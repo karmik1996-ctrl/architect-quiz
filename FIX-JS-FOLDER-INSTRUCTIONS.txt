@@ -24,3 +24,4 @@ Batch file-ը կ:
 Batch file-ը local-ում move անում է files-ները, հետո commit և push է անում:
 GitHub-ում files-ները js/ folder-ում կլինեն:
 
+

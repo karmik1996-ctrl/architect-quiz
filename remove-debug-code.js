@@ -43,3 +43,4 @@ console.log(`📊 New: ${newLines} lines, ${(newSize / 1024).toFixed(2)} KB`);
 console.log(`📉 Removed: ${originalLines - newLines} lines, ${((originalSize - newSize) / 1024).toFixed(2)} KB`);
 
 
+

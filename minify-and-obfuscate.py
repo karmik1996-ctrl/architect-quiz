@@ -147,3 +147,4 @@ print(f'Minified: {new_size / 1024:.2f} KB')
 print(f'Reduction: {((original_size - new_size) / original_size * 100):.1f}%')
 
 
+

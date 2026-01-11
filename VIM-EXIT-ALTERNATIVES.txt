@@ -25,3 +25,4 @@ Option 5: Եթե բոլոր options-ները չեն աշխատում:
 - Ctrl+C սեղմեք (cancel merge)
 - Command Prompt-ում նորից գործարկեք PULL-MERGE-PUSH.bat
 
+

@@ -6,3 +6,4 @@ Command Prompt-ում գրեք այս commands-ները հերթով:
 
 ԿԱՐԵՎՈՐ: /d flag-ը պետք է, Windows-ում directory փոխելու համար!
 
+

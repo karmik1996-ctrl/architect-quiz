@@ -42,3 +42,4 @@ console.log(`📊 Production size: ${(fs.statSync(outputPath).size / 1024).toFix
 console.log(`📉 Size reduction: ${((1 - fs.statSync(outputPath).size / fs.statSync(scriptPath).size) * 100).toFixed(1)}%`);
 
 
+

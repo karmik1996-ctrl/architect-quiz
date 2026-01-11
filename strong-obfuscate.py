@@ -85,3 +85,4 @@ print(f'Reduction: {((original_size - new_size) / original_size * 100):.1f}%')
 print('Code is now much harder to read in Developer Tools!')
 
 
+

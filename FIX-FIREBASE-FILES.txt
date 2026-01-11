@@ -1,0 +1,29 @@
+📋 Files to Upload (Fix Firebase Timing):
+
+1. js/firebase.config.js
+   - Fixed: Waits for Firebase SDK to load before initializing
+   - Emits 'firebaseInitialized' event when ready
+
+2. js/firebase.auth.js
+   - Fixed: Waits for Firebase to initialize before accessing auth/firestore
+   - Emits 'firebaseAuthReady' event when ready
+
+3. js/auth.ui.js
+   - Fixed: Waits for Firebase Auth to be ready before setting up listeners
+
+---
+
+📝 Commit Message:
+"Fix Firebase initialization timing issues"
+
+---
+
+✅ After Upload:
+1. Wait 1-2 minutes
+2. Hard refresh site (Ctrl+Shift+R)
+3. Check console - should see:
+   ✅ Firebase initialized successfully
+   ✅ Firebase Auth and Firestore initialized successfully
+   ❌ No errors
+
+

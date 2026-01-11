@@ -1,0 +1,39 @@
+📋 Files to Upload via GitHub Web Interface:
+
+1. index.html
+   Location: netlify-deploy/index.html
+   Description: Updated with Registration/Login UI (replaced payment request form)
+
+2. js/firebase.config.js
+   Location: netlify-deploy/js/firebase.config.js
+   Description: Firebase project configuration
+
+3. js/firebase.auth.js
+   Location: netlify-deploy/js/firebase.auth.js
+   Description: Firebase Authentication functions
+
+4. js/auth.ui.js (NEW)
+   Location: netlify-deploy/js/auth.ui.js
+   Description: Registration/Login UI handlers
+
+5. js/quiz.access.js (NEW)
+   Location: netlify-deploy/js/quiz.access.js
+   Description: Access control (demo/trial feature)
+
+6. js/quiz.core.js (UPDATED)
+   Location: netlify-deploy/js/quiz.core.js
+   Description: Quiz core with free trial integration
+
+---
+
+📝 Commit Message:
+"Add Firebase Auth, Registration/Login UI, and Demo/Trial feature (10 free questions)"
+
+---
+
+✅ After Upload:
+1. Wait 1-2 minutes for GitHub Pages to update
+2. Hard refresh site (Ctrl+Shift+R)
+3. Test: https://karmik1996-ctrl.github.io/architect-quiz/
+
+

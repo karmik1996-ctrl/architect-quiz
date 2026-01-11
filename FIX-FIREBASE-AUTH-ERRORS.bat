@@ -1,0 +1,42 @@
+@echo off
+echo ========================================
+echo Fix Firebase Auth Errors
+echo ========================================
+echo.
+cd /d D:\Programs\CursorTest\netlify-deploy
+echo [1/3] Adding firebase.auth.js...
+git add js/firebase.auth.js
+if %errorlevel% neq 0 (
+    echo ERROR: Git add failed!
+    pause
+    exit /b 1
+)
+echo Done!
+echo.
+echo [2/3] Creating commit...
+git commit -m "Fix Firebase Auth errors - add null checks in onAuthStateChanged, getCurrentUser, isUserLoggedIn"
+if %errorlevel% neq 0 (
+    echo ERROR: Commit failed!
+    pause
+    exit /b 1
+)
+echo Done!
+echo.
+echo [3/3] Pushing to GitHub...
+git push origin main
+if %errorlevel% neq 0 (
+    echo ERROR: Push failed!
+    pause
+    exit /b 1
+)
+echo Done!
+echo.
+echo ========================================
+echo SUCCESS: Firebase Auth fix pushed!
+echo ========================================
+echo.
+echo Wait 1-2 minutes, then hard refresh (Ctrl+Shift+R)
+echo.
+pause
+
+

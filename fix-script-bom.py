@@ -24,3 +24,4 @@ else:
     print('No BOM found, file is OK')
 
 
+
