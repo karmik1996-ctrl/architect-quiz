@@ -14,24 +14,66 @@ let quizSetQuestionsUsed = {}; // Track max questions reached per quiz set
 // ============================================
 
 function getQuizAttempts() {
-    const attempts = localStorage.getItem('quizAttempts');
-    return attempts ? parseInt(attempts) : 0;
+    // Use safe localStorage wrapper if available, otherwise use direct access with error handling
+    const attempts = (typeof safeLocalStorageGet === 'function') 
+        ? safeLocalStorageGet('quizAttempts', '0')
+        : (() => {
+            try {
+                const value = localStorage.getItem('quizAttempts');
+                return value || '0';
+            } catch (error) {
+                console.error('Error reading quizAttempts:', error);
+                return '0';
+            }
+        })();
+    const parsed = parseInt(attempts, 10);
+    return isNaN(parsed) ? 0 : parsed;
 }
 
 function incrementQuizAttempts() {
     const attempts = getQuizAttempts() + 1;
-    localStorage.setItem('quizAttempts', attempts.toString());
-    return attempts;
+    const success = (typeof safeLocalStorageSet === 'function')
+        ? safeLocalStorageSet('quizAttempts', attempts.toString())
+        : (() => {
+            try {
+                localStorage.setItem('quizAttempts', attempts.toString());
+                return true;
+            } catch (error) {
+                console.error('Error writing quizAttempts:', error);
+                return false;
+            }
+        })();
+    return success ? attempts : getQuizAttempts();
 }
 
 function decrementQuizAttempts() {
     const attempts = Math.max(0, getQuizAttempts() - 1);
-    localStorage.setItem('quizAttempts', attempts.toString());
-    return attempts;
+    const success = (typeof safeLocalStorageSet === 'function')
+        ? safeLocalStorageSet('quizAttempts', attempts.toString())
+        : (() => {
+            try {
+                localStorage.setItem('quizAttempts', attempts.toString());
+                return true;
+            } catch (error) {
+                console.error('Error writing quizAttempts:', error);
+                return false;
+            }
+        })();
+    return success ? attempts : getQuizAttempts();
 }
 
 function resetQuizAttempts() {
-    localStorage.setItem('quizAttempts', '0');
+    const success = (typeof safeLocalStorageSet === 'function')
+        ? safeLocalStorageSet('quizAttempts', '0')
+        : (() => {
+            try {
+                localStorage.setItem('quizAttempts', '0');
+                return true;
+            } catch (error) {
+                console.error('Error resetting quizAttempts:', error);
+                return false;
+            }
+        })();
 }
 
 // ============================================
@@ -39,12 +81,65 @@ function resetQuizAttempts() {
 // ============================================
 
 function loadQuizSetAttempts() {
-    const stored = localStorage.getItem('quizSetAttempts');
-    quizSetAttempts = stored ? JSON.parse(stored) : {};
+    try {
+        const stored = (typeof safeLocalStorageGet === 'function')
+            ? safeLocalStorageGet('quizSetAttempts', null)
+            : (() => {
+                try {
+                    return localStorage.getItem('quizSetAttempts');
+                } catch (error) {
+                    console.error('Error reading quizSetAttempts:', error);
+                    return null;
+                }
+            })();
+        
+        if (stored) {
+            // Validate data structure
+            if (typeof stored === 'object' && stored !== null) {
+                quizSetAttempts = stored;
+            } else if (typeof stored === 'string') {
+                try {
+                    const parsed = JSON.parse(stored);
+                    if (typeof parsed === 'object' && parsed !== null) {
+                        quizSetAttempts = parsed;
+                    } else {
+                        quizSetAttempts = {};
+                    }
+                } catch (e) {
+                    console.error('Error parsing quizSetAttempts:', e);
+                    quizSetAttempts = {};
+                }
+            } else {
+                quizSetAttempts = {};
+            }
+        } else {
+            quizSetAttempts = {};
+        }
+    } catch (error) {
+        console.error('Error loading quizSetAttempts:', error);
+        quizSetAttempts = {};
+    }
 }
 
 function saveQuizSetAttempts() {
-    localStorage.setItem('quizSetAttempts', JSON.stringify(quizSetAttempts));
+    try {
+        const success = (typeof safeLocalStorageSet === 'function')
+            ? safeLocalStorageSet('quizSetAttempts', quizSetAttempts)
+            : (() => {
+                try {
+                    localStorage.setItem('quizSetAttempts', JSON.stringify(quizSetAttempts));
+                    return true;
+                } catch (error) {
+                    console.error('Error writing quizSetAttempts:', error);
+                    return false;
+                }
+            })();
+        if (!success) {
+            console.warn('Failed to save quizSetAttempts');
+        }
+    } catch (error) {
+        console.error('Error saving quizSetAttempts:', error);
+    }
 }
 
 function getQuizSetAttempts(quizSetNumber) {
@@ -61,12 +156,65 @@ function resetQuizSetAttempts() {
 // ============================================
 
 function loadQuizSetQuestionsUsed() {
-    const stored = localStorage.getItem('quizSetQuestionsUsed');
-    quizSetQuestionsUsed = stored ? JSON.parse(stored) : {};
+    try {
+        const stored = (typeof safeLocalStorageGet === 'function')
+            ? safeLocalStorageGet('quizSetQuestionsUsed', null)
+            : (() => {
+                try {
+                    return localStorage.getItem('quizSetQuestionsUsed');
+                } catch (error) {
+                    console.error('Error reading quizSetQuestionsUsed:', error);
+                    return null;
+                }
+            })();
+        
+        if (stored) {
+            // Validate data structure
+            if (typeof stored === 'object' && stored !== null) {
+                quizSetQuestionsUsed = stored;
+            } else if (typeof stored === 'string') {
+                try {
+                    const parsed = JSON.parse(stored);
+                    if (typeof parsed === 'object' && parsed !== null) {
+                        quizSetQuestionsUsed = parsed;
+                    } else {
+                        quizSetQuestionsUsed = {};
+                    }
+                } catch (e) {
+                    console.error('Error parsing quizSetQuestionsUsed:', e);
+                    quizSetQuestionsUsed = {};
+                }
+            } else {
+                quizSetQuestionsUsed = {};
+            }
+        } else {
+            quizSetQuestionsUsed = {};
+        }
+    } catch (error) {
+        console.error('Error loading quizSetQuestionsUsed:', error);
+        quizSetQuestionsUsed = {};
+    }
 }
 
 function saveQuizSetQuestionsUsed() {
-    localStorage.setItem('quizSetQuestionsUsed', JSON.stringify(quizSetQuestionsUsed));
+    try {
+        const success = (typeof safeLocalStorageSet === 'function')
+            ? safeLocalStorageSet('quizSetQuestionsUsed', quizSetQuestionsUsed)
+            : (() => {
+                try {
+                    localStorage.setItem('quizSetQuestionsUsed', JSON.stringify(quizSetQuestionsUsed));
+                    return true;
+                } catch (error) {
+                    console.error('Error writing quizSetQuestionsUsed:', error);
+                    return false;
+                }
+            })();
+        if (!success) {
+            console.warn('Failed to save quizSetQuestionsUsed');
+        }
+    } catch (error) {
+        console.error('Error saving quizSetQuestionsUsed:', error);
+    }
 }
 
 function getQuizSetQuestionsUsed(quizSetNumber) {
@@ -127,14 +275,66 @@ function saveQuizProgress() {
 function loadQuizProgress() {
     try {
         // First, try to load from localStorage (faster)
-        const savedProgress = localStorage.getItem('quizProgress');
+        const savedProgress = (typeof safeLocalStorageGet === 'function')
+            ? safeLocalStorageGet('quizProgress', null)
+            : (() => {
+                try {
+                    const value = localStorage.getItem('quizProgress');
+                    return value ? JSON.parse(value) : null;
+                } catch (error) {
+                    console.error('Error reading quizProgress:', error);
+                    return null;
+                }
+            })();
         if (savedProgress) {
-            const progress = JSON.parse(savedProgress);
+            let progress = null;
+            try {
+                if (typeof savedProgress === 'object' && savedProgress !== null) {
+                    progress = savedProgress;
+                } else if (typeof savedProgress === 'string') {
+                    try {
+                        progress = JSON.parse(savedProgress);
+                    } catch (e) {
+                        console.error('Error parsing quizProgress:', e);
+                        progress = null;
+                    }
+                }
+            } catch (error) {
+                console.error('Error processing savedProgress:', error);
+                progress = null;
+            }
+            
+            // Validate progress object
+            if (!progress || typeof progress !== 'object' || typeof progress.timestamp !== 'number') {
+                // Invalid progress data, clear it
+                const removed = (typeof safeLocalStorageRemove === 'function')
+                    ? safeLocalStorageRemove('quizProgress')
+                    : (() => {
+                        try {
+                            localStorage.removeItem('quizProgress');
+                            return true;
+                        } catch (error) {
+                            console.error('Error removing invalid quizProgress:', error);
+                            return false;
+                        }
+                    })();
+                return Promise.resolve(null);
+            }
+            
             // Check if progress is recent (within 24 hours)
             const hoursSinceSave = (new Date().getTime() - progress.timestamp) / (1000 * 60 * 60);
             if (hoursSinceSave < 24) {
                 // Check if payment code matches
-                const currentPaymentCode = localStorage.getItem('paymentCode');
+                const currentPaymentCode = (typeof safeLocalStorageGet === 'function')
+                    ? (safeLocalStorageGet('paymentCode', '') || '')
+                    : (() => {
+                        try {
+                            return localStorage.getItem('paymentCode') || '';
+                        } catch (error) {
+                            console.error('Error reading paymentCode:', error);
+                            return '';
+                        }
+                    })();
                 if (currentPaymentCode && progress.paymentCode === currentPaymentCode) {
                     // SECURITY: Check if progress belongs to current browser session
                     const savedSessionId = progress.sessionId || '';
@@ -143,7 +343,17 @@ function loadQuizProgress() {
                     // Check if session matches
                     if (savedSessionId && currentSessionId && savedSessionId !== currentSessionId) {
                         // Clear old progress from different session
-                        localStorage.removeItem('quizProgress');
+                        const removed = (typeof safeLocalStorageRemove === 'function')
+                            ? safeLocalStorageRemove('quizProgress')
+                            : (() => {
+                                try {
+                                    localStorage.removeItem('quizProgress');
+                                    return true;
+                                } catch (error) {
+                                    console.error('Error removing quizProgress:', error);
+                                    return false;
+                                }
+                            })();
                         return null;
                     }
                     
@@ -151,18 +361,49 @@ function loadQuizProgress() {
                 }
             } else {
                 // Progress is too old, clear it
-                localStorage.removeItem('quizProgress');
+                const removed = (typeof safeLocalStorageRemove === 'function')
+                    ? safeLocalStorageRemove('quizProgress')
+                    : (() => {
+                        try {
+                            localStorage.removeItem('quizProgress');
+                            return true;
+                        } catch (error) {
+                            console.error('Error removing quizProgress:', error);
+                            return false;
+                        }
+                    })();
             }
         }
         
         // If no localStorage progress, try to load from cloud (if function exists)
-        const currentPaymentCode = localStorage.getItem('paymentCode');
+        const currentPaymentCode = (typeof safeLocalStorageGet === 'function')
+            ? (safeLocalStorageGet('paymentCode', '') || '')
+            : (() => {
+                try {
+                    return localStorage.getItem('paymentCode') || '';
+                } catch (error) {
+                    console.error('Error reading paymentCode:', error);
+                    return '';
+                }
+            })();
         if (currentPaymentCode && typeof loadQuizProgressFromCloud === 'function') {
             return loadQuizProgressFromCloud(currentPaymentCode).then(cloudProgress => {
                 if (cloudProgress) {
                     // Also save to localStorage for faster access next time
-                    localStorage.setItem('quizProgress', JSON.stringify(cloudProgress));
-                    return cloudProgress;
+                    const success = (typeof safeLocalStorageSet === 'function')
+                        ? safeLocalStorageSet('quizProgress', cloudProgress)
+                        : (() => {
+                            try {
+                                localStorage.setItem('quizProgress', JSON.stringify(cloudProgress));
+                                return true;
+                            } catch (error) {
+                                console.error('Error writing quizProgress:', error);
+                                return false;
+                            }
+                        })();
+                    if (success) {
+                        return cloudProgress;
+                    }
                 }
                 return null;
             }).catch(err => {
@@ -183,24 +424,48 @@ function loadQuizProgress() {
 function saveScrollPosition() {
     try {
         const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-        localStorage.setItem('mainMenuScrollPosition', scrollY.toString());
+        const success = (typeof safeLocalStorageSet === 'function')
+            ? safeLocalStorageSet('mainMenuScrollPosition', scrollY.toString())
+            : (() => {
+                try {
+                    localStorage.setItem('mainMenuScrollPosition', scrollY.toString());
+                    return true;
+                } catch (error) {
+                    console.error('Error writing scroll position:', error);
+                    return false;
+                }
+            })();
+        if (!success) {
+            console.warn('Failed to save scroll position');
+        }
     } catch (error) {
-        // Ignore errors
+        console.error('Error saving scroll position:', error);
     }
 }
 
 function restoreScrollPosition() {
     try {
-        const savedScroll = localStorage.getItem('mainMenuScrollPosition');
+        const savedScroll = (typeof safeLocalStorageGet === 'function')
+            ? safeLocalStorageGet('mainMenuScrollPosition', null)
+            : (() => {
+                try {
+                    return localStorage.getItem('mainMenuScrollPosition');
+                } catch (error) {
+                    console.error('Error reading scroll position:', error);
+                    return null;
+                }
+            })();
         if (savedScroll !== null) {
             const scrollY = parseInt(savedScroll, 10);
-            // Use requestAnimationFrame to ensure DOM is ready
-            requestAnimationFrame(() => {
-                window.scrollTo(0, scrollY);
-            });
+            if (!isNaN(scrollY)) {
+                // Use requestAnimationFrame to ensure DOM is ready
+                requestAnimationFrame(() => {
+                    window.scrollTo(0, scrollY);
+                });
+            }
         }
     } catch (error) {
-        // Ignore errors
+        console.error('Error restoring scroll position:', error);
     }
 }
 

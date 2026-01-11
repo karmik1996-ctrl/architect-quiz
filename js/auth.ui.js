@@ -6,6 +6,44 @@
 // Handles registration/login UI and integrates with Firebase Auth
 
 // ============================================
+// SECURITY HELPERS
+// ============================================
+
+/**
+ * Safely set status message HTML (escapes user input)
+ * @param {HTMLElement} element - Target element
+ * @param {string} className - CSS class (error, success, info)
+ * @param {string} message - Message text (will be escaped)
+ */
+function setStatusMessage(element, className, message) {
+    if (!element) return;
+    
+    // Escape user input to prevent XSS
+    const escapedMessage = (typeof escapeHtml === 'function') 
+        ? escapeHtml(message || '')
+        : (() => {
+            const div = document.createElement('div');
+            div.textContent = message || '';
+            return div.textContent || div.innerText || '';
+        })();
+    
+    // Use safe method to set HTML (HTML template is trusted, message is escaped)
+    const html = `<div class="payment-status ${className || 'info'}">${escapedMessage}</div>`;
+    
+    if (typeof safeSetInnerHTML === 'function') {
+        safeSetInnerHTML(element, html);
+    } else {
+        try {
+            element.innerHTML = html;
+        } catch (error) {
+            console.error('Error setting status message:', error);
+            // Fallback to textContent
+            element.textContent = message || '';
+        }
+    }
+}
+
+// ============================================
 // UI FUNCTIONS
 // ============================================
 
@@ -99,24 +137,18 @@ async function handleRegister(event) {
     
     // Validate
     if (!name || !phone || !email || !password) {
-        if (statusDiv) {
-            statusDiv.innerHTML = '<div class="payment-status error">⚠️ Խնդրում ենք լրացնել բոլոր դաշտերը</div>';
-        }
+        setStatusMessage(statusDiv, 'error', '⚠️ Խնդրում ենք լրացնել բոլոր դաշտերը');
         return;
     }
     
     if (password.length < 6) {
-        if (statusDiv) {
-            statusDiv.innerHTML = '<div class="payment-status error">⚠️ Գաղտնաբառը պետք է լինի առնվազն 6 նիշ</div>';
-        }
+        setStatusMessage(statusDiv, 'error', '⚠️ Գաղտնաբառը պետք է լինի առնվազն 6 նիշ');
         return;
     }
     
     // Disable button and show loading
     if (registerBtn) registerBtn.disabled = true;
-    if (statusDiv) {
-        statusDiv.innerHTML = '<div class="payment-status info">🔄 Գրանցումը կատարվում է...</div>';
-    }
+    setStatusMessage(statusDiv, 'info', '🔄 Գրանցումը կատարվում է...');
     
     try {
         // Check if registerUser function exists
@@ -128,9 +160,7 @@ async function handleRegister(event) {
         const result = await registerUser(email, password, name, phone);
         
         if (result.success) {
-            if (statusDiv) {
-                statusDiv.innerHTML = '<div class="payment-status success">✅ Գրանցումը հաջողությամբ ավարտվեց! Մուտք գործում եք...</div>';
-            }
+            setStatusMessage(statusDiv, 'success', '✅ Գրանցումը հաջողությամբ ավարտվեց! Մուտք գործում եք...');
             
             // Automatically login after registration
             setTimeout(async () => {
@@ -144,9 +174,8 @@ async function handleRegister(event) {
         }
     } catch (error) {
         console.error('Registration error:', error);
-        if (statusDiv) {
-            statusDiv.innerHTML = '<div class="payment-status error">❌ Գրանցման սխալ: ' + error.message + '</div>';
-        }
+        const errorMsg = error && error.message ? error.message : 'Unknown error';
+        setStatusMessage(statusDiv, 'error', '❌ Գրանցման սխալ: ' + errorMsg);
     } finally {
         if (registerBtn) registerBtn.disabled = false;
     }
@@ -168,17 +197,13 @@ async function handleLogin(event) {
     
     // Validate
     if (!email || !password) {
-        if (statusDiv) {
-            statusDiv.innerHTML = '<div class="payment-status error">⚠️ Խնդրում ենք մուտքագրել email և գաղտնաբառ</div>';
-        }
+        setStatusMessage(statusDiv, 'error', '⚠️ Խնդրում ենք մուտքագրել email և գաղտնաբառ');
         return;
     }
     
     // Disable button and show loading
     if (loginBtn) loginBtn.disabled = true;
-    if (statusDiv) {
-        statusDiv.innerHTML = '<div class="payment-status info">🔄 Մուտք գործում է...</div>';
-    }
+    setStatusMessage(statusDiv, 'info', '🔄 Մուտք գործում է...');
     
     try {
         // Check if loginUser function exists
@@ -190,9 +215,7 @@ async function handleLogin(event) {
         const result = await loginUser(email, password);
         
         if (result.success) {
-            if (statusDiv) {
-                statusDiv.innerHTML = '<div class="payment-status success">✅ Մուտք գործվեց հաջողությամբ!</div>';
-            }
+            setStatusMessage(statusDiv, 'success', '✅ Մուտք գործվեց հաջողությամբ!');
             
             // Show user info
             showUserInfo(result.user);
@@ -201,9 +224,8 @@ async function handleLogin(event) {
         }
     } catch (error) {
         console.error('Login error:', error);
-        if (statusDiv) {
-            statusDiv.innerHTML = '<div class="payment-status error">❌ Մուտքի սխալ: ' + error.message + '</div>';
-        }
+        const errorMsg = error && error.message ? error.message : 'Unknown error';
+        setStatusMessage(statusDiv, 'error', '❌ Մուտքի սխալ: ' + errorMsg);
     } finally {
         if (loginBtn) loginBtn.disabled = false;
     }

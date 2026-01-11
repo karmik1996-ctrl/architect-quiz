@@ -5,6 +5,32 @@
 // ============================================
 // Handles core quiz logic: questions, scoring, quiz flow, results
 
+// ============================================
+// SECURITY HELPERS
+// ============================================
+
+/**
+ * Safely set HTML content (use for trusted HTML, escape user input)
+ * @param {HTMLElement} element - Target element
+ * @param {string} html - HTML content (should be trusted/pre-escaped)
+ */
+function safeSetHTML(element, html) {
+    if (!element) return;
+    if (typeof safeSetInnerHTML === 'function') {
+        safeSetInnerHTML(element, html);
+    } else {
+        try {
+            element.innerHTML = html;
+        } catch (error) {
+            console.error('Error setting HTML:', error);
+            // Fallback to textContent
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            element.textContent = div.textContent || div.innerText || '';
+        }
+    }
+}
+
 // Global quiz state variables
 let currentQuestionIndex = 0;
 let score = 0;
@@ -287,7 +313,7 @@ function displayAbbreviations(question) {
             return `<strong>${abbrev}</strong> – ${abbreviations[abbrev]}`;
         }).join('<br>');
         
-        abbreviationsList.innerHTML = abbrevsHtml;
+        safeSetHTML(abbreviationsList, abbrevsHtml);
         abbreviationsSection.style.display = 'block';
     } else {
         abbreviationsSection.style.display = 'none';
@@ -545,7 +571,8 @@ async function initGame() {
                         if (quizSection) quizSection.style.display = 'none';
                         const paymentStatusEl = document.getElementById('payment-status');
                         if (paymentStatusEl) {
-                            paymentStatusEl.innerHTML = '<div class="payment-status error">❌ Վճարման կոդը չի գտնվել կամ անվավեր է</div>';
+                            // Use safe method (static message, no user input)
+                            safeSetHTML(paymentStatusEl, '<div class="payment-status error">❌ Վճարման կոդը չի գտնվել կամ անվավեր է</div>');
                         }
                         return; // Don't restore progress
                     }
@@ -691,7 +718,12 @@ async function initGame() {
             
             const remaining = Math.max(0, totalMaxAttempts - totalUsedAttempts);
             // Display as: Used/Total (e.g., 27/54 or 54/54)
-            attemptsDisplay.innerHTML = `Առկա է <strong>18 թեստ</strong>, ունեք իրավունք անցնելու ամեն թեստը <strong>3 անգամ</strong>։<br><strong>${totalUsedAttempts}/${totalMaxAttempts} օգտագործված</strong>${remaining > 0 ? `, <strong>մնաց ${remaining}</strong>` : ''}`;
+            // Escape numeric values for safety (defensive XSS protection)
+            const escapedUsed = (typeof escapeHtml === 'function') ? escapeHtml(String(totalUsedAttempts)) : String(totalUsedAttempts);
+            const escapedTotal = (typeof escapeHtml === 'function') ? escapeHtml(String(totalMaxAttempts)) : String(totalMaxAttempts);
+            const escapedRemaining = remaining > 0 ? ((typeof escapeHtml === 'function') ? escapeHtml(String(remaining)) : String(remaining)) : '';
+            const attemptsHtml = `Առկա է <strong>18 թեստ</strong>, ունեք իրավունք անցնելու ամեն թեստը <strong>3 անգամ</strong>։<br><strong>${escapedUsed}/${escapedTotal} օգտագործված</strong>${remaining > 0 ? `, <strong>մնաց ${escapedRemaining}</strong>` : ''}`;
+            safeSetHTML(attemptsDisplay, attemptsHtml);
             if (remaining === 0) {
                 attemptsDisplay.style.color = '#dc3545';
             } else {
@@ -1315,11 +1347,27 @@ function showAnswersReview(forceRefresh = false) {
             const userAnswerIndex = item.userAnswer;
             const correctAnswerIndex = question.correct;
             
+            // Escape user data for XSS protection
+            const escapedQuestion = (typeof escapeHtml === 'function') 
+                ? escapeHtml(question.question || '')
+                : (() => {
+                    const div = document.createElement('div');
+                    div.textContent = question.question || '';
+                    return div.textContent || div.innerText || '';
+                })();
+            const escapedMaterials = question.materials ? ((typeof escapeHtml === 'function') 
+                ? escapeHtml(question.materials)
+                : (() => {
+                    const div = document.createElement('div');
+                    div.textContent = question.materials;
+                    return div.textContent || div.innerText || '';
+                })()) : '';
+            
             html += `<div style="margin-bottom: 30px; padding: 20px; background: ${questionCardBg}; border-radius: 10px; border-left: 4px solid #4a90e2;">`;
-            html += `<div style="font-weight: bold; margin-bottom: 10px; color: ${questionTextColor};">Հարց ${item.questionIndex}: ${question.question}</div>`;
+            html += `<div style="font-weight: bold; margin-bottom: 10px; color: ${questionTextColor};">Հարց ${item.questionIndex}: ${escapedQuestion}</div>`;
             
             if (question.materials) {
-                html += `<div style="font-size: 0.9em; color: ${materialsColor}; margin-bottom: 15px; padding: 8px; background: ${materialsBg}; border-radius: 5px;">📖 ${question.materials}</div>`;
+                html += `<div style="font-size: 0.9em; color: ${materialsColor}; margin-bottom: 15px; padding: 8px; background: ${materialsBg}; border-radius: 5px;">📖 ${escapedMaterials}</div>`;
             }
             
             html += `<div style="margin-top: 15px;">`;
@@ -1343,7 +1391,15 @@ function showAnswersReview(forceRefresh = false) {
                 
                 html += `<div style="padding: 12px; margin-bottom: 8px; background: ${bgColor}; border: 2px solid ${borderColor}; border-radius: 8px; display: flex; align-items: center;">`;
                 html += `<span style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-weight: bold;">${String.fromCharCode(65 + ansIndex)}</span>`;
-                html += `<span style="flex: 1; color: ${answerTextColor};">${answer}</span>`;
+                // Escape answer text for XSS protection
+                const escapedAnswer = (typeof escapeHtml === 'function') 
+                    ? escapeHtml(answer || '')
+                    : (() => {
+                        const div = document.createElement('div');
+                        div.textContent = answer || '';
+                        return div.textContent || div.innerText || '';
+                    })();
+                html += `<span style="flex: 1; color: ${answerTextColor};">${escapedAnswer}</span>`;
                 if (icon) {
                     html += `<span style="margin-left: 10px; font-size: 1.2em;">${icon}</span>`;
                 }
@@ -1357,7 +1413,8 @@ function showAnswersReview(forceRefresh = false) {
     
     html += '</div>';
     
-    answersList.innerHTML = html;
+    // Use safe method to set HTML (all user data already escaped above)
+    safeSetHTML(answersList, html);
     answersReview.style.display = 'block';
     
     // Update button text to "Թաքցնել պատասխանները" when answers are shown

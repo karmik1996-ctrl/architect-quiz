@@ -128,14 +128,16 @@ async function getIPLocation() {
     // Try each service until one works
     for (const service of services) {
         try {
-            const response = await fetch(service.url, {
+            // Use safe fetch with timeout (10 seconds)
+            const fetchFn = (typeof safeFetch === 'function') ? safeFetch : fetch;
+            const response = await fetchFn(service.url, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json'
                 }
-            });
+            }, 10000); // 10 second timeout
             
-            if (response.ok) {
+            if (response && response.ok) {
                 const data = await response.json();
                 const location = service.parse(data);
                 return {
@@ -144,6 +146,7 @@ async function getIPLocation() {
                 };
             }
         } catch (error) {
+            // Continue to next service on error or timeout
             continue;
         }
     }

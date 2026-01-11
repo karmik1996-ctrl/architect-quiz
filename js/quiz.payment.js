@@ -5,6 +5,44 @@
 // ============================================
 // Handles all payment-related functions: submission, verification, session management, cloud sync
 
+// ============================================
+// SECURITY HELPERS
+// ============================================
+
+/**
+ * Safely set status message HTML (escapes user input)
+ * @param {HTMLElement} element - Target element
+ * @param {string} className - CSS class (error, success, info)
+ * @param {string} message - Message text (will be escaped)
+ */
+function setPaymentStatusMessage(element, className, message) {
+    if (!element) return;
+    
+    // Escape user input to prevent XSS
+    const escapedMessage = (typeof escapeHtml === 'function') 
+        ? escapeHtml(message || '')
+        : (() => {
+            const div = document.createElement('div');
+            div.textContent = message || '';
+            return div.textContent || div.innerText || '';
+        })();
+    
+    // Use safe method to set HTML (HTML template is trusted, message is escaped)
+    const html = `<div class="payment-status ${className || 'info'}">${escapedMessage}</div>`;
+    
+    if (typeof safeSetInnerHTML === 'function') {
+        safeSetInnerHTML(element, html);
+    } else {
+        try {
+            element.innerHTML = html;
+        } catch (error) {
+            console.error('Error setting payment status message:', error);
+            // Fallback to textContent
+            element.textContent = message || '';
+        }
+    }
+}
+
 // Payment constants
 const PAYMENT_AMOUNT = 15000; // 15,000 դրամ
 const PAYMENT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwarQPmrBy3dLKYQJZuSU_7qVPgrdjZWUAet8qS_MXC3cA4kcQkpJlkcZIWwt84bDTajg/exec';
@@ -32,14 +70,14 @@ async function submitPaymentRequest(event) {
     
     // Validate
     if (!formData.name || !formData.phone || !formData.paymentMethod) {
-        statusDiv.innerHTML = '<div class="payment-status error">⚠️ Խնդրում ենք լրացնել բոլոր պարտադիր դաշտերը</div>';
+        setPaymentStatusMessage(statusDiv, 'error', '⚠️ Խնդրում ենք լրացնել բոլոր պարտադիր դաշտերը');
         return;
     }
     
     // Disable button and show loading
     submitBtn.disabled = true;
     submitBtn.textContent = '⏳ Ուղարկվում է...';
-    statusDiv.innerHTML = '<div class="payment-status info">🔄 Վճարման հարցումը ուղարկվում է...</div>';
+    setPaymentStatusMessage(statusDiv, 'info', '🔄 Վճարման հարցումը ուղարկվում է...');
     
     try {
         // Try Netlify Forms first, then fallback to Google Apps Script
@@ -61,7 +99,7 @@ async function submitPaymentRequest(event) {
             });
             
             if (netlifyResponse.ok) {
-                statusDiv.innerHTML = '<div class="payment-status success">✅ Վճարման հարցումը հաջողությամբ ուղարկված է!<br>Վճարիր 15,000 դրամ և սպասիր վճարման կոդին email-ով:</div>';
+                setPaymentStatusMessage(statusDiv, 'success', '✅ Վճարման հարցումը հաջողությամբ ուղարկված է!<br>Վճարիր 15,000 դրամ և սպասիր վճարման կոդին email-ով:');
                 
                 // Hide form and show payment code input (after request)
                 document.getElementById('payment-request-form').style.display = 'none';
@@ -96,7 +134,7 @@ async function submitPaymentRequest(event) {
             delete window[callbackName];
             
             if (result && result.success) {
-                statusDiv.innerHTML = '<div class="payment-status success">✅ Վճարման հարցումը հաջողությամբ ուղարկված է!<br>Վճարիր 15,000 դրամ և սպասիր վճարման կոդին email-ով:</div>';
+                setPaymentStatusMessage(statusDiv, 'success', '✅ Վճարման հարցումը հաջողությամբ ուղարկված է!<br>Վճարիր 15,000 դրամ և սպասիր վճարման կոդին email-ով:');
                 
                 // Hide form and show payment code input (after request)
                 const requestForm = document.getElementById('payment-request-form');
@@ -118,7 +156,8 @@ async function submitPaymentRequest(event) {
                 submitBtn.disabled = false;
                 submitBtn.textContent = '📤 Ուղարկել Վճարման Հարցում';
             } else {
-                statusDiv.innerHTML = '<div class="payment-status error">❌ Սխալ: Վճարման հարցումը չի կարող ուղարկվել: ' + (result?.error || 'Unknown error') + '</div>';
+                const errorMsg = result?.error || 'Unknown error';
+                setPaymentStatusMessage(statusDiv, 'error', '❌ Սխալ: Վճարման հարցումը չի կարող ուղարկվել: ' + errorMsg);
                 submitBtn.disabled = false;
                 submitBtn.textContent = '📤 Ուղարկել Վճարման Հարցում';
             }
@@ -154,7 +193,7 @@ async function submitPaymentRequest(event) {
             }
             
             // Show user-friendly error message
-            statusDiv.innerHTML = '<div class="payment-status error">❌ Սխալ: Վճարման հարցումը չի կարող ուղարկվել:<br>Ստուգեք ինտերնետ կապը կամ փորձեք ավելի ուշ</div>';
+            setPaymentStatusMessage(statusDiv, 'error', '❌ Սխալ: Վճարման հարցումը չի կարող ուղարկվել:<br>Ստուգեք ինտերնետ կապը կամ փորձեք ավելի ուշ');
             submitBtn.disabled = false;
             submitBtn.textContent = '📤 Ուղարկել Վճարման Հարցում';
         };
@@ -169,7 +208,7 @@ async function submitPaymentRequest(event) {
         // Also set a timeout to detect if callback never fires
         const timeoutId = setTimeout(() => {
             if (window[callbackName]) {
-                statusDiv.innerHTML = '<div class="payment-status error">❌ Սխալ: Վճարման հարցումը չի կարող ուղարկվել:<br>Timeout - ստուգեք Google Apps Script deployment-ը<br>Կամ փորձեք ավելի ուշ</div>';
+                setPaymentStatusMessage(statusDiv, 'error', '❌ Սխալ: Վճարման հարցումը չի կարող ուղարկվել:<br>Timeout - ստուգեք Google Apps Script deployment-ը<br>Կամ փորձեք ավելի ուշ');
                 submitBtn.disabled = false;
                 submitBtn.textContent = '📤 Ուղարկել Վճարման Հարցում';
                 
@@ -224,7 +263,7 @@ async function submitPaymentRequest(event) {
                     },
                     body: formBody
                 }).then(() => {
-                    statusDiv.innerHTML = '<div class="payment-status success">✅ Վճարման հարցումը ուղարկված է (no-cors mode):<br>Վճարիր 15,000 դրամ և սպասիր վճարման կոդին email-ով:</div>';
+                    setPaymentStatusMessage(statusDiv, 'success', '✅ Վճարման հարցումը ուղարկված է (no-cors mode):<br>Վճարիր 15,000 դրամ և սպասիր վճարման կոդին email-ով:');
                     
                     const requestForm = document.getElementById('payment-request-form');
                     const codeSection = document.getElementById('payment-code-section');
@@ -240,7 +279,7 @@ async function submitPaymentRequest(event) {
                     submitBtn.disabled = false;
                     submitBtn.textContent = '📤 Ուղարկել Վճարման Հարցում';
                 }).catch(() => {
-                    statusDiv.innerHTML = '<div class="payment-status error">❌ Սխալ: Վճարման հարցումը չի կարող ուղարկվել</div>';
+                    setPaymentStatusMessage(statusDiv, 'error', '❌ Սխալ: Վճարման հարցումը չի կարող ուղարկվել');
                     submitBtn.disabled = false;
                     submitBtn.textContent = '📤 Ուղարկել Վճարման Հարցում';
                 });
@@ -248,7 +287,8 @@ async function submitPaymentRequest(event) {
         }, 10000); // 10 second timeout
         
     } catch (error) {
-        statusDiv.innerHTML = '<div class="payment-status error">❌ Սխալ: ' + error.message + '<br>Խնդրում ենք փորձել կրկին:</div>';
+        const errorMsg = error && error.message ? error.message : 'Unknown error';
+        setPaymentStatusMessage(statusDiv, 'error', '❌ Սխալ: ' + errorMsg + '<br>Խնդրում ենք փորձել կրկին:');
         submitBtn.disabled = false;
         submitBtn.textContent = '📤 Ուղարկել Վճարման Հարցում';
     }
@@ -293,10 +333,22 @@ function getBrowserSessionId() {
 
 async function getUserIP() {
     try {
-        const response = await fetch('https://api.ipify.org?format=json');
-        const data = await response.json();
-        return data.ip || 'unknown';
+        // Use safe fetch with timeout (5 seconds)
+        const fetchFn = (typeof safeFetch === 'function') ? safeFetch : fetch;
+        const response = await fetchFn('https://api.ipify.org?format=json', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        }, 5000); // 5 second timeout
+        
+        if (response && response.ok) {
+            const data = await response.json();
+            return data.ip || 'unknown';
+        }
+        return 'unknown';
     } catch (error) {
+        // Return fallback on error or timeout
         return 'unknown';
     }
 }
@@ -406,7 +458,7 @@ async function verifyPaymentCode() {
     const code = (paymentCodeInput?.value.trim() || paymentCodeInputAfter?.value.trim() || '').trim();
     
     if (!code) {
-        paymentStatus.innerHTML = '<div class="payment-status error">⚠️ Մուտքագրեք վճարման կոդ</div>';
+        setPaymentStatusMessage(paymentStatus, 'error', '⚠️ Մուտքագրեք վճարման կոդ');
         return;
     }
     
@@ -415,7 +467,7 @@ async function verifyPaymentCode() {
     
     verifyPaymentBtn.disabled = true;
     verifyPaymentBtn.textContent = '⏳ Ստուգվում է...';
-    paymentStatus.innerHTML = '<div class="payment-status info">🔄 Ստուգվում է վճարման կոդը...</div>';
+    setPaymentStatusMessage(paymentStatus, 'info', '🔄 Ստուգվում է վճարման կոդը...');
     
     try {
         // Special code: karmik1996
@@ -446,7 +498,7 @@ async function verifyPaymentCode() {
                     }
             });
             
-            paymentStatus.innerHTML = '<div class="payment-status success">✅ Վճարման կոդը հաստատված է! Հարցաթերթիկները բացվում են...</div>';
+            setPaymentStatusMessage(paymentStatus, 'success', '✅ Վճարման կոդը հաստատված է! Հարցաթերթիկները բացվում են...');
             
             // Hide payment section and show start section with smooth transition
             setTimeout(() => {
@@ -696,7 +748,7 @@ async function verifyPaymentCode() {
         // Check if payment code was not found or verification failed
         if (!data.success || !data.verified) {
             const errorMessage = data?.error || 'Վճարման կոդը չի գտնվել կամ անվավեր է';
-            paymentStatus.innerHTML = `<div class="payment-status error">❌ ${errorMessage}</div>`;
+            setPaymentStatusMessage(paymentStatus, 'error', '❌ ' + errorMessage);
             verifyPaymentBtn.disabled = false;
             verifyPaymentBtn.textContent = '✅ Ստուգել Վճարում';
             return;
@@ -774,7 +826,7 @@ async function verifyPaymentCode() {
             // Only clear if starting fresh
             // localStorage.removeItem('quizProgress');
             
-            paymentStatus.innerHTML = '<div class="payment-status success">✅ Վճարման կոդը հաստատված է! Հարցաթերթիկները բացվում են...</div>';
+            setPaymentStatusMessage(paymentStatus, 'success', '✅ Վճարման կոդը հաստատված է! Հարցաթերթիկները բացվում են...');
             
             // Hide payment section and show start section with smooth transition
             setTimeout(() => {
@@ -964,12 +1016,13 @@ async function verifyPaymentCode() {
                 }, 500); // Small delay to let UI settle before restoring progress
             }, 1500);
         } else {
-            paymentStatus.innerHTML = '<div class="payment-status error">❌ Վճարման կոդը սխալ է կամ արդեն օգտագործված է</div>';
+            setPaymentStatusMessage(paymentStatus, 'error', '❌ Վճարման կոդը սխալ է կամ արդեն օգտագործված է');
             verifyPaymentBtn.disabled = false;
             verifyPaymentBtn.textContent = '✅ Ստուգել Վճարում';
         }
     } catch (error) {
-        paymentStatus.innerHTML = '<div class="payment-status error">❌ Սխալ: ' + error.message + '</div>';
+        const errorMsg = error && error.message ? error.message : 'Unknown error';
+        setPaymentStatusMessage(paymentStatus, 'error', '❌ Սխալ: ' + errorMsg);
         verifyPaymentBtn.disabled = false;
         verifyPaymentBtn.textContent = '✅ Ստուգել Վճարում';
     }
