@@ -841,6 +841,12 @@ async function startQuiz() {
     userAnswers = [];
     
     gameStarted = true;
+    
+    // Start DevTools detection when quiz starts (security protection)
+    if (typeof setupDevToolsDetection === 'function') {
+        setupDevToolsDetection();
+    }
+    
     if (startSection) startSection.style.display = 'none';
     if (paymentSection) paymentSection.style.display = 'none';
     if (topicSection) topicSection.style.display = 'block';

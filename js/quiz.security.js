@@ -39,7 +39,8 @@ function detectDevTools() {
         }
     });
     try {
-        console.log(element);
+        // Don't log - just trigger getter to detect console access
+        void element.id;
     } catch (e) {
         // Ignore
     }
@@ -105,22 +106,18 @@ function showDevToolsWarning() {
 }
 
 /**
- * Handle DevTools detection - blur UI, disable interactions, show warning
+ * Handle DevTools detection - show warning only (don't block UI)
+ * In development/testing, we don't block the UI - just show a warning
  */
 function handleDevToolsDetection() {
     if (!devToolsDetected) {
         devToolsDetected = true;
         
-        // Blur the UI
-        document.body.style.filter = 'blur(10px)';
-        document.body.style.transition = 'filter 0.3s ease';
-        document.body.style.pointerEvents = 'none';
-        document.body.style.userSelect = 'none';
+        // Don't blur or disable UI - just show warning
+        // This allows testing/development while still showing a warning
+        // In production, users will still see the warning
         
-        // Disable interactions
-        document.body.style.cursor = 'not-allowed';
-        
-        // Show warning overlay
+        // Show warning overlay (non-blocking)
         showDevToolsWarning();
     }
 }
@@ -131,10 +128,6 @@ function handleDevToolsDetection() {
 function checkDevToolsClosed() {
     if (devToolsDetected && !detectDevTools()) {
         devToolsDetected = false;
-        document.body.style.filter = 'none';
-        document.body.style.pointerEvents = '';
-        document.body.style.userSelect = '';
-        document.body.style.cursor = '';
         
         // Remove warning overlay if exists
         const overlay = document.getElementById('devtools-warning-overlay');
@@ -171,10 +164,12 @@ function stopDevToolsDetection() {
         devToolsCheckInterval = null;
     }
     devToolsDetected = false;
-    document.body.style.filter = 'none';
-    document.body.style.pointerEvents = '';
-    document.body.style.userSelect = '';
-    document.body.style.cursor = '';
+    
+    // Remove warning overlay if exists
+    const overlay = document.getElementById('devtools-warning-overlay');
+    if (overlay) {
+        overlay.remove();
+    }
 }
 
 // ============================================
@@ -275,9 +270,13 @@ function initializeContentProtection() {
     // Setup blur protection
     setupBlurProtection();
     
-    // Setup DevTools detection (deterrence, not real security)
+    // Setup DevTools detection ONLY when quiz is active (not on every page load)
     // Note: DevTools detection is not 100% reliable, but serves as deterrence
-    setupDevToolsDetection();
+    // Only start detection if quiz is already started (gameStarted === true)
+    const quizActive = typeof gameStarted !== 'undefined' && gameStarted === true;
+    if (quizActive) {
+        setupDevToolsDetection();
+    }
 }
 
 // ============================================

@@ -61,7 +61,8 @@ function initializeFirebaseWhenReady() {
 }
 
 // Start initialization - wait for Firebase SDK to be available
-// Start checking immediately (synchronous scripts execute before DOMContentLoaded)
+// Start checking immediately after script loads
+// Synchronous scripts execute in order, so Firebase SDK should be available soon
 setTimeout(initializeFirebaseWhenReady, 100);
 
 // Expose firebaseConfig to the window for other modules

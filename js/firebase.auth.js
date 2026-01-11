@@ -69,6 +69,24 @@ initializeAuthWhenReady();
 // ============================================
 
 /**
+ * Wait for Firebase Auth to be ready
+ * @returns {Promise<boolean>} True if ready, false if timeout
+ */
+async function waitForAuthReady() {
+  const maxWait = 10000; // 10 seconds
+  const checkInterval = 100; // Check every 100ms
+  const maxAttempts = maxWait / checkInterval;
+  
+  for (let i = 0; i < maxAttempts; i++) {
+    if (auth && typeof auth.createUserWithEmailAndPassword === 'function') {
+      return true;
+    }
+    await new Promise(resolve => setTimeout(resolve, checkInterval));
+  }
+  return false;
+}
+
+/**
  * Register a new user
  * @param {string} email - User email
  * @param {string} password - User password
@@ -78,6 +96,12 @@ initializeAuthWhenReady();
  */
 async function registerUser(email, password, name, phone) {
   try {
+    // Wait for Firebase Auth to be ready
+    const authReady = await waitForAuthReady();
+    if (!authReady) {
+      throw new Error('Firebase Auth is not ready. Please refresh the page and try again.');
+    }
+    
     // Create user in Firebase Authentication
     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
     const user = userCredential.user;
@@ -123,6 +147,12 @@ async function registerUser(email, password, name, phone) {
  */
 async function loginUser(email, password) {
   try {
+    // Wait for Firebase Auth to be ready
+    const authReady = await waitForAuthReady();
+    if (!authReady) {
+      throw new Error('Firebase Auth is not ready. Please refresh the page and try again.');
+    }
+    
     const userCredential = await auth.signInWithEmailAndPassword(email, password);
     const user = userCredential.user;
     
