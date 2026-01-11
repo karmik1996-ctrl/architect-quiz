@@ -5,31 +5,65 @@
 // ============================================
 // Handles user registration, login, logout, and session management
 
-// Check if Firebase is loaded
-if (typeof firebase === 'undefined') {
-  console.error('Firebase SDK is not loaded. Make sure Firebase SDK is included in HTML before this script.');
-}
-
 // Initialize Firebase Authentication and Firestore
+// Wait for Firebase to be initialized
 let auth;
 let db;
 
-try {
-  // Firebase should already be initialized by firebase.config.js
-  // Just get the auth and firestore instances
-  if (typeof firebase !== 'undefined') {
-    // Initialize Authentication
-    auth = firebase.auth();
-    
-    // Initialize Firestore
-    db = firebase.firestore();
-    
-    console.log('✅ Firebase Auth and Firestore initialized successfully');
-  } else {
-    console.error('❌ Firebase SDK not loaded!');
+let authInitAttempts = 0;
+const MAX_AUTH_INIT_ATTEMPTS = 50; // 5 seconds max wait
+
+function initializeAuthWhenReady() {
+  authInitAttempts++;
+  
+  try {
+    // Check if Firebase is loaded and initialized
+    if (typeof firebase !== 'undefined' && 
+        typeof firebase.apps !== 'undefined' && 
+        firebase.apps && 
+        firebase.apps.length > 0 &&
+        typeof firebase.auth === 'function' &&
+        typeof firebase.firestore === 'function') {
+      // Initialize Authentication
+      auth = firebase.auth();
+      
+      // Initialize Firestore
+      db = firebase.firestore();
+      
+      console.log('✅ Firebase Auth and Firestore initialized successfully');
+      
+      // Trigger custom event for other scripts
+      if (typeof window !== 'undefined') {
+        window.firebaseAuthReady = true;
+        window.dispatchEvent(new Event('firebaseAuthReady'));
+      }
+    } else if (authInitAttempts < MAX_AUTH_INIT_ATTEMPTS) {
+      // Wait for Firebase to initialize
+      if (typeof window !== 'undefined' && window.firebaseInitialized) {
+        // Firebase initialized, but auth might not be ready yet
+        setTimeout(initializeAuthWhenReady, 100);
+      } else if (typeof window !== 'undefined') {
+        // Wait for Firebase initialization event
+        window.addEventListener('firebaseInitialized', function() {
+          setTimeout(initializeAuthWhenReady, 100);
+        }, { once: true });
+      } else {
+        // Retry after a short delay
+        setTimeout(initializeAuthWhenReady, 100);
+      }
+    } else {
+      console.error('❌ Firebase Auth/Firestore failed to initialize after', MAX_AUTH_INIT_ATTEMPTS, 'attempts');
+    }
+  } catch (error) {
+    console.error('❌ Firebase Auth/Firestore initialization error:', error);
   }
-} catch (error) {
-  console.error('❌ Firebase Auth/Firestore initialization error:', error);
+}
+
+// Start initialization
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeAuthWhenReady);
+} else {
+  initializeAuthWhenReady();
 }
 
 // ============================================

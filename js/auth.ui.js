@@ -285,23 +285,32 @@ function initializeAuthUI() {
         setTimeout(checkAuthState, 1000); // Wait for Firebase to load
     }
     
-    // Listen for auth state changes
-    if (typeof onAuthStateChanged === 'function') {
-        onAuthStateChanged((user) => {
-            if (user) {
-                getCurrentUser().then((userData) => {
-                    if (userData) {
-                        showUserInfo(userData);
-                    }
-                }).catch((error) => {
-                    console.error('Error getting user data:', error);
-                });
-            } else {
-                hideUserInfo();
-                showRegisterForm();
+    // Listen for auth state changes (wait for Firebase Auth to be ready)
+    function setupAuthStateListener() {
+        if (typeof onAuthStateChanged === 'function') {
+            onAuthStateChanged((user) => {
+                if (user) {
+                    getCurrentUser().then((userData) => {
+                        if (userData) {
+                            showUserInfo(userData);
+                        }
+                    }).catch((error) => {
+                        console.error('Error getting user data:', error);
+                    });
+                } else {
+                    hideUserInfo();
+                    showRegisterForm();
+                }
+            });
+        } else {
+            // Wait for Firebase Auth to be ready
+            if (typeof window !== 'undefined') {
+                window.addEventListener('firebaseAuthReady', setupAuthStateListener, { once: true });
             }
-        });
+        }
     }
+    
+    setupAuthStateListener();
 }
 
 // ============================================

@@ -12,20 +12,49 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase (compat version - using firebase.initializeApp)
-if (typeof firebase !== 'undefined') {
-    try {
-        // Check if Firebase is already initialized
-        if (!firebase.apps || firebase.apps.length === 0) {
-            firebase.initializeApp(firebaseConfig);
-            console.log("✅ Firebase initialized successfully");
-        } else {
-            console.log("✅ Firebase already initialized");
+// Wait for Firebase SDK to load with retry mechanism
+let firebaseInitAttempts = 0;
+const MAX_INIT_ATTEMPTS = 50; // 5 seconds max wait
+
+function initializeFirebaseWhenReady() {
+    firebaseInitAttempts++;
+    
+    if (typeof firebase !== 'undefined' && typeof firebase.initializeApp === 'function') {
+        try {
+            // Check if Firebase is already initialized
+            if (!firebase.apps || firebase.apps.length === 0) {
+                firebase.initializeApp(firebaseConfig);
+                console.log("✅ Firebase initialized successfully");
+                // Trigger custom event for other scripts
+                if (typeof window !== 'undefined') {
+                    window.firebaseInitialized = true;
+                    window.dispatchEvent(new Event('firebaseInitialized'));
+                }
+            } else {
+                console.log("✅ Firebase already initialized");
+                if (typeof window !== 'undefined') {
+                    window.firebaseInitialized = true;
+                    window.dispatchEvent(new Event('firebaseInitialized'));
+                }
+            }
+        } catch (error) {
+            console.error("❌ Firebase initialization error:", error);
         }
-    } catch (error) {
-        console.error("❌ Firebase initialization error:", error);
+    } else if (firebaseInitAttempts < MAX_INIT_ATTEMPTS) {
+        // Retry after a short delay
+        setTimeout(initializeFirebaseWhenReady, 100);
+    } else {
+        console.error("❌ Firebase SDK failed to load after", MAX_INIT_ATTEMPTS, "attempts");
     }
+}
+
+// Start initialization when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(initializeFirebaseWhenReady, 100);
+    });
 } else {
-    console.error("❌ Firebase SDK not loaded! Make sure Firebase SDK scripts are included before this script.");
+    setTimeout(initializeFirebaseWhenReady, 100);
 }
 
 // Expose firebaseConfig to the window for other modules
