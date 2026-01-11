@@ -61,41 +61,19 @@ function initializeFirebaseWhenReady() {
 }
 
 // Start initialization - wait for Firebase SDK to be available
-// Try multiple strategies: script onload event, immediate check, DOMContentLoaded, and window.onload
-(function initFirebase() {
-    // Strategy 1: Wait for Firebase SDK scripts onload event (if available)
-    if (typeof window !== 'undefined') {
-        if (window.firebaseSDKScriptsReady) {
-            // Scripts already loaded
-            setTimeout(initializeFirebaseWhenReady, 50);
-        } else {
-            // Wait for script onload event
-            window.addEventListener('firebaseSDKScriptsReady', function() {
-                setTimeout(initializeFirebaseWhenReady, 50);
-            }, { once: true });
-        }
-    }
-    
-    // Strategy 2: If DOM is already loaded, start immediately
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+// Use window.onload to ensure all scripts are loaded
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    // DOM is already loaded, start checking
+    setTimeout(initializeFirebaseWhenReady, 100);
+} else {
+    // Wait for window load event
+    window.addEventListener('load', function() {
         setTimeout(initializeFirebaseWhenReady, 100);
-    } else {
-        // Strategy 3: Wait for DOMContentLoaded
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(initializeFirebaseWhenReady, 100);
-            });
-        }
-        
-        // Strategy 4: Also wait for window.onload as fallback
-        window.addEventListener('load', function() {
-            setTimeout(initializeFirebaseWhenReady, 100);
-        }, { once: true });
-    }
+    }, { once: true });
     
-    // Strategy 5: Immediate check as fallback (for already loaded scripts)
-    setTimeout(initializeFirebaseWhenReady, 200);
-})();
+    // Also try immediate check as fallback
+    setTimeout(initializeFirebaseWhenReady, 100);
+}
 
 // Expose firebaseConfig to the window for other modules
 if (typeof window !== 'undefined') {
