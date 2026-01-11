@@ -515,21 +515,43 @@
         window.showLoginForm = function() { return false; };
     </script>
         <!-- Firebase SDK - Load first (compat version for script tags) -->
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app-compat.js" onload="window.firebaseAppLoaded = true;"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth-compat.js" onload="window.firebaseAuthLoaded = true;"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore-compat.js" onload="window.firebaseFirestoreLoaded = true; loadFirebaseModules();"></script>
         
-        <!-- Firebase Config (after SDK) -->
-        <script src="js/firebase.config.js" charset="UTF-8"></script>
-        
-        <!-- Firebase Auth (after config) -->
-        <script src="js/firebase.auth.js" charset="UTF-8"></script>
-        
-        <!-- Auth UI (after Firebase Auth) -->
-        <script src="js/auth.ui.js" charset="UTF-8"></script>
-        
-        <!-- Access Control (after Auth UI) -->
-        <script src="js/quiz.access.js" charset="UTF-8"></script>
+        <!-- Firebase Config (after SDK) - loaded when Firebase SDK is ready -->
+        <script>
+            function loadFirebaseModules() {
+                if (typeof firebase !== 'undefined' && window.firebaseAppLoaded && window.firebaseAuthLoaded && window.firebaseFirestoreLoaded) {
+                    // Load our Firebase modules
+                    const configScript = document.createElement('script');
+                    configScript.src = 'js/firebase.config.js';
+                    configScript.charset = 'UTF-8';
+                    configScript.onload = function() {
+                        const authScript = document.createElement('script');
+                        authScript.src = 'js/firebase.auth.js';
+                        authScript.charset = 'UTF-8';
+                        authScript.onload = function() {
+                            const authUIScript = document.createElement('script');
+                            authUIScript.src = 'js/auth.ui.js';
+                            authUIScript.charset = 'UTF-8';
+                            authUIScript.onload = function() {
+                                const accessScript = document.createElement('script');
+                                accessScript.src = 'js/quiz.access.js';
+                                accessScript.charset = 'UTF-8';
+                                document.head.appendChild(accessScript);
+                            };
+                            document.head.appendChild(authUIScript);
+                        };
+                        document.head.appendChild(authScript);
+                    };
+                    document.head.appendChild(configScript);
+                } else {
+                    // Retry after a short delay
+                    setTimeout(loadFirebaseModules, 100);
+                }
+            }
+        </script>
         
         <!-- Modular JavaScript files - load in dependency order -->
         <script src="js/quiz.data.js" charset="UTF-8"></script>
