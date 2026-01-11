@@ -1,0 +1,26 @@
+Vim Editor - Ինչպես Exit անել
+
+ՊՐՈԲԼԵՄ:
+Git merge commit message-ի համար Vim editor է բացվել
+Editor-ը INSERT mode-ում է (-- INSERT --)
+
+ԼՈՒԾՈՒՄ 1: Save and Exit (Ամենահեշտ)
+1. Esc սեղմել (INSERT mode-ից դուրս գալու համար)
+2. :wq գրել
+3. Enter սեղմել
+
+ԼՈՒԾՈՒՄ 2: Exit without saving (Եթե message-ը չեք փոխել)
+1. Esc սեղմել
+2. :q գրել
+3. Enter սեղմել
+
+ԿԱՐԵՎՈՐ:
+- Default merge message-ը լավ է, կարող եք exit անել առանց փոփոխության
+- :wq = write (save) + quit (exit)
+- :q = quit (exit, եթե փոփոխություն չկա)
+
+ՀԵՏՈՉԱՆՑՈՒՄ:
+Esc սեղմեք → :wq գրեք → Enter սեղմեք
+
+Merge-ը կավարտվի և push-ը կշարունակվի:
+

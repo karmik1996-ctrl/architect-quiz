@@ -1,0 +1,27 @@
+Vim Editor - Exit Alternatives
+
+Եթե :wq չի աշխատում, փորձեք այլ options:
+
+Option 1: :x (save and exit)
+1. Esc սեղմեք
+2. :x գրեք
+3. Enter սեղմեք
+
+Option 2: ZZ (Shift+Z, Shift+Z)
+1. Esc սեղմեք
+2. ZZ սեղմեք (Shift+Z, Shift+Z)
+
+Option 3: Force quit (:qa!)
+1. Esc սեղմեք
+2. :qa! գրեք
+3. Enter սեղմեք
+(Սա discard կանի merge-ը, բայց exit կանի)
+
+Option 4: Եթե Notepad է բացված:
+- Notepad window-ը փակեք (X button)
+- Merge-ը կավարտվի
+
+Option 5: Եթե բոլոր options-ները չեն աշխատում:
+- Ctrl+C սեղմեք (cancel merge)
+- Command Prompt-ում նորից գործարկեք PULL-MERGE-PUSH.bat
+
