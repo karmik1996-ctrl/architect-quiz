@@ -503,34 +503,9 @@
         window.showLoginForm = function() { return false; };
     </script>
         <!-- Firebase SDK - Load first (compat version for script tags) -->
-        <script>
-            // Track Firebase SDK loading
-            window.firebaseSDKLoaded = {
-                app: false,
-                auth: false,
-                firestore: false
-            };
-            
-            function checkFirebaseSDKReady() {
-                if (window.firebaseSDKLoaded.app && 
-                    window.firebaseSDKLoaded.auth && 
-                    window.firebaseSDKLoaded.firestore) {
-                    if (typeof window !== 'undefined') {
-                        window.firebaseSDKScriptsReady = true;
-                        window.dispatchEvent(new Event('firebaseSDKScriptsReady'));
-                    }
-                }
-            }
-        </script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app-compat.js" 
-                onload="window.firebaseSDKLoaded.app = true; checkFirebaseSDKReady();"
-                onerror="console.error('Failed to load firebase-app-compat.js');"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth-compat.js"
-                onload="window.firebaseSDKLoaded.auth = true; checkFirebaseSDKReady();"
-                onerror="console.error('Failed to load firebase-auth-compat.js');"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore-compat.js"
-                onload="window.firebaseSDKLoaded.firestore = true; checkFirebaseSDKReady();"
-                onerror="console.error('Failed to load firebase-firestore-compat.js');"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore-compat.js"></script>
         
         <!-- Firebase Config and Auth Modules - Load after SDK (scripts execute in order, modules have retry mechanisms) -->
         <script src="js/firebase.config.js" charset="UTF-8"></script>
