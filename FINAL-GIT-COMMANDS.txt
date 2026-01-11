@@ -1,0 +1,13 @@
+cd D:\Programs\CursorTest\netlify-deploy
+git config --global user.email "karmik1996-ctrl@example.com"
+git config --global user.name "karmik1996-ctrl"
+git init
+git add js/
+git commit -m "Add js folder"
+git remote remove origin
+git remote add origin https://github.com/karmik1996-ctrl/architect-quiz.git
+git branch -M main
+git push -u origin main
+
+Password: Personal Access Token (ոչ GitHub password!)
+

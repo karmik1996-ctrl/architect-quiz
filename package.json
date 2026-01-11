@@ -1,0 +1,19 @@
+{
+  "name": "quiz-site",
+  "version": "1.0.0",
+  "description": "Architect licensing quiz site with production-level security",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'No build needed'",
+    "deploy": "netlify deploy --prod"
+  },
+  "keywords": [
+    "quiz",
+    "netlify",
+    "security"
+  ],
+  "author": "",
+  "license": "ISC"
+}
+
+

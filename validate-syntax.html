@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <title>JavaScript Syntax Validator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 JavaScript Syntax Validator</h1>
+    <p>Ստուգում է script.js ֆայլի syntax-ը</p>
+    
+    <button onclick="validateScript()">Ստուգել script.js</button>
+    
+    <div id="results"></div>
+
+    <script>
+        async function validateScript() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<div class="info">⏳ Ստուգում է script.js ֆայլը...</div>';
+            
+            try {
+                // Load script.js
+                const response = await fetch('./script.js');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const scriptContent = await response.text();
+                const lines = scriptContent.split('\n');
+                
+                let report = '<h2>📊 Ստուգման Արդյունքներ</h2>';
+                
+                // 1. File size check
+                report += `<div class="info"><strong>1. Ֆայլի Չափ:</strong> ${scriptContent.length} bytes, ${lines.length} lines</div>`;
+                
+                // 2. Check brackets
+                const openBraces = (scriptContent.match(/{/g) || []).length;
+                const closeBraces = (scriptContent.match(/}/g) || []).length;
+                const openParens = (scriptContent.match(/\(/g) || []).length;
+                const closeParens = (scriptContent.match(/\)/g) || []).length;
+                const openBrackets = (scriptContent.match(/\[/g) || []).length;
+                const closeBrackets = (scriptContent.match(/\]/g) || []).length;
+                
+                report += `<div class="${openBraces === closeBraces ? 'success' : 'error'}">
+                    <strong>2. Braces:</strong> ${openBraces} open, ${closeBraces} close ${openBraces === closeBraces ? '✅' : '❌'}
+                </div>`;
+                
+                report += `<div class="${openParens === closeParens ? 'success' : 'error'}">
+                    <strong>3. Parentheses:</strong> ${openParens} open, ${closeParens} close ${openParens === closeParens ? '✅' : '❌'}
+                </div>`;
+                
+                report += `<div class="${openBrackets === closeBrackets ? 'success' : 'error'}">
+                    <strong>4. Brackets:</strong> ${openBrackets} open, ${closeBrackets} close ${openBrackets === closeBrackets ? '✅' : '❌'}
+                </div>`;
+                
+                // 3. Check last lines
+                const lastLines = lines.slice(-5);
+                report += `<div class="info">
+                    <strong>5. Վերջին 5 Lines:</strong>
+                    <pre>${lastLines.map((line, i) => `${lines.length - 5 + i + 1}: ${line}`).join('\n')}</pre>
+                </div>`;
+                
+                // 4. Try to parse as JavaScript
+                try {
+                    // Create a new script element to test parsing
+                    const script = document.createElement('script');
+                    script.textContent = scriptContent;
+                    document.body.appendChild(script);
+                    document.body.removeChild(script);
+                    
+                    report += `<div class="success">
+                        <strong>6. JavaScript Parser:</strong> ✅ Syntax is valid! No parsing errors found.
+                    </div>`;
+                } catch (e) {
+                    report += `<div class="error">
+                        <strong>6. JavaScript Parser:</strong> ❌ Error: ${e.message}
+                        <pre>${e.stack}</pre>
+                    </div>`;
+                }
+                
+                // 5. Check for common issues
+                const issues = [];
+                
+                // Check for unclosed template literals
+                let inTemplate = false;
+                let templateStart = 0;
+                for (let i = 0; i < scriptContent.length; i++) {
+                    if (scriptContent[i] === '`' && (i === 0 || scriptContent[i-1] !== '\\')) {
+                        if (!inTemplate) {
+                            inTemplate = true;
+                            templateStart = i;
+                        } else {
+                            inTemplate = false;
+                        }
+                    }
+                }
+                if (inTemplate) {
+                    issues.push('Unclosed template literal detected');
+                }
+                
+                // Check for unclosed strings
+                let inString = false;
+                let stringChar = null;
+                for (let i = 0; i < scriptContent.length; i++) {
+                    if ((scriptContent[i] === '"' || scriptContent[i] === "'") && (i === 0 || scriptContent[i-1] !== '\\')) {
+                        if (!inString) {
+                            inString = true;
+                            stringChar = scriptContent[i];
+                        } else if (scriptContent[i] === stringChar) {
+                            inString = false;
+                            stringChar = null;
+                        }
+                    }
+                }
+                if (inString) {
+                    issues.push('Unclosed string literal detected');
+                }
+                
+                if (issues.length > 0) {
+                    report += `<div class="error">
+                        <strong>7. Issues Found:</strong>
+                        <ul>${issues.map(issue => `<li>${issue}</li>`).join('')}</ul>
+                    </div>`;
+                } else {
+                    report += `<div class="success">
+                        <strong>7. Issues:</strong> ✅ No common issues found
+                    </div>`;
+                }
+                
+                resultsDiv.innerHTML = report;
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">
+                    <strong>❌ Error:</strong> ${error.message}
+                    <pre>${error.stack}</pre>
+                </div>`;
+            }
+        }
+        
+        // Auto-validate on load
+        window.addEventListener('load', () => {
+            setTimeout(validateScript, 500);
+        });
+    </script>
+</body>
+</html>
+
+

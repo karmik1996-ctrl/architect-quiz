@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Ադմինիստրատորի Պանել - Վճարման Կոդի Ստեղծիչ</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Inter', 'Helvetica Neue', 'Arial', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+            color: #1a1a1a;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: #0a0a0a;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 60px 50px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .container {
+            background: #1a1a1a;
+            border-color: #2a2a2a;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            font-size: 1.5em;
+        }
+        
+        body.dark-mode h1 {
+            color: #e0e0e0;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        body.dark-mode .section {
+            background: #2a2a2a;
+            border-color: #3a3a3a;
+        }
+        
+        .section h2 {
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+        
+        body.dark-mode .section h2 {
+            color: #e0e0e0;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #1a1a1a;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            font-size: 0.9em;
+        }
+
+        body.dark-mode label {
+            color: #e0e0e0;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            background: transparent !important;
+            color: #1a1a1a;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            transition: border-color 0.2s;
+            font-family: 'Inter', 'Helvetica Neue', 'Arial', sans-serif;
+        }
+        
+        body.dark-mode input,
+        body.dark-mode select {
+            background: transparent !important;
+            border-color: #3a3a3a;
+            color: #e0e0e0;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #1a1a1a;
+        }
+
+        body.dark-mode input:focus,
+        body.dark-mode select:focus {
+            border-color: #e0e0e0;
+        }
+        
+        button {
+            background: #ffffff;
+            color: #1a1a1a;
+            border: 1px solid #1a1a1a;
+            padding: 16px 48px;
+            font-size: 0.85em;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            border-radius: 12px;
+            width: 100%;
+            margin-top: 10px;
+            font-family: 'Inter', 'Helvetica Neue', 'Arial', sans-serif;
+        }
+        
+        body.dark-mode button {
+            background: #1a1a1a;
+            color: #e0e0e0;
+            border-color: #e0e0e0;
+        }
+
+        button:hover {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        body.dark-mode button:hover {
+            background: #e0e0e0;
+            color: #1a1a1a;
+        }
+
+        button:active {
+            background: #0a0a0a;
+            color: #ffffff;
+        }
+        
+        body.dark-mode button:active {
+            background: #ffffff;
+            color: #1a1a1a;
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            border: 1px solid;
+        }
+        
+        .success {
+            background: #e8f5e9;
+            color: #1a1a1a;
+            border-color: #4caf50;
+        }
+        
+        body.dark-mode .success {
+            background: #1a3a1a;
+            color: #e0e0e0;
+            border-color: #4caf50;
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #1a1a1a;
+            border-color: #f44336;
+        }
+        
+        body.dark-mode .error {
+            background: #3a1a1a;
+            color: #e0e0e0;
+            border-color: #f44336;
+        }
+        
+        .info {
+            background: #f5f5f5;
+            color: #1a1a1a;
+            border-color: #e0e0e0;
+        }
+        
+        body.dark-mode .info {
+            background: #2a2a2a;
+            color: #e0e0e0;
+            border-color: #3a3a3a;
+        }
+        
+        .code-display {
+            background: #1a1a1a;
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            font-weight: 400;
+            text-align: center;
+            margin-top: 10px;
+            letter-spacing: 2px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        body.dark-mode .code-display {
+            background: #0a0a0a;
+            color: #0f0;
+            border-color: #2a2a2a;
+        }
+        
+        .test-section {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+        }
+        
+        body.dark-mode .test-section {
+            background: #2a2a2a;
+            border-color: #3a3a3a;
+        }
+        
+        .test-section h2 {
+            color: #1a1a1a;
+        }
+        
+        body.dark-mode .test-section h2 {
+            color: #e0e0e0;
+        }
+        
+        .test-section p {
+            color: #6a6a6a;
+        }
+        
+        body.dark-mode .test-section p {
+            color: #e0e0e0;
+        }
+        
+        .code-list {
+            margin-top: 15px;
+        }
+        
+        .code-item {
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .code-item code {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .code-item button {
+            width: auto;
+            padding: 5px 15px;
+            margin: 0;
+            font-size: 14px;
+        }
+        
+        .request-item {
+            transition: all 0.2s;
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        body.dark-mode .request-item {
+            background: #1a1a1a;
+            border-color: #3a3a3a;
+        }
+        
+        body.dark-mode .request-item h3 {
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .request-item code {
+            background: #2a2a2a;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .request-item strong {
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .request-item {
+            color: #e0e0e0;
+        }
+        
+        /* Light mode table background */
+        table {
+            background: #ffffff !important;
+        }
+        
+        body.dark-mode table {
+            background: #1a1a1a !important;
+            color: #e0e0e0 !important;
+        }
+        
+        body.dark-mode table thead tr {
+            background: #2a2a2a !important;
+            border-bottom-color: #3a3a3a !important;
+        }
+        
+        body.dark-mode table thead th {
+            color: #e0e0e0 !important;
+            border-right-color: #3a3a3a !important;
+        }
+        
+        body.dark-mode table tbody tr {
+            border-bottom-color: #3a3a3a !important;
+        }
+        
+        /* Light mode table rows */
+        table tbody tr:nth-child(even) {
+            background: #fafafa !important;
+        }
+        
+        table tbody tr:nth-child(odd) {
+            background: #ffffff !important;
+        }
+        
+        body.dark-mode table tbody tr:nth-child(even) {
+            background: #2a2a2a !important;
+        }
+        
+        body.dark-mode table tbody tr:nth-child(odd) {
+            background: #1a1a1a !important;
+        }
+        
+        body.dark-mode table td {
+            color: #e0e0e0 !important;
+            border-right-color: #3a3a3a !important;
+        }
+        
+        body.dark-mode table code {
+            background: #2a2a2a !important;
+            color: #e0e0e0 !important;
+        }
+        
+        body.dark-mode #generated-code-display {
+            background: transparent !important;
+            border: 1px solid #444;
+        }
+        
+        body.dark-mode #generated-code-text {
+            color: #e0e0e0;
+        }
+        
+        /* Payment date sections dark mode */
+        body.dark-mode .payment-date-section {
+            background: #2a2a2a !important;
+            border-color: #3a3a3a !important;
+        }
+        
+        body.dark-mode .payment-date-header {
+            background: #2a2a2a !important;
+            border-bottom-color: #3a3a3a !important;
+        }
+        
+        body.dark-mode .payment-date-header:hover {
+            background: #3a3a3a !important;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+    </style>
+    <script>
+        // TEMPORARILY DISABLED: F12 block removed for debugging
+        // Light protection - only disable right-click, don't block window resize (for AnyDesk compatibility)
+        (function(){'use strict';
+            // Disable right-click context menu
+            document.addEventListener('contextmenu',function(e){e.preventDefault();return false;});
+            
+            // TEMPORARILY DISABLED: F12 block removed for debugging
+            // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S
+            // document.addEventListener('keydown',function(e){
+            //     if(e.keyCode===123||(e.ctrlKey&&e.shiftKey&&(e.keyCode===73||e.keyCode===74))||(e.ctrlKey&&e.keyCode===85)||(e.ctrlKey&&e.keyCode===83)){
+            //         e.preventDefault();
+            //         e.stopPropagation();
+            //         return false;
+            //     }
+            // });
+            
+            // Disable text selection (soft - allow in inputs)
+            document.addEventListener('selectstart',function(e){
+                if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'&&!e.target.isContentEditable){
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // Disable drag (soft)
+            document.addEventListener('dragstart',function(e){
+                if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'){
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // Disable copy (soft - allow in inputs)
+            document.addEventListener('copy',function(e){
+                if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'&&!e.target.isContentEditable){
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // Disable cut (soft)
+            document.addEventListener('cut',function(e){
+                if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'&&!e.target.isContentEditable){
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // Disable paste (soft)
+            document.addEventListener('paste',function(e){
+                if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'&&!e.target.isContentEditable){
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        })();
+    </script>
+</head>
+<body>
+    <!-- Password Protection -->
+    <div id="password-protection" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0a0a0a; display: flex; align-items: center; justify-content: center; z-index: 999999;">
+        <div style="background: #1a1a1a; padding: 40px; border-radius: 16px; border: 1px solid #3a3a3a; max-width: 400px; width: 90%; text-align: center;">
+            <h2 style="color: #e0e0e0; margin-bottom: 20px; font-weight: 400;">🔐 Ադմինիստրատորի Պանել</h2>
+            <p style="color: #999; margin-bottom: 30px; font-size: 0.9em;">Խնդրում ենք մուտքագրել գաղտնաբառը</p>
+            <input type="password" id="admin-password" placeholder="Գաղտնաբառ" style="width: 100%; padding: 12px 16px; border: 1px solid #3a3a3a; background: #0a0a0a; color: #e0e0e0; border-radius: 8px; font-size: 1em; margin-bottom: 15px;" autocomplete="off">
+            <div id="password-error" style="color: #f44336; margin-bottom: 15px; font-size: 0.9em; display: none;">❌ Սխալ գաղտնաբառ</div>
+            <button id="password-submit" style="width: 100%; padding: 12px 24px; background: #ffffff; color: #1a1a1a; border: none; border-radius: 8px; font-size: 1em; cursor: pointer; font-weight: 400;">Մուտք</button>
+        </div>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <button id="dark-mode-toggle" class="dark-mode-toggle" title="Գիշերային/Ցերեկային ռեժիմ" style="display: none;">
+        <span class="dark-mode-icon sun">☀️</span>
+        <span class="toggle-slider"></span>
+        <span class="dark-mode-icon moon">🌙</span>
+    </button>
+    
+    <div class="container" style="display: none;">
+        <h1>🔐 Ադմինիստրատորի Պանել - Վճարման Կոդի Ստեղծիչ</h1>
+        
+        <!-- Test Payment Code Section -->
+        <div class="section test-section">
+            <h2>🧪 Փորձարկման Վճարման Կոդ</h2>
+            <p style="margin-bottom: 15px; color: #6a6a6a; font-size: 0.9em;">Ստեղծեք փորձարկման վճարման կոդ localStorage-ում և ստուգեք:</p>
+            
+            <div class="form-group">
+                <label for="test-code">Փորձարկման Կոդ:</label>
+                <input type="text" id="test-code" placeholder="Մուտքագրեք փորձարկման կոդ">
+        </div>
+            
+            <button onclick="createTestPaymentCode()" class="btn-primary">✅ Ստեղծել Փորձարկման Վճարման Կոդ</button>
+            <button onclick="verifyTestPaymentCode()" class="btn-secondary">🔍 Ստուգել Վճարման Կոդ</button>
+            <button onclick="clearPaymentCode()" class="btn-secondary">🗑️ Մաքրել Վճարման Կոդ</button>
+            
+            <div id="test-result"></div>
+    </div>
+
+        <!-- Payment Code Generator Section -->
+        <div class="section">
+            <h2>📝 Ստեղծել Վճարման Կոդ</h2>
+            
+            <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <button onclick="generatePaymentCode()" class="btn-primary">🎲 Ստեղծել Վճարման Կոդ</button>
+                <div id="generated-code-display" style="font-size: 1em; font-weight: bold; font-family: monospace; color: #007bff; padding: 8px 12px; background: transparent; border: 1px solid #e0e0e0; border-radius: 6px; min-width: 200px; text-align: center;">
+                    <span id="generated-code-text" style="color: #6a6a6a;">-</span>
+                </div>
+            </div>
+            
+            <div id="generate-result" style="margin-top: 15px;"></div>
+        </div>
+        
+        <!-- Payment Requests Section -->
+        <div class="section">
+            <h2>📋 Վճարման Հարցումներ</h2>
+            <p style="margin-bottom: 15px; color: #6a6a6a; font-size: 0.9em;">Այստեղ կարող եք տեսնել բոլոր վճարման հարցումները:</p>
+            <button onclick="togglePaymentRequestsSection()" class="btn-primary">🔄 Բեռնել Հարցումները</button>
+            <div id="requests-section" style="display: none; margin-top: 20px;">
+                <button onclick="clearAllRequests()" class="btn-secondary" style="margin-bottom: 15px;">🗑️ Մաքրել Բոլոր Հարցումները</button>
+                <div id="requests-result"></div>
+                <div id="requests-list" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+        
+        <!-- Payments Section -->
+        <div class="section">
+            <h2>✅ Վճարման Պատմություն (Բոլոր ստեղծված կոդերը)</h2>
+            <p style="margin-bottom: 15px; color: #6a6a6a; font-size: 0.9em;">Այստեղ կարող եք տեսնել բոլոր ստեղծված payment codes-ները և նրանց կարգավիճակը:</p>
+            <button onclick="togglePaymentsSection()" class="btn-primary">🔄 Բեռնել Վճարումները</button>
+            <div id="payments-section" style="display: none; margin-top: 20px;">
+                <button onclick="clearAllPayments()" class="btn-secondary" style="margin-bottom: 15px;">🗑️ Մաքրել Բոլոր Վճարումները</button>
+                <div id="payments-result"></div>
+                <div id="payments-list" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+        
+        <!-- Quiz Usage Statistics -->
+        <div class="section">
+            <h2>📊 Օգտագործման Վիճակագրություն</h2>
+            <p style="margin-bottom: 15px; color: #6a6a6a; font-size: 0.9em;">Տեսեք, թե որ payment code-ով քանի թեստ է օգտագործված:</p>
+            <div class="form-group">
+                <label for="usage-code-input">Payment Code:</label>
+                <input type="text" id="usage-code-input" placeholder="Մուտքագրեք payment code" onkeypress="if(event.key === 'Enter') checkQuizUsage();">
+            </div>
+            <button onclick="checkQuizUsage()" class="btn-primary">🔍 Ստուգել Օգտագործումը</button>
+            <div id="usage-result" style="margin-top: 20px;"></div>
+        </div>
+        
+        <!-- Test in Main App -->
+        <div class="section">
+            <h2>🚀 Փորձարկել Գլխավոր Ծրագրում</h2>
+            <p style="margin-bottom: 15px;">Բացեք գլխավոր ծրագիրը և փորձեք ստուգել ստեղծված կոդը:</p>
+            <button onclick="window.open('index.html', '_blank')" class="btn-primary">📱 Բացել Գլխավոր Ծրագիրը</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONTENT PROTECTION SYSTEM (Admin Panel)
+        // ============================================
+        
+        // 1. Dynamic Watermark System
+        function createAdminWatermark() {
+            // Remove existing watermark if any
+            const existing = document.getElementById('admin-watermark');
+            if (existing) existing.remove();
+            
+            // Get admin identifier
+            const adminId = 'ADMIN';
+            const sessionId = sessionStorage.getItem('adminSessionId') || Date.now().toString(36);
+            const timestamp = new Date().toISOString().split('T')[0];
+            
+            // Create watermark container
+            const watermark = document.createElement('div');
+            watermark.id = 'admin-watermark';
+            watermark.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: 999999;
+                overflow: hidden;
+                user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+            `;
+            
+            // Create repeated watermark pattern
+            const watermarkText = `${adminId} | ${sessionId} | ${timestamp}`;
+            
+            // Add multiple watermark layers
+            for (let layer = 0; layer < 3; layer++) {
+                const layerDiv = document.createElement('div');
+                layerDiv.style.cssText = `
+                    position: absolute;
+                    width: 200%;
+                    height: 200%;
+                    top: -50%;
+                    left: -50%;
+                    opacity: ${0.12 - layer * 0.02};
+                    pointer-events: none;
+                `;
+                
+                for (let i = 0; i < 100; i++) {
+                    const text = document.createElement('div');
+                    text.textContent = watermarkText;
+                    text.style.cssText = `
+                        position: absolute;
+                        top: ${(i % 20) * 5}%;
+                        left: ${(i % 10) * 10}%;
+                        transform: rotate(${i * 3.6 + layer * 45}deg);
+                        white-space: nowrap;
+                        font-family: Arial, sans-serif;
+                        font-size: 18px;
+                        font-weight: bold;
+                        color: #ff0000;
+                        pointer-events: none;
+                    `;
+                    layerDiv.appendChild(text);
+                }
+                watermark.appendChild(layerDiv);
+            }
+            
+            document.body.appendChild(watermark);
+            return watermark;
+        }
+        
+        // 2. Blur Content on Focus Loss
+        function setupAdminBlurProtection() {
+            // Blur on window blur
+            window.addEventListener('blur', () => {
+                document.body.style.filter = 'blur(20px)';
+                document.body.style.transition = 'filter 0.3s ease';
+            });
+            
+            // Remove blur on focus
+            window.addEventListener('focus', () => {
+                document.body.style.filter = 'none';
+            });
+            
+            // Blur on visibility change (tab switch, minimize, etc.)
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    document.body.style.filter = 'blur(20px)';
+                } else {
+                    document.body.style.filter = 'none';
+                }
+            });
+            
+            // Blur on page unload attempt
+            window.addEventListener('beforeunload', () => {
+                document.body.style.filter = 'blur(20px)';
+            });
+        }
+        
+        // Initialize admin content protection
+        function initializeAdminContentProtection() {
+            const isAuthenticated = sessionStorage.getItem('adminAuthenticated') === 'true';
+            if (isAuthenticated) {
+                // Create session ID if not exists
+                if (!sessionStorage.getItem('adminSessionId')) {
+                    sessionStorage.setItem('adminSessionId', Date.now().toString(36) + Math.random().toString(36).substr(2, 9));
+                }
+                
+                // Create watermark
+                createAdminWatermark();
+                
+                // Setup blur protection
+                setupAdminBlurProtection();
+            }
+        }
+        
+        // Password Protection
+        const ADMIN_PASSWORD = 'karmik1996';
+        const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+        const MAX_LOGIN_ATTEMPTS = 5;
+        const LOCKOUT_TIME = 15 * 60 * 1000; // 15 minutes lockout
+        
+        const passwordProtection = document.getElementById('password-protection');
+        const adminPasswordInput = document.getElementById('admin-password');
+        const passwordSubmit = document.getElementById('password-submit');
+        const passwordError = document.getElementById('password-error');
+        const container = document.querySelector('.container');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        
+        // Simple hash function (for client-side obfuscation)
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return Math.abs(hash).toString(16);
+        }
+        
+        // Check login attempts
+        function getLoginAttempts() {
+            const attempts = sessionStorage.getItem('adminLoginAttempts');
+            return attempts ? parseInt(attempts, 10) : 0;
+        }
+        
+        function incrementLoginAttempts() {
+            const attempts = getLoginAttempts() + 1;
+            sessionStorage.setItem('adminLoginAttempts', attempts.toString());
+            sessionStorage.setItem('adminLoginAttemptsTime', Date.now().toString());
+            return attempts;
+        }
+        
+        function resetLoginAttempts() {
+            sessionStorage.removeItem('adminLoginAttempts');
+            sessionStorage.removeItem('adminLoginAttemptsTime');
+        }
+        
+        function isLockedOut() {
+            const lockoutTime = sessionStorage.getItem('adminLoginAttemptsTime');
+            if (!lockoutTime) return false;
+            const timeSinceLockout = Date.now() - parseInt(lockoutTime, 10);
+            return timeSinceLockout < LOCKOUT_TIME && getLoginAttempts() >= MAX_LOGIN_ATTEMPTS;
+        }
+        
+        // Check if already authenticated and session not expired
+        async function checkAuthentication() {
+            // First check server-side authentication via Netlify Function
+            try {
+                const response = await fetch('/.netlify/functions/verify-auth', {
+                    method: 'GET',
+                    credentials: 'include' // Include cookies
+                });
+                
+                const data = await response.json();
+                
+                if (data.authenticated && data.role === 'admin') {
+                    // Server confirms authentication
+                    sessionStorage.setItem('adminAuthenticated', 'true');
+                    sessionStorage.setItem('adminAuthTime', Date.now().toString());
+                    passwordProtection.style.display = 'none';
+                    container.style.display = 'block';
+                    if (darkModeToggle) darkModeToggle.style.display = 'flex';
+                    
+                    // Initialize content protection
+                    initializeAdminContentProtection();
+                    return true;
+                } else {
+                    // Not authenticated on server
+                    sessionStorage.removeItem('adminAuthenticated');
+                    sessionStorage.removeItem('adminAuthTime');
+                    return false;
+                }
+            } catch (error) {
+                // Fallback to client-side check if server unavailable
+                const authTime = sessionStorage.getItem('adminAuthTime');
+                const isAuthenticated = sessionStorage.getItem('adminAuthenticated') === 'true';
+                
+                if (isAuthenticated && authTime) {
+                    const timeSinceAuth = Date.now() - parseInt(authTime, 10);
+                    if (timeSinceAuth < SESSION_TIMEOUT) {
+                        passwordProtection.style.display = 'none';
+                        container.style.display = 'block';
+                        if (darkModeToggle) darkModeToggle.style.display = 'flex';
+                        return true;
+                    } else {
+                        sessionStorage.removeItem('adminAuthenticated');
+                        sessionStorage.removeItem('adminAuthTime');
+                    }
+                }
+                return false;
+            }
+        }
+        
+        // Check authentication (async)
+        checkAuthentication().then(authenticated => {
+            if (!authenticated) {
+                // Not authenticated, show password protection
+                passwordProtection.style.display = 'flex';
+                container.style.display = 'none';
+                if (darkModeToggle) darkModeToggle.style.display = 'none';
+                
+                // Check if locked out
+                if (isLockedOut()) {
+                    const remainingTime = Math.ceil((LOCKOUT_TIME - (Date.now() - parseInt(sessionStorage.getItem('adminLoginAttemptsTime'), 10))) / 1000 / 60);
+                    passwordError.textContent = 'Շատ փորձեր: Խնդրում ենք սպասել ' + remainingTime + ' րոպե';
+                    passwordError.style.display = 'block';
+                    adminPasswordInput.disabled = true;
+                    passwordSubmit.disabled = true;
+                    setTimeout(() => {
+                        resetLoginAttempts();
+                        adminPasswordInput.disabled = false;
+                        passwordSubmit.disabled = false;
+                        passwordError.style.display = 'none';
+                    }, LOCKOUT_TIME);
+                }
+            
+            // Focus on password input
+            if (adminPasswordInput && !adminPasswordInput.disabled) {
+                setTimeout(() => adminPasswordInput.focus(), 100);
+            }
+            
+            // Submit on Enter key
+            if (adminPasswordInput) {
+                adminPasswordInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !adminPasswordInput.disabled) {
+                        checkPassword();
+                    }
+                });
+            }
+        });
+        
+        async function checkPassword() {
+            if (isLockedOut()) {
+                return;
+            }
+            
+            const enteredPassword = adminPasswordInput.value.trim();
+            
+            if (!enteredPassword) {
+                passwordError.textContent = 'Խնդրում ենք մուտքագրել գաղտնաբառ';
+                passwordError.style.display = 'block';
+                return;
+            }
+            
+            // Disable button during request
+            if (passwordSubmit) passwordSubmit.disabled = true;
+            
+            try {
+                // Call Netlify Function for server-side authentication
+                const response = await fetch('/.netlify/functions/admin-auth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include', // Include cookies
+                    body: JSON.stringify({ password: enteredPassword })
+                });
+                
+                const data = await response.json();
+                
+                if (data.authenticated) {
+                    // Correct password - cookie is set automatically (HttpOnly)
+                    sessionStorage.setItem('adminAuthenticated', 'true');
+                    sessionStorage.setItem('adminAuthTime', Date.now().toString());
+                    resetLoginAttempts();
+                    passwordProtection.style.display = 'none';
+                    container.style.display = 'block';
+                    if (darkModeToggle) darkModeToggle.style.display = 'flex';
+                } else {
+                    // Wrong password
+                    const attempts = incrementLoginAttempts();
+                    passwordError.textContent = 'Սխալ գաղտնաբառ (Մնացել է ' + (MAX_LOGIN_ATTEMPTS - attempts) + ' փորձ)';
+                    passwordError.style.display = 'block';
+                    adminPasswordInput.value = '';
+                    
+                    if (attempts >= MAX_LOGIN_ATTEMPTS) {
+                        // Lockout
+                        adminPasswordInput.disabled = true;
+                        passwordSubmit.disabled = true;
+                        passwordError.textContent = 'Շատ փորձեր: Խնդրում ենք սպասել 15 րոպե';
+                        setTimeout(() => {
+                            resetLoginAttempts();
+                            adminPasswordInput.disabled = false;
+                            passwordSubmit.disabled = false;
+                            passwordError.style.display = 'none';
+                        }, LOCKOUT_TIME);
+                    } else {
+                        adminPasswordInput.focus();
+                    }
+                    
+                    // Shake animation
+                    passwordProtection.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        passwordProtection.style.animation = '';
+                    }, 500);
+                }
+            } catch (error) {
+                passwordError.textContent = 'Սխալ: Սերվերի հետ կապ հաստատել չհաջողվեց';
+                passwordError.style.display = 'block';
+            } finally {
+                if (passwordSubmit) passwordSubmit.disabled = false;
+            }
+        }
+        
+        if (passwordSubmit) {
+            passwordSubmit.addEventListener('click', checkPassword);
+        }
+        
+        // Check session timeout periodically
+        setInterval(function() {
+            checkAuthentication().then(authenticated => {
+                if (!authenticated) {
+                    // Session expired, show password protection
+                    passwordProtection.style.display = 'flex';
+                    container.style.display = 'none';
+                    if (darkModeToggle) darkModeToggle.style.display = 'none';
+                }
+            });
+        }, 60000); // Check every minute
+        
+        // Dark Mode Toggle
+        // Load saved dark mode preference
+        const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (savedDarkMode) {
+            document.body.classList.add('dark-mode');
+        }
+        
+        // Toggle dark mode
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                document.body.classList.toggle('dark-mode');
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDarkMode);
+            });
+        }
+        
+        async function createTestPaymentCode() {
+            const code = document.getElementById('test-code').value.trim().toUpperCase();
+            
+            if (!code) {
+                showResult('test-result', 'Խնդրում ենք մուտքագրել փորձարկման կոդ', 'error');
+                return;
+            }
+            
+            // Add payment code to Google Sheets first
+            try {
+                const script = document.createElement('script');
+                script.src = PAYMENT_WEB_APP_URL + '?action=addPaymentWithCode&paymentCode=' + encodeURIComponent(code) + '&amount=15000&status=Paid&verified=Yes&name=Test&callback=handleAddPayment';
+                script.onerror = function() {
+                    // Continue anyway - save to localStorage
+                };
+                document.body.appendChild(script);
+            } catch (error) {
+                }
+            
+            // Create payment token and save to localStorage
+            const token = 'PAID_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('paymentToken', token);
+            localStorage.setItem('paymentTimestamp', new Date().getTime().toString());
+            localStorage.setItem('paymentCode', code);
+            localStorage.setItem('paymentIP', '127.0.0.1');
+            localStorage.setItem('paymentDevice', 'test-device-' + Date.now());
+            
+            // Reset quiz attempts
+            if (typeof resetQuizAttempts === 'function') {
+                resetQuizAttempts();
+            }
+            if (typeof resetQuizSetAttempts === 'function') {
+                resetQuizSetAttempts();
+            }
+            
+            showResult('test-result', `✅ Փորձարկման վճարման կոդ "${code}" հաջողությամբ ստեղծված է!`, 'success');
+        }
+        
+        // Global function for add payment JSONP callback
+        window.handleAddPayment = function(result) {
+            // Remove script tag
+            const scripts = document.querySelectorAll('script[src*="addPaymentWithCode"]');
+            scripts.forEach(script => {
+                if (script.parentNode) {
+                            script.parentNode.removeChild(script);
+                        }
+            });
+            
+            if (result && result.success) {
+                } else {
+                }
+        };
+        
+        function verifyTestPaymentCode() {
+            const code = document.getElementById('test-code').value.trim().toUpperCase();
+            const savedCode = localStorage.getItem('paymentCode');
+            const paymentToken = localStorage.getItem('paymentToken');
+            
+            if (!code) {
+                showResult('test-result', 'Խնդրում ենք մուտքագրել ստուգելու կոդ', 'error');
+                return;
+            }
+            
+            if (code === savedCode && paymentToken) {
+                showResult('test-result', `✅ Վճարման կոդ "${code}" ստուգված է և ակտիվ է!`, 'success');
+                } else {
+                showResult('test-result', `❌ Վճարման կոդ "${code}" ստուգված չէ կամ գոյություն չունի`, 'error');
+            }
+            
+        }
+        
+        function clearPaymentCode() {
+            localStorage.removeItem('paymentCode');
+            localStorage.removeItem('paymentToken');
+            localStorage.removeItem('paymentTimestamp');
+            localStorage.removeItem('paymentIP');
+            localStorage.removeItem('paymentDevice');
+            localStorage.removeItem('quizProgress');
+            
+            showResult('test-result', '✅ Բոլոր վճարման տվյալները մաքրված են!', 'success');
+        }
+        
+        function generatePaymentCode() {
+            // Generate random 12-character code (letters + numbers)
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            
+            // Generate exactly 12 random characters
+            for (let i = 0; i < 12; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            
+            // Display code immediately
+            const codeDisplay = document.getElementById('generated-code-text');
+            codeDisplay.textContent = code;
+            codeDisplay.style.color = '#007bff';
+            
+            // Add copy button next to code
+            const codeDisplayDiv = document.getElementById('generated-code-display');
+            if (!codeDisplayDiv.querySelector('button')) {
+                const copyBtn = document.createElement('button');
+                copyBtn.textContent = '📋';
+                copyBtn.className = 'btn-secondary';
+                copyBtn.style.cssText = 'margin-left: 10px; padding: 6px 10px; font-size: 0.8em; min-width: 32px; height: 28px; display: flex; align-items: center; justify-content: center;';
+                copyBtn.onclick = () => copyCodeToClipboard(code);
+                copyBtn.title = 'Պատճենել';
+                codeDisplayDiv.appendChild(copyBtn);
+            }
+            
+            // Add payment code to Google Sheets
+            const resultDiv = document.getElementById('generate-result');
+            resultDiv.innerHTML = '<div class="info">⏳ Ավելացվում է Google Sheets-ում...</div>';
+            
+            try {
+                const callbackName = 'handleAddPayment' + Date.now();
+                window[callbackName] = function(result) {
+                    // Remove script tag
+                    const scripts = document.querySelectorAll('script[src*="addPaymentWithCode"]');
+                    scripts.forEach(script => {
+                        if (script.parentNode) {
+                            script.parentNode.removeChild(script);
+                        }
+                    });
+                    
+                    // Clean up callback
+                    delete window[callbackName];
+                    
+                    if (result && result.success) {
+                        resultDiv.innerHTML = '<div class="success">✅ Կոդը հաջողությամբ ավելացված է Google Sheets-ում</div>';
+                    } else {
+                        resultDiv.innerHTML = `<div class="error">❌ Սխալ: ${result?.error || 'Անհայտ սխալ'}</div>`;
+                    }
+                };
+                
+                const script = document.createElement('script');
+                script.src = PAYMENT_WEB_APP_URL + '?action=addPaymentWithCode&paymentCode=' + encodeURIComponent(code) + '&amount=15000&status=Pending&verified=No&name=Generated&callback=' + callbackName;
+                script.onerror = function() {
+                    resultDiv.innerHTML = '<div class="error">❌ Սխալ: Հնարավոր չէ կապվել Google Sheets-ի հետ</div>';
+                    document.body.removeChild(script);
+                    delete window[callbackName];
+                };
+                document.body.appendChild(script);
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="error">❌ Սխալ: ' + error.toString() + '</div>';
+            }
+        }
+        
+        function showResult(elementId, message, type) {
+            const resultDiv = document.getElementById(elementId);
+            resultDiv.innerHTML = `<div class="${type}">${message}</div>`;
+            
+            // Clear result after 5 seconds
+            setTimeout(() => {
+                resultDiv.innerHTML = '';
+            }, 5000);
+        }
+        
+        function copyCodeToClipboard(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                // Show success message
+                const resultDiv = document.getElementById('generate-result');
+                const currentContent = resultDiv.innerHTML;
+                const successMsg = '<div class="success" style="margin-top: 10px;">✅ Կոդը պատճենված է!</div>';
+                resultDiv.innerHTML = currentContent + successMsg;
+                
+                // Remove success message after 2 seconds
+                setTimeout(() => {
+                    const successDiv = resultDiv.querySelector('.success:last-child');
+                    if (successDiv && successDiv.textContent.includes('պատճենված')) {
+                        successDiv.remove();
+                    }
+                }, 2000);
+            }).catch(err => {
+                alert('Սխալ: Հնարավոր չէ պատճենել կոդը');
+            });
+        }
+        
+        // Payment Requests Functions
+        const PAYMENT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwarQPmrBy3dLKYQJZuSU_7qVPgrdjZWUAet8qS_MXC3cA4kcQkpJlkcZIWwt84bDTajg/exec';
+        
+        function togglePaymentRequestsSection() {
+            const section = document.getElementById('requests-section');
+            if (section) {
+                if (section.style.display === 'none' || section.style.display === '') {
+                    section.style.display = 'block';
+                    loadPaymentRequests();
+                } else {
+                    section.style.display = 'none';
+                }
+            } else {
+                // If section doesn't exist yet, create it and load
+                loadPaymentRequests();
+            }
+        }
+        
+        function loadPaymentRequests() {
+            const resultDiv = document.getElementById('requests-result');
+            const listDiv = document.getElementById('requests-list');
+            
+            if (!resultDiv || !listDiv) {
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="info">🔄 Բեռնվում են հարցումները...</div>';
+            listDiv.innerHTML = '';
+            
+            // Use JSONP with script tag
+            const script = document.createElement('script');
+            script.src = PAYMENT_WEB_APP_URL + '?action=readPaymentRequests&callback=handlePaymentRequests';
+            script.onerror = function(error) {
+                resultDiv.innerHTML = '<div class="error">❌ Սխալ: Հնարավոր չէ կապվել Google Sheets-ի հետ</div>';
+                if (script.parentNode) {
+                    document.body.removeChild(script);
+                }
+            };
+            document.body.appendChild(script);
+            
+            // Set timeout
+            setTimeout(() => {
+                if (resultDiv.innerHTML.includes('🔄 Բեռնվում են')) {
+                    resultDiv.innerHTML = '<div class="error">❌ Request timeout. Ստուգեք Google Apps Script deployment-ը:</div>';
+                }
+            }, 30000);
+        }
+                    
+        function displayPaymentRequests(requests) {
+            const listDiv = document.getElementById('requests-list');
+                
+            if (!requests || requests.length === 0) {
+                listDiv.innerHTML = '<div class="info">Հարցումներ չկան</div>';
+                return;
+            }
+            
+            // Combine all requests and sort by date (newest first)
+            const allRequests = [...requests].sort((a, b) => {
+                const dateA = a.date ? new Date(a.date).getTime() : 0;
+                const dateB = b.date ? new Date(b.date).getTime() : 0;
+                return dateB - dateA;
+            });
+            
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const tableBg = isDarkMode ? '#1a1a1a' : '#ffffff';
+            const headerBg = isDarkMode ? '#2a2a2a' : '#f5f5f5';
+            const rowBgEven = isDarkMode ? '#2a2a2a' : '#fafafa';
+            const rowBgOdd = isDarkMode ? '#1a1a1a' : '#ffffff';
+            const textColor = isDarkMode ? '#e0e0e0' : '#1a1a1a';
+            const borderColor = isDarkMode ? '#3a3a3a' : '#e0e0e0';
+            const codeBg = isDarkMode ? '#2a2a2a' : '#f5f5f5';
+            const actualTableBg = isDarkMode ? '#1a1a1a' : '#ffffff';
+            
+            let html = '<div style="overflow-x: auto;">';
+            html += '<table style="width: 100%; border-collapse: collapse; background: ' + actualTableBg + '; border-radius: 8px; overflow: hidden;">';
+            html += '<thead>';
+            html += '<tr style="background: ' + headerBg + '; border-bottom: 2px solid ' + borderColor + ';">';
+            html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em; border-right: 1px solid ' + borderColor + ';">#</th>';
+            html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em; border-right: 1px solid ' + borderColor + ';">Անուն</th>';
+            html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em; border-right: 1px solid ' + borderColor + ';">Հեռախոս</th>';
+            html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em; border-right: 1px solid ' + borderColor + ';">Email</th>';
+            html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em; border-right: 1px solid ' + borderColor + ';">Վճարման Եղանակ</th>';
+            html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em; border-right: 1px solid ' + borderColor + ';">Վճարման Կոդ</th>';
+            html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em; border-right: 1px solid ' + borderColor + ';">Ամսաթիվ</th>';
+            html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em;">Կարգավիճակ</th>';
+            html += '</tr>';
+            html += '</thead>';
+            html += '<tbody>';
+            
+            allRequests.forEach((request, index) => {
+                let date = 'Անհայտ';
+                if (request.date) {
+                    const dateObj = new Date(request.date);
+                    const day = String(dateObj.getDate()).padStart(2, '0');
+                    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const year = dateObj.getFullYear();
+                    const hours = String(dateObj.getHours()).padStart(2, '0');
+                    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                    const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+                    date = day + '/' + month + '/' + year + ', ' + hours + ':' + minutes + ':' + seconds;
+                }
+                const status = (request.status || 'Pending').toLowerCase();
+                const isPending = status === 'pending';
+                const statusText = isPending ? 'Սպասում' : 'Վճարված';
+                const statusColor = isPending ? '#ff9800' : '#28a745';
+                const rowBg = index % 2 === 0 ? rowBgEven : rowBgOdd;
+                
+                html += '<tr style="background: ' + rowBg + '; border-bottom: 1px solid ' + borderColor + ';">';
+                html += '<td style="padding: 6px 8px; color: ' + textColor + '; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; font-weight: 500; text-align: right;">' + (index + 1) + '</td>';
+                html += '<td style="padding: 6px 8px; color: ' + textColor + '; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; text-align: right;">' + (request.name || 'Չկա') + '</td>';
+                html += '<td style="padding: 6px 8px; color: ' + textColor + '; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; text-align: right;">' + (request.phone || 'Չկա') + '</td>';
+                html += '<td style="padding: 6px 8px; color: ' + textColor + '; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; text-align: right;">' + (request.email || 'Չկա') + '</td>';
+                html += '<td style="padding: 6px 8px; color: ' + textColor + '; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; text-align: right;">' + (request.paymentMethod || 'Չկա') + '</td>';
+                
+                // Payment Code with Copy Button
+                if (request.paymentCode) {
+                    html += '<td style="padding: 6px 8px; color: ' + textColor + '; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; text-align: right;">';
+                    html += '<div style="display: flex; align-items: center; gap: 4px; justify-content: flex-end;">';
+                    html += '<code style="background: ' + codeBg + '; padding: 3px 6px; border-radius: 3px; font-family: monospace; color: ' + textColor + '; font-size: 0.85em; line-height: 1.2; display: inline-block;">' + request.paymentCode + '</code>';
+                    html += '<button onclick="copyToClipboard(\'' + request.paymentCode + '\', this)" style="background: #007bff; color: white; border: none; padding: 3px 6px; border-radius: 3px; cursor: pointer; font-size: 0.7em; display: flex; align-items: center; justify-content: center; width: 24px; height: 20px; flex-shrink: 0;" title="Պատճենել">📋</button>';
+                    html += '</div>';
+                    html += '</td>';
+                } else {
+                    html += '<td style="padding: 6px 8px; color: ' + (isDarkMode ? '#6a6a6a' : '#6a6a6a') + '; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; text-align: right;">Չկա</td>';
+                }
+                
+                html += '<td style="padding: 6px 8px; color: ' + textColor + '; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; text-align: right;">' + date + '</td>';
+                html += '<td style="padding: 6px 8px; color: ' + statusColor + ' !important; font-size: 0.75em; font-weight: 500; text-align: right;">' + statusText + '</td>';
+                html += '</tr>';
+            });
+            
+            html += '</tbody>';
+            html += '</table>';
+            html += '</div>';
+            
+            listDiv.innerHTML = html;
+        }
+        
+        // Copy to clipboard function
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(function() {
+                const originalText = button.innerHTML;
+                button.innerHTML = '✅';
+                button.style.background = '#28a745';
+                setTimeout(function() {
+                    button.innerHTML = originalText;
+                    button.style.background = '#007bff';
+                }, 2000);
+            }).catch(function(err) {
+                alert('Չհաջողվեց պատճենել');
+            });
+        }
+        
+        function clearAllRequests() {
+            if (!confirm('Դուք համոզված եք, որ ցանկանում եք մաքրել բոլոր հարցումները?')) {
+                return;
+            }
+            
+            // Open section if closed
+            const section = document.getElementById('requests-section');
+            if (section && section.style.display === 'none') {
+                section.style.display = 'block';
+            }
+            
+            const resultDiv = document.getElementById('requests-result');
+            resultDiv.innerHTML = '<div class="info">🔄 Մաքրվում են հարցումները...</div>';
+            
+            // Use JSONP with script tag
+            const script = document.createElement('script');
+            script.src = PAYMENT_WEB_APP_URL + '?action=clearAllPaymentRequests&callback=handleClearRequests';
+                    script.onerror = function() {
+                resultDiv.innerHTML = '<div class="error">❌ Սխալ: Հնարավոր չէ կապվել Google Sheets-ի հետ</div>';
+                            document.body.removeChild(script);
+            };
+            document.body.appendChild(script);
+        }
+        
+        // Global function for clear requests JSONP callback
+        window.handleClearRequests = function(result) {
+            const resultDiv = document.getElementById('requests-result');
+            
+            // Remove script tag
+            const scripts = document.querySelectorAll('script[src*="clearAllPaymentRequests"]');
+            scripts.forEach(script => {
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+            });
+            
+            if (result && result.success) {
+                resultDiv.innerHTML = '<div class="success">✅ Բոլոր հարցումները մաքրված են</div>';
+                document.getElementById('requests-list').innerHTML = '';
+                } else {
+                resultDiv.innerHTML = `<div class="error">❌ Սխալ: ${result?.error || 'Անհայտ սխալ'}</div>`;
+            }
+        };
+        
+        // Global function for JSONP callback
+        window.handlePaymentRequests = function(data) {
+            const resultDiv = document.getElementById('requests-result');
+            const listDiv = document.getElementById('requests-list');
+            
+            if (!resultDiv || !listDiv) {
+                return;
+            }
+            
+            // Remove script tag
+            const scripts = document.querySelectorAll('script[src*="readPaymentRequests"]');
+            scripts.forEach(script => {
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+            });
+            
+            // Handle both array and object responses
+            let requests = [];
+            if (Array.isArray(data)) {
+                requests = data;
+            } else if (data && data.requests && Array.isArray(data.requests)) {
+                requests = data.requests;
+            } else if (data && data.success && data.requests && Array.isArray(data.requests)) {
+                requests = data.requests;
+            } else if (data && data.error) {
+                resultDiv.innerHTML = '<div class="error">❌ Սխալ: ' + data.error + '</div>';
+                return;
+            }
+            
+            if (requests.length > 0) {
+                displayPaymentRequests(requests);
+                resultDiv.innerHTML = '<div class="success">✅ Գտնվել է ' + requests.length + ' հարցում</div>';
+            } else {
+                listDiv.innerHTML = '<div class="info">Հարցումներ չկան</div>';
+                resultDiv.innerHTML = '<div class="info">ℹ️ Հարցումներ չկան</div>';
+            }
+        };
+        
+        // Quiz Usage Statistics
+        function checkQuizUsage() {
+            const codeInput = document.getElementById('usage-code-input');
+            const resultDiv = document.getElementById('usage-result');
+            
+            if (!codeInput || !resultDiv) {
+                return;
+            }
+            
+            const code = codeInput.value.trim().toUpperCase();
+            
+            if (!code) {
+                resultDiv.innerHTML = '<div class="error">Խնդրում ենք մուտքագրել payment code</div>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="info">⏳ Ստուգվում է Google Sheets-ից...</div>';
+            
+            // Get quiz usage from Google Apps Script using JSONP
+            const callbackName = 'handleGetQuizUsage' + Date.now();
+            
+            window[callbackName] = function(result) {
+                // Clean up
+                const scripts = document.querySelectorAll('script[src*="getQuizUsage"]');
+                scripts.forEach(script => {
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                });
+                delete window[callbackName];
+                
+                if (!resultDiv) {
+                    return;
+                }
+                
+                if (result && result.success && result.quizUsage) {
+                    displayQuizUsage(code, result.quizUsage);
+                } else {
+                    const errorMsg = result?.error || 'Չհաջողվեց ստանալ տվյալները';
+                    resultDiv.innerHTML = '<div class="error">❌ Սխալ: ' + errorMsg + '</div>';
+                }
+            };
+            
+            // Build JSONP URL
+            const url = PAYMENT_WEB_APP_URL + '?action=getQuizUsage&paymentCode=' + encodeURIComponent(code) + '&callback=' + callbackName;
+            
+            // Create and append script tag
+            const script = document.createElement('script');
+            script.src = url;
+            script.onerror = function(error) {
+                if (resultDiv) {
+                    resultDiv.innerHTML = '<div class="error">❌ Script load error. Ստուգեք Google Apps Script deployment-ը:</div>';
+                }
+                if (window[callbackName]) {
+                    delete window[callbackName];
+                }
+                if (script.parentNode) {
+                    document.body.removeChild(script);
+                }
+            };
+            document.body.appendChild(script);
+            
+            // Set timeout
+            setTimeout(() => {
+                if (window[callbackName]) {
+                    if (resultDiv && resultDiv.innerHTML.includes('⏳ Ստուգվում է')) {
+                        resultDiv.innerHTML = '<div class="error">❌ Request timeout. Ստուգեք Google Apps Script deployment-ը:</div>';
+                    }
+                    delete window[callbackName];
+                }
+            }, 30000);
+        }
+        
+        function displayQuizUsage(code, quizUsage) {
+            const resultDiv = document.getElementById('usage-result');
+            
+            // Check dark mode
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const detailSectionBg = isDarkMode ? 'transparent' : '#f5f5f5';
+            const detailTextColor = isDarkMode ? '#e0e0e0' : '#1a1a1a';
+            
+            // Calculate statistics
+            let totalUsed = 0;
+            let usedTests = [];
+            let exhaustedTests = [];
+            
+            // Check all 18 quiz sets
+            for (let i = 1; i <= 18; i++) {
+                const quizSet = quizUsage[i.toString()] || quizUsage[i];
+                if (quizSet && (quizSet.attempts > 0 || (quizSet.questionsUsed && quizSet.questionsUsed > 0))) {
+                    totalUsed += quizSet.attempts || 0;
+                    usedTests.push({ 
+                        test: i, 
+                        attempts: quizSet.attempts || 0, 
+                        questionsUsed: quizSet.questionsUsed || 0,
+                        completed: quizSet.completed || false 
+                    });
+                    if (quizSet.attempts >= 3) {
+                        exhaustedTests.push(i);
+                    }
+                }
+            }
+            
+            // Build display HTML
+            let html = '<div class="info">';
+            html += `<p><strong>Payment Code:</strong> <code>${code}</code></p>`;
+            html += `<p><strong>Ընդամենը օգտագործված:</strong> ${totalUsed} / 54 անգամ</p>`;
+            html += `<p><strong>Օգտագործված թեստեր:</strong> ${usedTests.length} / 18 թեստ</p>`;
+            
+            if (exhaustedTests.length > 0) {
+                html += `<p><strong>Սպառված թեստեր:</strong> ${exhaustedTests.join(', ')}</p>`;
+            }
+            
+            html += '</div>';
+            
+            // Show detailed breakdown
+            if (usedTests.length > 0) {
+                html += `<div style="margin-top: 15px; padding: 15px; background: ${detailSectionBg}; border-radius: 12px;">`;
+                html += `<h3 style="margin-top: 0; font-size: 1em; font-weight: 400; color: ${detailTextColor};">Մանրամասն:</h3>`;
+                html += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px;">';
+                
+                usedTests.forEach(({ test, attempts, questionsUsed }) => {
+                    const isExhausted = attempts >= 3;
+                    const bgColor = isExhausted ? '#ffebee' : '#e8f5e9';
+                    const textColor = isExhausted ? '#dc3545' : '#1a1a1a';
+                    html += `<div style="background: ${bgColor}; padding: 10px; border-radius: 8px; text-align: center;">`;
+                    html += `<div style="font-weight: 500; color: ${textColor}; margin-bottom: 5px;">Թեստ ${test}</div>`;
+                    if (questionsUsed > 0) {
+                        html += `<div style="font-size: 0.9em; color: ${textColor}; margin-bottom: 3px;">${questionsUsed} հարց օգտագործված</div>`;
+                    }
+                    html += `<div style="font-size: 1.1em; color: ${textColor}; font-weight: 500;">${attempts} / 3 փորձ</div>`;
+                    html += '</div>';
+                });
+                
+                html += '</div>';
+                html += '</div>';
+            } else {
+                html += '<div class="info" style="margin-top: 15px;">Դեռ ոչ մի թեստ չի օգտագործված</div>';
+            }
+            
+            resultDiv.innerHTML = html;
+        }
+        
+        // Payments Functions
+        function togglePaymentsSection() {
+            const section = document.getElementById('payments-section');
+            if (section) {
+                if (section.style.display === 'none' || section.style.display === '') {
+                    section.style.display = 'block';
+                    loadPayments();
+                } else {
+                    section.style.display = 'none';
+                }
+            } else {
+                // If section doesn't exist yet, create it and load
+                loadPayments();
+            }
+        }
+        
+        function loadPayments() {
+            const resultDiv = document.getElementById('payments-result');
+            const listDiv = document.getElementById('payments-list');
+            
+            if (!resultDiv || !listDiv) {
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div class="info">🔄 Բեռնվում են վճարումները...</div>';
+            listDiv.innerHTML = '';
+            
+            // Use JSONP with script tag
+            const script = document.createElement('script');
+            script.src = PAYMENT_WEB_APP_URL + '?action=readPayments&callback=handlePayments';
+            script.onerror = function(error) {
+                resultDiv.innerHTML = '<div class="error">❌ Սխալ: Հնարավոր չէ կապվել Google Sheets-ի հետ</div>';
+                if (script.parentNode) {
+                    document.body.removeChild(script);
+                }
+            };
+            document.body.appendChild(script);
+            
+            // Set timeout
+            setTimeout(() => {
+                if (resultDiv.innerHTML.includes('🔄 Բեռնվում են')) {
+                    resultDiv.innerHTML = '<div class="error">❌ Request timeout. Ստուգեք Google Apps Script deployment-ը:</div>';
+                }
+            }, 30000);
+        }
+        
+        function displayPayments(payments) {
+            const listDiv = document.getElementById('payments-list');
+            
+            if (!payments || payments.length === 0) {
+                listDiv.innerHTML = '<div class="info">Վճարումներ չկան</div>';
+                return;
+            }
+            
+            // Group payments by date (only date part, not time)
+            const paymentsByDate = {};
+            payments.forEach(payment => {
+                let dateKey = 'Անհայտ';
+                if (payment.date) {
+                    const dateObj = new Date(payment.date);
+                    const day = String(dateObj.getDate()).padStart(2, '0');
+                    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const year = dateObj.getFullYear();
+                    dateKey = day + '/' + month + '/' + year;
+                }
+                if (!paymentsByDate[dateKey]) {
+                    paymentsByDate[dateKey] = [];
+                }
+                paymentsByDate[dateKey].push(payment);
+            });
+            
+            // Sort dates (newest first)
+            const sortedDates = Object.keys(paymentsByDate).sort((a, b) => {
+                if (a === 'Անհայտ') return 1;
+                if (b === 'Անհայտ') return -1;
+                const dateA = new Date(a.split('/').reverse().join('-'));
+                const dateB = new Date(b.split('/').reverse().join('-'));
+                return dateB - dateA;
+            });
+            
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const tableBg = isDarkMode ? '#1a1a1a' : '#ffffff';
+            const headerBg = isDarkMode ? '#2a2a2a' : '#f5f5f5';
+            const rowBgEven = isDarkMode ? '#2a2a2a' : '#fafafa';
+            const rowBgOdd = isDarkMode ? '#1a1a1a' : '#ffffff';
+            const textColor = isDarkMode ? '#e0e0e0' : '#1a1a1a';
+            const borderColor = isDarkMode ? '#3a3a3a' : '#e0e0e0';
+            const codeBg = isDarkMode ? '#2a2a2a' : '#f5f5f5';
+            const actualTableBg = isDarkMode ? '#1a1a1a' : '#ffffff';
+            const sectionBg = isDarkMode ? '#2a2a2a' : '#f5f5f5';
+            const sectionBorder = isDarkMode ? '#3a3a3a' : '#e0e0e0';
+            
+            let html = '';
+            
+            // Create collapsible sections for each date
+            sortedDates.forEach((dateKey, dateIndex) => {
+                const datePayments = paymentsByDate[dateKey];
+                const sectionId = 'payment-section-' + dateIndex;
+                const isExpanded = dateIndex === 0; // Expand first section by default
+                
+                // Section header (collapsible)
+                html += '<div class="payment-date-section" style="margin-bottom: 15px; border: 1px solid ' + sectionBorder + '; border-radius: 8px; background: ' + sectionBg + '; overflow: hidden;">';
+                html += '<div class="payment-date-header" style="padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; background: ' + sectionBg + '; border-bottom: 1px solid ' + sectionBorder + ';">';
+                html += '<div onclick="togglePaymentSection(\'' + sectionId + '\')" style="cursor: pointer; display: flex; align-items: center; gap: 10px; flex: 1;">';
+                html += '<span style="font-size: 1.2em; transition: transform 0.3s;" id="' + sectionId + '-icon">' + (isExpanded ? '▼' : '▶') + '</span>';
+                html += '<span style="font-weight: 500; color: ' + textColor + '; font-size: 0.9em;">' + dateKey + '</span>';
+                html += '<span style="color: ' + (isDarkMode ? '#6a6a6a' : '#6a6a6a') + '; font-size: 0.85em;">(' + datePayments.length + ' վճարում)</span>';
+                html += '</div>';
+                html += '<button onclick="event.stopPropagation(); deletePaymentsByDate(\'' + dateKey + '\', ' + datePayments.length + ');" style="padding: 6px 12px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 0.8em; margin-left: 10px; flex-shrink: 0;" title="Ջնջել այս ամսաթվի բոլոր վճարումները">🗑️ Ջնջել</button>';
+                html += '</div>';
+                
+                // Section content (collapsible)
+                html += '<div id="' + sectionId + '" style="display: ' + (isExpanded ? 'block' : 'none') + '; overflow-x: auto;">';
+                html += '<table style="width: 100%; border-collapse: collapse; background: ' + actualTableBg + ';">';
+                html += '<thead>';
+                html += '<tr style="background: ' + headerBg + '; border-bottom: 2px solid ' + borderColor + ';">';
+                html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em; border-right: 1px solid ' + borderColor + ';">#</th>';
+                html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em; border-right: 1px solid ' + borderColor + ';">Ամսաթիվ</th>';
+                html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em; border-right: 1px solid ' + borderColor + ';">Վճարման Կոդ</th>';
+                html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em; border-right: 1px solid ' + borderColor + ';">Գումար</th>';
+                html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em; border-right: 1px solid ' + borderColor + ';">Կարգավիճակ</th>';
+                html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em; border-right: 1px solid ' + borderColor + ';">Հաստատված</th>';
+                html += '<th style="padding: 8px; text-align: right; font-weight: 500; color: ' + textColor + '; font-size: 0.8em;">Գործողություն</th>';
+                html += '</tr>';
+                html += '</thead>';
+                html += '<tbody>';
+                
+                // Sort payments within date by time (newest first)
+                const sortedDatePayments = [...datePayments].sort((a, b) => {
+                    const dateA = a.date ? new Date(a.date).getTime() : 0;
+                    const dateB = b.date ? new Date(b.date).getTime() : 0;
+                    return dateB - dateA;
+                });
+                
+                sortedDatePayments.forEach((payment, index) => {
+                let date = 'Անհայտ';
+                if (payment.date) {
+                    const dateObj = new Date(payment.date);
+                    const day = String(dateObj.getDate()).padStart(2, '0');
+                    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                    const year = dateObj.getFullYear();
+                    const hours = String(dateObj.getHours()).padStart(2, '0');
+                    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+                    const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+                    date = day + '/' + month + '/' + year + ', ' + hours + ':' + minutes + ':' + seconds;
+                }
+                const status = (payment.status || 'Pending').toLowerCase();
+                const isPaid = status === 'paid' || status === 'հաստատված';
+                const statusText = isPaid ? 'Վճարված' : 'Սպասում';
+                const statusColor = isPaid ? '#28a745' : '#ff9800';
+                const verified = (payment.verified || 'No').toLowerCase();
+                const isVerified = verified === 'yes' || verified === 'այո';
+                const verifiedText = isVerified ? 'Այո' : 'Ոչ';
+                const verifiedColor = isVerified ? '#28a745' : '#6a6a6a';
+                const rowBg = index % 2 === 0 ? rowBgEven : rowBgOdd;
+                
+                html += '<tr style="background: ' + rowBg + '; border-bottom: 1px solid ' + borderColor + ';">';
+                html += '<td style="padding: 6px 8px; color: ' + textColor + '; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; font-weight: 500; text-align: right;">' + (index + 1) + '</td>';
+                html += '<td style="padding: 6px 8px; color: ' + textColor + '; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; text-align: right;">' + date + '</td>';
+                
+                // Payment Code with Copy Button
+                if (payment.paymentCode) {
+                    html += '<td style="padding: 6px 8px; color: ' + textColor + '; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; text-align: right;">';
+                    html += '<div style="display: flex; align-items: center; gap: 4px; justify-content: flex-end;">';
+                    html += '<code style="background: ' + codeBg + '; padding: 3px 6px; border-radius: 3px; font-family: monospace; color: ' + textColor + '; font-size: 0.85em; line-height: 1.2; display: inline-block;">' + payment.paymentCode + '</code>';
+                    html += '<button onclick="copyToClipboard(\'' + payment.paymentCode + '\', this)" style="background: #007bff; color: white; border: none; padding: 3px 6px; border-radius: 3px; cursor: pointer; font-size: 0.7em; display: flex; align-items: center; justify-content: center; width: 24px; height: 20px; flex-shrink: 0;" title="Պատճենել">📋</button>';
+                    html += '</div>';
+                    html += '</td>';
+                } else {
+                    html += '<td style="padding: 6px 8px; color: ' + (isDarkMode ? '#6a6a6a' : '#6a6a6a') + '; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; text-align: right;">Չկա</td>';
+                }
+                
+                html += '<td style="padding: 6px 8px; color: ' + textColor + '; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; text-align: right;">' + (payment.amount || '15,000') + ' դրամ</td>';
+                html += '<td style="padding: 6px 8px; color: ' + statusColor + ' !important; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; font-weight: 500; text-align: right;">' + statusText + '</td>';
+                html += '<td style="padding: 6px 8px; color: ' + verifiedColor + ' !important; font-size: 0.75em; border-right: 1px solid ' + borderColor + '; font-weight: 500; text-align: right;">' + verifiedText + '</td>';
+                html += '<td style="padding: 6px 8px; color: ' + textColor + '; font-size: 0.75em; text-align: right;">';
+                html += '<button onclick="deletePayment(\'' + payment.paymentCode + '\')" style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8em;" title="Ջնջել">🗑️ Ջնջել</button>';
+                html += '</td>';
+                html += '</tr>';
+                });
+                
+                html += '</tbody>';
+                html += '</table>';
+                html += '</div>'; // Close collapsible content
+                html += '</div>'; // Close section
+            });
+            
+            listDiv.innerHTML = html;
+        }
+        
+        function togglePaymentSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const icon = document.getElementById(sectionId + '-icon');
+            if (section && icon) {
+                const isExpanded = section.style.display !== 'none';
+                section.style.display = isExpanded ? 'none' : 'block';
+                icon.textContent = isExpanded ? '▶' : '▼';
+            }
+        }
+        
+        function deletePayment(paymentCode) {
+            if (!paymentCode) {
+                alert('Վճարման կոդը բացակայում է');
+                return;
+            }
+            
+            if (!confirm('Դուք համոզված եք, որ ցանկանում եք ջնջել վճարման կոդը "' + paymentCode + '"?\n\nՈւշադրություն: Ջնջելուց հետո այս կոդով հնարավոր չի լինի մուտք գործել հարցաթերթիկներին:')) {
+                return;
+            }
+            
+            const resultDiv = document.getElementById('payments-result');
+            resultDiv.innerHTML = '<div class="info">🔄 Ջնջվում է վճարումը...</div>';
+            
+            // Use JSONP with script tag
+            const callbackName = 'handleDeletePayment' + Date.now();
+            window[callbackName] = function(result) {
+                // Remove script tag
+                const scripts = document.querySelectorAll('script[src*="deletePayment"]');
+                scripts.forEach(script => {
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                });
+                
+                // Clean up callback
+                delete window[callbackName];
+                
+                if (result && result.success) {
+                    resultDiv.innerHTML = '<div class="success">✅ Վճարումը հաջողությամբ ջնջված է</div>';
+                    // Reload payments list
+                    setTimeout(() => {
+                        loadPayments();
+                    }, 1000);
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Սխալ: ${result?.error || 'Անհայտ սխալ'}</div>`;
+                }
+            };
+            
+            const script = document.createElement('script');
+            script.src = PAYMENT_WEB_APP_URL + '?action=deletePayment&paymentCode=' + encodeURIComponent(paymentCode) + '&callback=' + callbackName;
+            script.onerror = function() {
+                resultDiv.innerHTML = '<div class="error">❌ Սխալ: Հնարավոր չէ կապվել Google Sheets-ի հետ</div>';
+                if (script.parentNode) {
+                    document.body.removeChild(script);
+                }
+                if (window[callbackName]) {
+                    delete window[callbackName];
+                }
+            };
+            document.body.appendChild(script);
+        }
+        
+        function deletePaymentsByDate(dateKey, count) {
+            if (!dateKey || !count) {
+                alert('Ամսաթիվը կամ քանակը բացակայում է');
+                return;
+            }
+            
+            if (!confirm('Դուք համոզված եք, որ ցանկանում եք ջնջել "' + dateKey + '" ամսաթվի բոլոր ' + count + ' վճարումները?\n\nՈւշադրություն: Ջնջելուց հետո այս ամսաթվի բոլոր վճարման կոդերով հնարավոր չի լինի մուտք գործել հարցաթերթիկներին:\n\nԱյս գործողությունը անդարձելի է:')) {
+                return;
+            }
+            
+            const resultDiv = document.getElementById('payments-result');
+            resultDiv.innerHTML = '<div class="info">🔄 Ջնջվում են վճարումները...</div>';
+            
+            // Use JSONP with script tag
+            const callbackName = 'handleDeletePaymentsByDate' + Date.now();
+            window[callbackName] = function(result) {
+                // Remove script tag
+                const scripts = document.querySelectorAll('script[src*="deletePaymentsByDate"]');
+                scripts.forEach(script => {
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                });
+                
+                // Clean up callback
+                delete window[callbackName];
+                
+                if (result && result.success) {
+                    resultDiv.innerHTML = '<div class="success">✅ "' + dateKey + '" ամսաթվի ' + (result.deletedCount || count) + ' վճարում(ներ) հաջողությամբ ջնջված են</div>';
+                    // Reload payments list
+                    setTimeout(() => {
+                        loadPayments();
+                    }, 1000);
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Սխալ: ${result?.error || 'Անհայտ սխալ'}</div>`;
+                }
+            };
+            
+            const script = document.createElement('script');
+            script.src = PAYMENT_WEB_APP_URL + '?action=deletePaymentsByDate&dateKey=' + encodeURIComponent(dateKey) + '&callback=' + callbackName;
+            script.onerror = function() {
+                resultDiv.innerHTML = '<div class="error">❌ Սխալ: Հնարավոր չէ կապվել Google Sheets-ի հետ</div>';
+                if (script.parentNode) {
+                    document.body.removeChild(script);
+                }
+                if (window[callbackName]) {
+                    delete window[callbackName];
+                }
+            };
+            document.body.appendChild(script);
+        }
+        
+        function clearAllPayments() {
+            if (!confirm('Դուք համոզված եք, որ ցանկանում եք մաքրել բոլոր վճարումները?\n\nՈւշադրություն: Այս գործողությունը անդարձելի է:')) {
+                return;
+            }
+            
+            // Open section if closed
+            const section = document.getElementById('payments-section');
+            if (section && section.style.display === 'none') {
+                section.style.display = 'block';
+            }
+            
+            const resultDiv = document.getElementById('payments-result');
+            resultDiv.innerHTML = '<div class="info">🔄 Մաքրվում են վճարումները...</div>';
+            
+            // Use JSONP with script tag
+            const callbackName = 'handleClearAllPayments' + Date.now();
+            window[callbackName] = function(result) {
+                // Remove script tag
+                const scripts = document.querySelectorAll('script[src*="clearAllPayments"]');
+                scripts.forEach(script => {
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                });
+                
+                // Clean up callback
+                delete window[callbackName];
+                
+                if (result && result.success) {
+                    resultDiv.innerHTML = '<div class="success">✅ Բոլոր վճարումները մաքրված են</div>';
+                    document.getElementById('payments-list').innerHTML = '';
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Սխալ: ${result?.error || 'Անհայտ սխալ'}</div>`;
+                }
+            };
+            
+            const script = document.createElement('script');
+            script.src = PAYMENT_WEB_APP_URL + '?action=clearAllPayments&callback=' + callbackName;
+            script.onerror = function() {
+                resultDiv.innerHTML = '<div class="error">❌ Սխալ: Հնարավոր չէ կապվել Google Sheets-ի հետ</div>';
+                if (script.parentNode) {
+                    document.body.removeChild(script);
+                }
+                if (window[callbackName]) {
+                    delete window[callbackName];
+                }
+            };
+            document.body.appendChild(script);
+        }
+        
+        // Global function for payments JSONP callback
+        window.handlePayments = function(data) {
+            const resultDiv = document.getElementById('payments-result');
+            const listDiv = document.getElementById('payments-list');
+            
+            if (!resultDiv || !listDiv) {
+                return;
+            }
+            
+            // Remove script tag
+            const scripts = document.querySelectorAll('script[src*="readPayments"]');
+            scripts.forEach(script => {
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+            });
+            
+            // Handle both array and object responses
+            let payments = [];
+            if (Array.isArray(data)) {
+                payments = data;
+            } else if (data && data.payments && Array.isArray(data.payments)) {
+                payments = data.payments;
+            } else if (data && data.success && data.payments && Array.isArray(data.payments)) {
+                payments = data.payments;
+            } else if (data && data.error) {
+                resultDiv.innerHTML = '<div class="error">❌ Սխալ: ' + data.error + '</div>';
+                return;
+            }
+            
+            if (payments.length > 0) {
+                displayPayments(payments);
+                resultDiv.innerHTML = '<div class="success">✅ Գտնվել է ' + payments.length + ' վճարում</div>';
+            } else {
+                listDiv.innerHTML = '<div class="info">Վճարումներ չկան</div>';
+                resultDiv.innerHTML = '<div class="info">ℹ️ Վճարումներ չկան</div>';
+            }
+        };
+    </script>
+</body>
+</html>
+

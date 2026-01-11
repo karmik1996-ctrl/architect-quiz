@@ -1,0 +1,64 @@
+[build]
+  publish = "."
+  command = "echo 'No build needed'"
+
+# Environment Variables (set in Netlify dashboard)
+# ADMIN_PASSWORD - Admin panel password (NEVER commit to git)
+# ADMIN_TOKEN - Admin authentication token
+# JWT_SECRET - JWT signing secret
+# GOOGLE_APPS_SCRIPT_URL - Google Apps Script URL
+
+# Security Headers - Strong Protection
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Force HTTPS (HSTS)
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    
+    # Prevent clickjacking
+    X-Frame-Options = "DENY"
+    
+    # Prevent MIME type sniffing
+    X-Content-Type-Options = "nosniff"
+    
+    # XSS Protection
+    X-XSS-Protection = "1; mode=block"
+    
+    # Referrer Policy
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+    # Content Security Policy - Strict
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://*.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://script.google.com https://*.googleapis.com https://api.ipgeolocation.io; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+    
+    # Permissions Policy
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), display-capture=()"
+    
+    # Remove server information
+    Server = ""
+    X-Powered-By = ""
+
+# Admin panel - separate link (TODO: Change to random path in environment variable)
+# For now, using /admin - CHANGE THIS to random path for production
+[[redirects]]
+  from = "/admin"
+  to = "/admin-panel.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin-panel.html"
+  status = 200
+
+# Main page - Payment and Quiz together (same link)
+# index.html is the payment page
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+# All other paths redirect to main page (payment + quiz together)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false

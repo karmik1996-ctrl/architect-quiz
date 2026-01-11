@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>ճարտարապետների արտոնագրման և որակավորման հարցաթերթիկներ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <!-- Dark Mode Toggle -->
+        <button id="dark-mode-toggle" class="dark-mode-toggle" title="Գիշերային/Ցերեկային ռեժիմ" onclick="handleDarkModeToggle(event); return false;">
+            <span class="dark-mode-icon sun">☀️</span>
+            <span class="toggle-slider"></span>
+            <span class="dark-mode-icon moon">🌙</span>
+        </button>
+        
+        <!-- Payment Section - Always visible first -->
+        <div id="payment-section" class="section">
+            <h1>Պատասխանիր բոլոր հարցերին և եղիր պատրաստ ճարտարապետների արտոնագրման և որակավորման հարցաթերթիկներին։</h1>
+            <button id="info-btn" class="btn-info" style="margin-bottom: 20px;" onclick="handleInfoClick(event); return false;">ℹ️ Ինչ առավելություններ կստանաք այցելելով այս կայքը։</button>
+            <div class="payment-info">
+                <div class="payment-amount">
+                    Վճարման Գումար: <strong>15,000 դրամ</strong>
+                    <p style="margin-top: 10px; color: #555; font-size: 0.95em;">Ամբողջ թեստը 3 անգամ անցնելու համար</p>
+                </div>
+                
+                <div class="payment-instructions">
+                    <h3>📋 Վճարման Հրահանգներ:</h3>
+                    <ol>
+                        <li>Մուտքագրիր քո տվյալները և ուղարկիր վճարման հարցումը</li>
+                        <li>Փոխանցիր <strong>15,000 դրամ</strong> հետևյալ հաշվին</li>
+                        <li>Ստացիր <strong>Վճարման Կոդ</strong> email-ով</li>
+                        <li>Մուտքագրիր code-ը ներքևում և սկսիր հարցաթերթիկները</li>
+                    </ol>
+                </div>
+                
+                <!-- Payment Request Form -->
+                <div id="payment-request-form" class="payment-request-form">
+                    <h3>📝 Մուտքագրիր Քո Տվյալները</h3>
+                    <form id="payment-form" name="payment-request" onsubmit="submitPaymentRequest(event)">
+                        <input type="hidden" name="form-name" value="payment-request">
+                        <div class="form-group">
+                            <label for="payment-name">Անուն *</label>
+                            <input type="text" id="payment-name" name="name" required placeholder="Մուտքագրիր քո անունը" autocomplete="name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="payment-phone">Հեռախոս *</label>
+                            <input type="tel" id="payment-phone" name="phone" required placeholder="Օրինակ: 091234567" autocomplete="tel">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="payment-email">Email</label>
+                            <input type="email" id="payment-email" name="email" placeholder="email@example.com" autocomplete="email">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="payment-method">Վճարման Եղանակ *</label>
+                            <select id="payment-method" name="paymentMethod" required>
+                                <option value="">Ընտրիր վճարման եղանակը</option>
+                                <option value="IDram">IDram</option>
+                                <option value="ArCa">ArCa</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="payment-message">Հաղորդագրություն (ընտրովի)</label>
+                            <textarea id="payment-message" name="message" rows="3" placeholder="Լրացուցիչ տեղեկություններ..."></textarea>
+                        </div>
+                        
+                        <button type="submit" id="submit-payment-btn" class="btn-primary" style="width: 100%;">
+                            📤 Ուղարկել Վճարման Հարցում
+                        </button>
+                        <div id="payment-request-status"></div>
+                    </form>
+                </div>
+                
+                <div class="bank-details">
+                    <strong>IDram:</strong>
+                    <span id="idram-number">988014515</span>
+                    <button class="copy-btn" onclick="copyToClipboard('idram-number')">📋</button>
+                </div>
+                
+                <div class="bank-details">
+                    <strong>ArCa:</strong>
+                    <span id="arca-number">4318270001189347</span>
+                    <button class="copy-btn" onclick="copyToClipboard('arca-number')">📋</button>
+                </div>
+                
+                <!-- Payment Code Input - Always visible -->
+                <div id="payment-code-section" class="payment-code-input" style="display: block; margin-top: 30px;">
+                    <h3 style="color: #1a1a1a; margin-bottom: 15px; font-size: 1.1em;">🔑 Վճարման Կոդ</h3>
+                    <p style="margin-bottom: 15px; color: #666; font-size: 0.9em;">Եթե արդեն ունես վճարման կոդ, մուտքագրիր այն ներքևում:</p>
+                    <label for="payment-code">Վճարման Կոդ:</label>
+                    <input type="text" id="payment-code" placeholder="Մուտքագրիր վճարման կոդը" autocomplete="off">
+                    <button id="verify-payment-btn" class="btn-primary" style="width: 100%; margin-top: 10px;" onclick="verifyPaymentCode(); return false;">✅ ՍՏՈՒԳԵԼ ԵՎ ՍԿՍԵԼ ՀԱՐՑԱԹԵՐԹԻԿՆԵՐԸ</button>
+                    <div id="payment-status"></div>
+                </div>
+                
+                <!-- Payment Code Input - Shown after request submitted (alternative message) -->
+                <div id="payment-code-section-after-request" class="payment-code-input" style="display: none; margin-top: 30px;">
+                    <h3 style="color: #28a745; margin-bottom: 15px;">✅ Վճարման Հարցումը Ուղարկված է!</h3>
+                    <p style="margin-bottom: 15px; color: #555;">Վճարիր 15,000 դրամ և ստացիր վճարման կոդը email-ով:</p>
+                    <label for="payment-code-after">🔑 Վճարման Կոդ:</label>
+                    <input type="text" id="payment-code-after" placeholder="Մուտքագրիր վճարման կոդը" autocomplete="off">
+                    <button id="verify-payment-btn-after" class="btn-primary" style="width: 100%;" onclick="verifyPaymentCode(); return false;">✅ ՍՏՈՒԳԵԼ ԵՎ ՍԿՍԵԼ ՀԱՐՑԱԹԵՐԹԻԿՆԵՐԸ</button>
+                    <div id="payment-status-after"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start Section - Hidden until payment verified -->
+        <div id="start-section" class="section" style="display: none;">
+            <h1>ճարտարապետների արտոնագրման և որակավորման հարցաթերթիկներ</h1>
+            <div id="welcome-message" style="margin-bottom: 20px; padding: 15px; border-radius: 12px; text-align: center; display: none; border: 1px solid #e0e0e0;">
+                <h2 id="welcome-greeting" style="margin: 0 0 10px 0; font-size: 1.5em; font-weight: bold;"></h2>
+                <p id="welcome-info" style="margin: 0; font-size: 1.1em; opacity: 0.95;"></p>
+            </div>
+            <h2>Սկսիր Հարցաթերթիկները</h2>
+            <div id="quiz-attempts-info" style="margin-bottom: 15px; padding: 10px; background: #f0f0f0; border-radius: 12px; color: #555;">
+                <p style="margin: 0;"><strong>📊 Ձեր անցնելու իրավունքները:</strong></p>
+                <p id="quiz-attempts" style="margin: 5px 0 0 0; color: #28a745; font-weight: bold;"><strong>18 թեստ</strong>, <strong>54 հարց</strong>։<br><strong>Մնացել է 54 հարց</strong></p>
+            </div>
+            <button id="start-btn" class="btn-primary" onclick="startQuiz(); return false;">Սկսել</button>
+            <button id="back-to-payment-btn" class="btn-secondary" style="margin-top: 15px; width: 100%;" onclick="if(document.getElementById('start-section')) document.getElementById('start-section').style.display='none'; if(document.getElementById('payment-section')) document.getElementById('payment-section').style.display='block'; return false;">← Ետ Գնալ Գլխավոր Մենյու</button>
+        </div>
+
+        <!-- Topic Section -->
+        <div id="topic-section" class="section" style="display: none;">
+            <div id="topic-title" class="topic-title"></div>
+        </div>
+
+        <!-- Question Section -->
+        <div id="question-section" class="section" style="display: none;">
+            <!-- Back button at the top left -->
+            <button id="back-to-payment-from-quiz-btn" class="btn-secondary" onclick="if(document.getElementById('topic-section')) document.getElementById('topic-section').style.display='none'; if(document.getElementById('question-section')) document.getElementById('question-section').style.display='none'; if(document.getElementById('answers-section')) document.getElementById('answers-section').style.display='none'; if(document.getElementById('next-section')) document.getElementById('next-section').style.display='none'; if(document.getElementById('results-section')) document.getElementById('results-section').style.display='none'; if(document.getElementById('start-section')) document.getElementById('start-section').style.display='none'; if(document.getElementById('payment-section')) document.getElementById('payment-section').style.display='block'; return false;">← Ետ Գնալ Գլխավոր Մենյու</button>
+            
+            <!-- Materials section - will be populated dynamically -->
+            <div id="materials-section" style="margin-bottom: 15px; padding: 12px; background: #e8f4f8; border-left: 4px solid #2196F3; border-radius: 12px; display: none;">
+                <h4 style="margin: 0 0 8px 0; color: #1976D2; font-size: 0.9em; font-weight: 600;">📖 Օգտագործված նյութեր:</h4>
+                <div id="materials-list" style="font-size: 0.85em; color: #555; line-height: 1.5;"></div>
+            </div>
+            <div class="question-header">
+                <div style="font-size: 0.9em; color: #4a90e2; font-weight: 600; margin-bottom: 5px; text-align: left;">
+                    Հարցաթերթիկ համար <span id="quiz-set-number-display">1</span> / 18
+                    <div id="exhausted-quiz-sets-display" style="font-size: 0.85em; color: #dc3545; margin-top: 5px; display: none;">
+                        <span id="exhausted-quiz-sets-text"></span>
+                    </div>
+                </div>
+                <div class="question-counter">
+                    <span id="question-number">1</span> / <span id="total-questions">0</span>
+                </div>
+                <div class="score">Միավոր: <span id="score">0</span></div>
+                <div id="quiz-attempts-header" style="font-size: 0.9em; color: #666; margin-top: 5px;">
+                    <span id="quiz-attempts-header-text">3-ից 0 սպառված</span>
+                </div>
+            </div>
+            <div id="topic-title" class="topic-title materials-section" style="font-size: 1.1em; font-weight: 600; margin-bottom: 15px; padding: 10px;"></div>
+            <div id="question-text" class="question-text"></div>
+        </div>
+
+        <!-- Answers Section -->
+        <div id="answers-section" class="section" style="display: none;">
+            <div class="answers-container">
+                <button class="answer-btn" data-index="0">
+                    <span class="answer-letter">Ա</span>
+                    <span class="answer-text"></span>
+                </button>
+                <button class="answer-btn" data-index="1">
+                    <span class="answer-letter">Բ</span>
+                    <span class="answer-text"></span>
+                </button>
+                <button class="answer-btn" data-index="2">
+                    <span class="answer-letter">Գ</span>
+                    <span class="answer-text"></span>
+                </button>
+                <button class="answer-btn" data-index="3">
+                    <span class="answer-letter">Դ</span>
+                    <span class="answer-text"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Next Section -->
+        <div id="next-section" class="section" style="display: none;">
+            <button id="next-btn" class="btn-primary">Հաջորդ Հարց</button>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="section" style="display: none;">
+            <h2>Հարցաթերթիկները Ավարտված են!</h2>
+            <div class="results-display">
+                <div class="result-item">
+                    <span class="result-label">Միավոր:</span>
+                    <span class="result-value">
+                        <span id="final-score">0</span> / <span id="final-total">0</span>
+                    </span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Տոկոս:</span>
+                    <span class="result-value" id="final-percentage">0%</span>
+                </div>
+                <div class="result-item" id="remaining-attempts-display" style="display: none;">
+                    <span class="result-label">Մնացած անցնելու իրավունքներ:</span>
+                    <span class="result-value" id="remaining-attempts-value">0</span>
+                </div>
+            </div>
+            <button id="view-answers-btn" class="btn-secondary">📋 Դիտել պատասխանները</button>
+            <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                <button id="repeat-quiz-btn" class="btn-primary" style="flex: 1; min-width: 200px;" onclick="repeatQuiz(); return false;">🔄 Կրկնել Հարցաթերթիկը</button>
+                <button id="next-quiz-set-btn" class="btn-primary" style="flex: 1; min-width: 200px;" onclick="startNextQuizSet(); return false;">Հաջորդ Հարցաթերթիկ</button>
+                <button id="finish-all-quiz-sets-btn" class="btn-primary" style="flex: 1; min-width: 200px; display: none;" onclick="showAllResults(); return false;">Ավարտել Բոլոր Հարցաթերթիկները</button>
+            </div>
+            
+            <div id="answers-review" style="display: none; margin-top: 30px;">
+                <div id="answers-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="info-modal" style="display: none;">
+        <div class="info-modal-content">
+            <button class="info-modal-close" id="info-modal-close">&times;</button>
+            <h1>📚 Ինչ առավելություններ կստանաք այցելելով այս կայքը։</h1>
+            
+            <div class="info-section">
+                <h2>🎯 Նպատակ</h2>
+                <p>Այս կայքը թույլ է տալիս պատրաստվել <strong>ճարտարապետի արտոնագրման քնություններին</strong>:</p>
+                <p>Կայքը պարունակում է <strong>քաղաքաշինական նորմեր</strong>, <strong>ճարտարապետական կանոններ</strong> և <strong>իրավական փաստաթղթեր</strong>:</p>
+            </div>
+
+            <div class="info-section">
+                <h2>📊 Թեստերի Մասին</h2>
+                <p>Կայքը պարունակում է <strong>17 թեստ</strong>, յուրաքանչյուրը <strong>10 հարցով</strong>:</p>
+                <p>18-րդ թեստը պարունակում է <strong>5 հարց</strong>:</p>
+                <p>Ընդհանուր <strong>175 հարց</strong> տարբեր թեմաներից:</p>
+                <ul>
+                    <li>Քաղաքաշինական նորմեր</li>
+                    <li>Ինժեներաերկրաբանական հետազննումներ</li>
+                    <li>Նախագծման թույլտվություններ</li>
+                    <li>Հուշարձանների պահպանություն</li>
+                    <li>Եվ այլ թեմաներ</li>
+                </ul>
+            </div>
+
+            <div class="info-section">
+                <h2>🎲 Պատահականության սկզբունքով ընտրված թեստեր</h2>
+                <p>Կայքը <strong>ամեն անգամ տարբեր թեստեր</strong> է հավաքում:</p>
+                <p>Յուրաքանչյուր թեստ պարունակում է <strong>10 հարց</strong> տարբեր թեմաներից:</p>
+                <div class="info-image-placeholder">
+                    <p>📸 Թեստի Օրինակ</p>
+                    <div class="example-quiz">
+                        <div class="example-question">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <strong style="color: #667eea;">Հարց 1 / 10</strong>
+                                <span style="color: #667eea; font-weight: bold;">Միավոր: 0</span>
+                            </div>
+                            <div class="example-materials" style="padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.9em;">
+                                <strong>1.2. Ինժեներաերկրաբանական հետազննումներ</strong>
+                            </div>
+                            <p style="font-size: 1.1em; line-height: 1.6;">Քաղաքաշինական համակցված ծրագրային փաստաթղթի ելակետային նյութերի ցանկը ներառում է</p>
+                        </div>
+                        <div class="example-answers">
+                            <div class="example-answer" style="cursor: pointer;">
+                                <span style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-weight: bold;">Ա</span>
+                                <span>Տարածքի սահմանված կարգով հաստատված սեյսմիկ շրջանացման քարտեզը...</span>
+                            </div>
+                            <div class="example-answer" style="cursor: pointer;">
+                                <span style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-weight: bold;">Բ</span>
+                                <span>Կառուապատման էսքիզային նախագիծը</span>
+                            </div>
+                            <div class="example-answer" style="cursor: pointer;">
+                                <span style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-weight: bold;">Գ</span>
+                                <span>Ըամալնքի ղեկավարի կողմից կազմված և հաստատված առաջադրանքը</span>
+                            </div>
+                            <div class="example-answer" style="cursor: pointer;">
+                                <span style="background: #667eea; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-weight: bold;">Դ</span>
+                                <span>Բոլոր վերը նշվածները</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2>✅ Ճիշտ Պատասխան</h2>
+                <p>Երբ դուք <strong>ճիշտեք</strong> պատասխանում, պատասխանը ընդգծվում է <strong>կանաչով</strong>:</p>
+                <div class="info-image-placeholder">
+                    <div class="example-correct">
+                        <div class="example-answer correct-answer" style="padding: 15px; margin-bottom: 10px;">
+                            <span class="answer-letter" style="background: #28a745; color: white; width: 35px; height: 35px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold; font-size: 1.1em;">Ա</span>
+                            <span class="answer-text" style="flex: 1; font-size: 1.05em;">Տարածքի սահմանված կարգով հաստատված սեյսմիկ շրջանացման քարտեզը (ուրվագիծը), ինժեներաերկրաբանական շրջանացման (պալմանների) քարտեզը, գեոդեզիական ճանույթները</span>
+                            <span class="check-mark" style="font-size: 1.8em; margin-left: 15px;">✅</span>
+                        </div>
+                        <p style="text-align: center; color: #28a745; font-weight: bold; margin-top: 10px;">Ճիշտ պատասխան! +1 միավոր</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2>❌ Սխալ Պատասխան</h2>
+                <p>Երբ դուք <strong>սխալեք</strong> պատասխանում, պատասխանը ընդգծվում է <strong>կարմիրով</strong>:</p>
+                <div class="info-image-placeholder">
+                    <div class="example-incorrect">
+                        <div class="example-answer incorrect-answer" style="padding: 15px; margin-bottom: 10px;">
+                            <span class="answer-letter" style="background: #dc3545; color: white; width: 35px; height: 35px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold; font-size: 1.1em;">Բ</span>
+                            <span class="answer-text" style="flex: 1; font-size: 1.05em;">Կառուապատման էսքիզային նախագիծը</span>
+                            <span class="cross-mark" style="font-size: 1.8em; margin-left: 15px;">❌</span>
+                        </div>
+                        <div class="example-answer correct-answer" style="padding: 12px; margin-top: 10px; opacity: 0.8;">
+                            <span class="answer-letter" style="background: #28a745; color: white; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-right: 10px; font-weight: bold;">Ա</span>
+                            <span class="answer-text" style="font-size: 0.95em;">Տարածքի սահմանված կարգով հաստատված սեյսմիկ շրջանացման քարտեզը...</span>
+                            <span class="check-mark" style="font-size: 1.3em; margin-left: 10px;">✅</span>
+                        </div>
+                        <p class="correct-indicator" style="text-align: center; margin-top: 15px; font-weight: bold;">Ճիշտ պատասխանը: <strong style="color: #28a745;">Ա</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2>📈 Արդյունքներ</h2>
+                <p>Թեստի ավարտից հետո դուք կտեսնեք:</p>
+                <ul>
+                    <li>Ձեր միավորը (0-5)</li>
+                    <li>Տոկոսը (0-100%)</li>
+                    <li>Բոլոր հարցերի պատասխանները</li>
+                    <li>Ճիշտ և սխալ պատասխանները</li>
+                </ul>
+            </div>
+
+            <div class="info-section">
+                <h2>📖 Պարզ և հասկանալի ուսումնական նյութեր</h2>
+                <p>Բոլոր թեմաները ներկայացված են հակիրճ, համակարգված և հեշտ ընկալվող ձևաչափով, որպեսզի արագ կողմնորոշվեք ցանկացած բաժնում։</p>
+            </div>
+
+            <div class="info-section">
+                <h2>⚡ Արագ ու արդյունավետ պատրաստում ատեստավորմանը</h2>
+                <p>Ստացեք միայն այն գիտելիքները, որոնք իրականում կարևոր են․ առանց ավելորդ ծանրաբեռնվածության, առանց ժամանակի կորուստի։</p>
+            </div>
+
+            <div class="info-section">
+                <h2>🕐 Սովորեք այն ժամանակ, երբ Ձեզ հարմար է</h2>
+                <p>Դասերն ու նյութերը հասանելի են օրվա բոլոր ժամերին, որպեսզի սովորվելու գործընթացը ներդաշնակվի Ձեր անձնական ռիթմի հետ։</p>
+            </div>
+
+            <div class="info-section">
+                <h2>📚 Ամբողջ կարևոր տեղեկատվությունը՝ մեկ հարթակում</h2>
+                <p>Ձեզ այլևս հարկավոր չէ որոնել տարբեր կայքերով ու աղբյուրներով․ ամեն ինչ հավաքված է այստեղ՝ հստակ և տրամաբանական կառուցվածքով։</p>
+            </div>
+
+            <div class="info-section">
+                <h2>😌 Ատեստավորում՝ առանց սթրեսի և անհանգստության</h2>
+                <p>Մեր ուսուցման մեթոդը օգնում է Ձեզ վստահ լինել Ձեր գիտելիքների վրա և առանց ավելորդ լարվածության անցնել քննությունը։</p>
+            </div>
+
+            <div class="info-section">
+                <h2>Վճարում</h2>
+                <p>Ամբողջ թեստը <strong>3 անգամ անցնելու համար</strong> է վճարում <strong>15,000 դրամ</strong>:</p>
+                <p>Վճարումից հետո դուք կստանաք <strong>Վճարման Կոդ</strong>, որով կարող եք մուտք գործել հարցաթերթիկները:</p>
+            </div>
+
+            <button id="info-back-btn" class="btn-primary" style="width: 100%; margin-top: 30px;">← Ետ Գնալ</button>
+        </div>
+    </div>
+
+    <!-- Screenshot Protection Overlay -->
+    <div id="screenshot-protection"></div>
+
+    <!-- Idle Animation Overlay -->
+    <div id="idle-animation-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 1); z-index: 999998; pointer-events: none; transition: background 2s ease-in-out; background-size: cover; background-position: center; background-repeat: no-repeat; isolation: isolate; transform-style: preserve-3d;">
+        <!-- Dark overlay removed completely for clear images -->
+        
+        <div id="idle-title-container" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 90%; max-width: 900px; pointer-events: none; z-index: 999999;">
+            <h1 id="idle-title-1" class="idle-title" style="font-size: 1.8em; color: #ffffff; margin: 0 auto 30px; text-shadow: 8px 8px 0px rgba(0, 0, 0, 1), -8px -8px 0px rgba(0, 0, 0, 1), 8px -8px 0px rgba(0, 0, 0, 1), -8px 8px 0px rgba(0, 0, 0, 1), 0px 0px 0px 10px rgba(0, 0, 0, 1), 0px 0px 60px rgba(0, 0, 0, 1), 0px 0px 80px rgba(0, 0, 0, 1), 0px 0px 100px rgba(0, 0, 0, 1); opacity: 0; transform: scale(0.5) translateY(50px); filter: blur(10px); transition: all 1.5s ease-in-out; display: block; line-height: 1.4; font-weight: 900; z-index: 999999; position: relative; background: rgba(0, 0, 0, 1); padding: 25px 35px; border-radius: 12px; backdrop-filter: none; box-shadow: 0 0 80px rgba(0, 0, 0, 1), inset 0 0 50px rgba(0, 0, 0, 1), 0 0 0 3px rgba(255, 255, 255, 0.3);">ճարտարապետների արտոնագրման և որակավորման հարցաթերթիկներ</h1>
+            <h2 id="idle-title-2" class="idle-title" style="font-size: 1.3em; color: #ffffff; margin: 0 auto 20px; text-shadow: 6px 6px 0px rgba(0, 0, 0, 1), -6px -6px 0px rgba(0, 0, 0, 1), 6px -6px 0px rgba(0, 0, 0, 1), -6px 6px 0px rgba(0, 0, 0, 1), 0px 0px 0px 8px rgba(0, 0, 0, 1), 0px 0px 50px rgba(0, 0, 0, 1), 0px 0px 70px rgba(0, 0, 0, 1), 0px 0px 90px rgba(0, 0, 0, 1); opacity: 0; transform: scale(0.5) translateY(50px); filter: blur(10px); transition: all 1.5s ease-in-out; display: block; font-weight: 900; font-style: italic; z-index: 999999; position: relative; background: rgba(0, 0, 0, 1); padding: 18px 28px; border-radius: 10px; backdrop-filter: none; box-shadow: 0 0 70px rgba(0, 0, 0, 1), inset 0 0 40px rgba(0, 0, 0, 1), 0 0 0 3px rgba(255, 255, 255, 0.3);">Պատասխանիր բոլոր հարցերին և եղիր պատրաստ</h2>
+            
+            <!-- Architect portrait image - below the name, circular -->
+            <img id="idle-architect-image" src="" alt="" crossorigin="anonymous" style="display: block; margin: 30px auto 0; width: 180px; height: 180px; opacity: 0; pointer-events: none; border-radius: 50%; object-fit: cover; background: transparent; transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out; transform: scale(0.8); box-shadow: 0 0 40px rgba(255, 255, 255, 0.5), 0 0 80px rgba(255, 255, 255, 0.3); visibility: visible; z-index: 999999; position: relative; border: 4px solid rgba(255, 255, 255, 0.4);">
+        </div>
+    </div>
+
+        <script>
+            // TEMPORARILY DISABLED: F12 block removed for debugging
+            // Light protection - only disable right-click, don't block window resize (for AnyDesk compatibility)
+            // CRITICAL: Initialize AFTER DOMContentLoaded to ensure buttons work
+            (function(){'use strict';
+                function initProtection() {
+                    // Disable right-click context menu (only on non-interactive elements)
+                    document.addEventListener('contextmenu',function(e){
+                        // Allow right-click on buttons and inputs
+                        if(e.target.tagName==='BUTTON'||e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.closest('button')||e.target.closest('input')||e.target.closest('textarea')){
+                            return true;
+                        }
+                        e.preventDefault();
+                        return false;
+                    }, {passive: false});
+                    
+                    // TEMPORARILY DISABLED: F12 block removed for debugging
+                    // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S
+                    // CRITICAL: Only block DevTools shortcuts, NOT button clicks
+                    // document.addEventListener('keydown',function(e){
+                    //     // Allow all clicks and normal keyboard input
+                    //     if(e.target.tagName==='BUTTON'||e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.closest('button')||e.target.closest('input')||e.target.closest('textarea')){
+                    //         return true;
+                    //     }
+                    //     // Only block DevTools shortcuts
+                    //     if(e.keyCode===123||(e.ctrlKey&&e.shiftKey&&(e.keyCode===73||e.keyCode===74))||(e.ctrlKey&&e.keyCode===85)||(e.ctrlKey&&e.keyCode===83)){
+                    //         e.preventDefault();
+                    //         e.stopPropagation();
+                    //         return false;
+                    //     }
+                    // }, {passive: false});
+                
+                // Disable text selection (soft)
+                document.addEventListener('selectstart',function(e){
+                    if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'&&!e.target.isContentEditable){
+                        e.preventDefault();
+                        return false;
+                    }
+                }, {passive: false});
+                
+                // Disable drag (soft)
+                document.addEventListener('dragstart',function(e){
+                    if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'){
+                        e.preventDefault();
+                        return false;
+                    }
+                }, {passive: false});
+                
+                // Disable copy (soft - allow in inputs)
+                document.addEventListener('copy',function(e){
+                    if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'&&!e.target.isContentEditable){
+                        e.preventDefault();
+                        return false;
+                    }
+                }, {passive: false});
+                
+                // Disable cut (soft)
+                document.addEventListener('cut',function(e){
+                    if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'&&!e.target.isContentEditable){
+                        e.preventDefault();
+                        return false;
+                    }
+                }, {passive: false});
+                
+                // Disable paste (soft)
+                document.addEventListener('paste',function(e){
+                    if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'&&!e.target.isContentEditable){
+                        e.preventDefault();
+                        return false;
+                    }
+                }, {passive: false});
+            }
+            
+            // CRITICAL: Initialize protection AFTER DOMContentLoaded to ensure buttons work
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initProtection);
+            } else {
+                // DOM already loaded, initialize immediately but after a small delay
+                setTimeout(initProtection, 100);
+            }
+        })();
+    </script>
+    <script>
+        // CRITICAL: Expose functions immediately before script loads (for onclick attributes)
+        // These will be overwritten by script.js, but ensure they exist during HTML parsing
+        window.handleDarkModeToggle = function(e) { if(e) e.preventDefault(); return false; };
+        window.handleInfoClick = function(e) { if(e) e.preventDefault(); return false; };
+        window.verifyPaymentCode = function() { return false; };
+        window.startQuiz = function() { return false; };
+        window.nextQuestion = function() { return false; };
+        window.showAnswersReview = function() { return false; };
+        window.repeatQuiz = function() { return false; };
+        window.startNextQuizSet = function() { return false; };
+        window.showAllResults = function() { return false; };
+        window.copyToClipboard = function() { return false; };
+        window.submitPaymentRequest = function() { return false; };
+    </script>
+        <!-- Modular JavaScript files - load in dependency order -->
+        <script src="js/quiz.data.js" charset="UTF-8"></script>
+        <script src="js/quiz.storage.js" charset="UTF-8"></script>
+        <script src="js/quiz.security.js" charset="UTF-8"></script>
+        <script src="js/quiz.payment.js" charset="UTF-8"></script>
+        <script src="js/quiz.tracking.js" charset="UTF-8"></script>
+        <script src="js/quiz.svg.js" charset="UTF-8"></script>
+        <script src="js/quiz.core.js" charset="UTF-8"></script>
+        <script src="js/quiz.ui.js" charset="UTF-8"></script>
+        <script src="js/quiz.idle.js" charset="UTF-8"></script>
+        <script src="js/main.js" charset="UTF-8"></script>
+    <script>
+        // ============================================
+        // MAXIMUM POWER SCREENSHOT PROTECTION SYSTEM
+        // ============================================
+        // The most aggressive and reliable screenshot protection
+        // Works perfectly on both Desktop and Mobile devices
+        // ============================================
+        (function() {
+            'use strict';
+            
+            // IMPORTANT: Align behavior with admin panel (no reload on minimize/switch).
+            // Fully disable screenshot/visibility handlers to avoid any reload/reset.
+            // If you ever need to re-enable, remove the line below.
+            return;
+            
+            // Global protection state
+            let screenshotDetected = false;
+            let protectionActive = false;
+            
+            // Check if device is mobile
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
+            // ============================================
+            // UNIVERSAL SCREENSHOT PROTECTION FUNCTION - MAXIMUM POWER
+            // ============================================
+            function activateScreenshotProtection() {
+                // ALWAYS activate - no early return
+                screenshotDetected = true;
+                protectionActive = true;
+                
+                // INSTANT BLOCKING - Multiple synchronous layers for maximum protection
+                // Layer 1: Clear body content IMMEDIATELY (before anything else)
+                document.body.innerHTML = '';
+                document.body.style.background = '#000';
+                document.body.style.color = '#fff';
+                document.body.style.margin = '0';
+                document.body.style.padding = '0';
+                
+                // Layer 2: Hide ALL elements IMMEDIATELY (synchronous loop)
+                const allElements = document.querySelectorAll('*');
+                for (let i = 0; i < allElements.length; i++) {
+                    const el = allElements[i];
+                    if (el.tagName !== 'BODY' && el.tagName !== 'HTML' && el.id !== 'screenshot-warning-overlay' && el.id !== 'mobile-screenshot-warning') {
+                        el.style.display = 'none';
+                        el.style.visibility = 'hidden';
+                        el.style.opacity = '0';
+                        el.style.height = '0';
+                        el.style.width = '0';
+                        el.style.overflow = 'hidden';
+                        el.style.position = 'absolute';
+                        el.style.left = '-9999px';
+                        el.style.top = '-9999px';
+                    }
+                }
+                
+                // Layer 3: Block ALL interactions immediately
+                document.body.style.pointerEvents = 'none';
+                document.body.style.userSelect = 'none';
+                document.body.style.webkitUserSelect = 'none';
+                document.body.style.mozUserSelect = 'none';
+                document.body.style.msUserSelect = 'none';
+                document.body.style.touchAction = 'none';
+                document.body.style.overflow = 'hidden';
+                document.documentElement.style.overflow = 'hidden';
+                document.documentElement.style.pointerEvents = 'none';
+                document.documentElement.style.display = 'none';
+                document.documentElement.style.visibility = 'hidden';
+                
+                // Layer 4: Create warning overlay IMMEDIATELY (synchronous)
+                const warningDiv = document.createElement('div');
+                warningDiv.id = isMobile ? 'mobile-screenshot-warning' : 'screenshot-warning-overlay';
+                warningDiv.innerHTML = '<div style="font-size:48px;">⚠️</div><div style="font-weight:bold;font-size:28px;">Screenshot Protection Activated</div><div style="font-size:22px;opacity:0.9;margin-top:20px;">Սքրինշոթ անելու փորձ է հայտնաբերվել</div>';
+                document.body.appendChild(warningDiv);
+                
+                // Set styles with maximum priority - SYNCHRONOUS
+                warningDiv.style.cssText = 'width:100vw!important;height:100vh!important;min-height:100vh!important;max-height:100vh!important;background:#000!important;color:#fff!important;display:flex!important;align-items:center!important;justify-content:center!important;font-size:32px!important;position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:0!important;z-index:2147483647!important;flex-direction:column!important;gap:25px!important;text-align:center!important;padding:30px!important;box-sizing:border-box!important;overflow:hidden!important;margin:0!important;border:none!important;outline:none!important;';
+                
+                // Force overlay to be on top with multiple methods
+                warningDiv.style.setProperty('z-index', '2147483647', 'important');
+                warningDiv.style.setProperty('position', 'fixed', 'important');
+                warningDiv.style.setProperty('top', '0', 'important');
+                warningDiv.style.setProperty('left', '0', 'important');
+                warningDiv.style.setProperty('width', '100vw', 'important');
+                warningDiv.style.setProperty('height', '100vh', 'important');
+                warningDiv.style.setProperty('background', '#000', 'important');
+                warningDiv.style.setProperty('display', 'flex', 'important');
+                
+                // Use requestAnimationFrame for additional visual update
+                requestAnimationFrame(function() {
+                    // Ensure overlay is still visible and on top
+                    if (warningDiv.parentNode) {
+                        warningDiv.style.display = 'flex';
+                        warningDiv.style.visibility = 'visible';
+                        warningDiv.style.opacity = '1';
+                        warningDiv.style.zIndex = '2147483647';
+                    }
+                    
+                    // Save dark mode state BEFORE clearing storage
+                    const currentDarkMode = document.body.classList.contains('dark-mode');
+                    
+                    // Clear ALL storage
+                    try {
+                        localStorage.clear();
+                        sessionStorage.clear();
+                        if (window.indexedDB) {
+                            indexedDB.databases().then(function(dbs) {
+                                dbs.forEach(function(db) {
+                                    indexedDB.deleteDatabase(db.name);
+                                });
+                            });
+                        }
+                    } catch(e) {}
+                    
+                    // Restore dark mode state AFTER clearing
+                    if (currentDarkMode) {
+                        localStorage.setItem('darkMode', 'true');
+                    }
+                    
+                    // Block ALL events
+                    const preventAll = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        e.cancelBubble = true;
+                        return false;
+                    };
+                    
+                    const eventsToBlock = [
+                        'touchstart', 'touchmove', 'touchend', 'touchcancel',
+                        'click', 'mousedown', 'mouseup', 'mousemove',
+                        'keydown', 'keyup', 'keypress',
+                        'scroll', 'wheel', 'contextmenu',
+                        'selectstart', 'dragstart', 'copy', 'cut', 'paste'
+                    ];
+                    
+                    eventsToBlock.forEach(function(eventType) {
+                        document.addEventListener(eventType, preventAll, {capture: true, passive: false});
+                        window.addEventListener(eventType, preventAll, {capture: true, passive: false});
+                        document.body.addEventListener(eventType, preventAll, {capture: true, passive: false});
+                    });
+                    
+                    // Reload page after 3 seconds
+                    setTimeout(function() {
+                        window.location.replace(window.location.href);
+                    }, 3000);
+                });
+            }
+            
+            // ============================================
+            // MOBILE SCREENSHOT PROTECTION - MAXIMUM POWER
+            // ============================================
+            if (isMobile) {
+                let mobilePageReady = false;
+                let mobileLastActivationTime = 0;
+                let mobileActivationCount = 0;
+                const MOBILE_COOLDOWN_PERIOD = 500; // 0.5 seconds cooldown (very short)
+                
+                // Initialize mobile protection - faster
+                function initMobileProtection() {
+                    setTimeout(function() {
+                        mobilePageReady = true;
+                    }, 1000); // 1 second delay (reduced)
+                }
+                
+                if (document.readyState === 'complete') {
+                    initMobileProtection();
+                } else {
+                    window.addEventListener('load', initMobileProtection);
+                    if (document.readyState === 'interactive') {
+                        initMobileProtection();
+                    }
+                }
+                
+                // Disable right-click - NO COOLDOWN for rapid activations
+                document.addEventListener('contextmenu', function(e) {
+                    if (!mobilePageReady) return;
+                    const now = Date.now();
+                    const timeSinceLastActivation = now - mobileLastActivationTime;
+                    
+                    // If multiple activations in short time, ignore cooldown
+                    if (timeSinceLastActivation < 300) {
+                        mobileActivationCount++;
+                    } else {
+                        mobileActivationCount = 1;
+                    }
+                    
+                    // Always activate if multiple rapid attempts or cooldown passed
+                    if (mobileActivationCount > 1 || timeSinceLastActivation > MOBILE_COOLDOWN_PERIOD) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        mobileLastActivationTime = now;
+                        activateScreenshotProtection();
+                        return false;
+                    }
+                }, true);
+                
+                document.addEventListener('selectstart', function(e) {
+                    if (e.target.tagName !== 'INPUT' && 
+                        e.target.tagName !== 'TEXTAREA' && 
+                        !e.target.isContentEditable) {
+                        e.preventDefault();
+                    }
+                });
+                
+                document.addEventListener('dragstart', function(e) {
+                    e.preventDefault();
+                });
+                
+                document.addEventListener('copy', function(e) {
+                    if (!mobilePageReady) return;
+                    const now = Date.now();
+                    const timeSinceLastActivation = now - mobileLastActivationTime;
+                    
+                    if (e.target.tagName !== 'INPUT' && 
+                        e.target.tagName !== 'TEXTAREA' && 
+                        !e.target.isContentEditable) {
+                        e.preventDefault();
+                        // If multiple activations in short time, ignore cooldown
+                        if (timeSinceLastActivation < 200 || timeSinceLastActivation > MOBILE_COOLDOWN_PERIOD) {
+                            mobileLastActivationTime = now;
+                            activateScreenshotProtection();
+                        }
+                    }
+                }, true);
+                
+                // Continuous monitoring for screenshot attempts - ULTRA SENSITIVE
+                let lastTouchTime = 0;
+                let touchCount = 0;
+                let lastVisibilityChange = 0;
+                let visibilityChangeCount = 0;
+                
+                // Detect rapid touches (screenshot gesture) - ULTRA SENSITIVE
+                document.addEventListener('touchstart', function(e) {
+                    if (!mobilePageReady) return;
+                    const now = Date.now();
+                    if (now - lastTouchTime < 150) {
+                        touchCount++;
+                        if (touchCount > 1) {
+                            // Rapid touches detected - ALWAYS activate (no cooldown check)
+                            mobileLastActivationTime = now;
+                            activateScreenshotProtection();
+                        }
+                    } else {
+                        touchCount = 1;
+                    }
+                    lastTouchTime = now;
+                }, true);
+                
+                // Monitor visibility changes (app switching for screenshot) - ULTRA AGGRESSIVE
+                document.addEventListener('visibilitychange', function() {
+                    if (!mobilePageReady) return;
+                    const now = Date.now();
+                    if (document.hidden) {
+                        // Page hidden - possible screenshot attempt
+                        if (now - lastVisibilityChange < 300) {
+                            visibilityChangeCount++;
+                            // Rapid visibility changes - ALWAYS activate (no cooldown check)
+                            if (visibilityChangeCount > 1) {
+                                mobileLastActivationTime = now;
+                                activateScreenshotProtection();
+                            }
+                        } else {
+                            visibilityChangeCount = 1;
+                            // Single visibility change - check cooldown
+                            if (now - mobileLastActivationTime > MOBILE_COOLDOWN_PERIOD) {
+                                mobileLastActivationTime = now;
+                                activateScreenshotProtection();
+                            }
+                        }
+                        lastVisibilityChange = now;
+                    }
+                });
+                
+                // Monitor page blur/focus (another screenshot indicator) - NO COOLDOWN
+                window.addEventListener('blur', function() {
+                    if (!mobilePageReady) return;
+                    setTimeout(function() {
+                        if (document.hidden) {
+                            mobileLastActivationTime = Date.now();
+                            activateScreenshotProtection();
+                        }
+                    }, 50); // Very fast response
+                });
+                
+                // Monitor pagehide/pageshow (screenshot attempt detection) - NO COOLDOWN
+                window.addEventListener('pagehide', function() {
+                    if (!mobilePageReady) return;
+                    mobileLastActivationTime = Date.now();
+                    activateScreenshotProtection();
+                });
+                
+                // Continuous monitoring - check every 50ms for screenshot attempts
+                setInterval(function() {
+                    if (!mobilePageReady) return;
+                    // If page is hidden for more than 100ms, activate protection
+                    if (document.hidden) {
+                        setTimeout(function() {
+                            if (document.hidden && Date.now() - mobileLastActivationTime > MOBILE_COOLDOWN_PERIOD) {
+                                mobileLastActivationTime = Date.now();
+                                activateScreenshotProtection();
+                            }
+                        }, 100);
+                    }
+                }, 50);
+                
+                // ============================================
+                // MOBILE PROTECTION COMPLETE
+                // ============================================
+                // Mobile screenshot protection includes:
+                // - Rapid touch detection
+                // - Right-click blocking (with cooldown)
+                // - Copy blocking (with cooldown)
+                // - Text selection blocking
+                // - Drag blocking
+                // - Visibility change monitoring
+                
+                return; // Mobile protection complete
+            }
+            
+            // ============================================
+            // DESKTOP SCREENSHOT PROTECTION - SMART DETECTION
+            // ============================================
+            let desktopPageReady = false;
+            let desktopPageLoadTime = Date.now();
+            let desktopLastActivationTime = 0;
+            const DESKTOP_COOLDOWN_PERIOD = 500; // 0.5 seconds cooldown (very short)
+            
+            // Initialize desktop protection - Minimal delay
+            function initializeDesktopProtection() {
+                setTimeout(function() {
+                    desktopPageReady = true;
+                }, 2000); // 2 seconds delay - just for safety
+            }
+            
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeDesktopProtection);
+            } else {
+                window.addEventListener('load', initializeDesktopProtection);
+                if (document.readyState === 'complete') {
+                    initializeDesktopProtection();
+                }
+            }
+            
+            // Track rapid activations
+            let desktopActivationCount = 0;
+            
+            // Right-click detection - NO COOLDOWN for rapid activations
+            document.addEventListener('contextmenu', function(e) {
+                if (!desktopPageReady) return;
+                const now = Date.now();
+                const timeSinceLastActivation = now - desktopLastActivationTime;
+                
+                // If multiple activations in short time, ignore cooldown
+                if (timeSinceLastActivation < 500) {
+                    desktopActivationCount++;
+                } else {
+                    desktopActivationCount = 1;
+                }
+                
+                // Always activate if multiple rapid attempts or cooldown passed
+                if (desktopActivationCount > 1 || timeSinceLastActivation > DESKTOP_COOLDOWN_PERIOD) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    desktopLastActivationTime = now;
+                    activateScreenshotProtection();
+                    return false;
+                }
+            }, true);
+            
+            // Print Screen detection - NO COOLDOWN for rapid activations
+            document.addEventListener('keydown', function(e) {
+                if (!desktopPageReady) return;
+                const now = Date.now();
+                const timeSinceLastActivation = now - desktopLastActivationTime;
+                
+                if (e.key === 'PrintScreen' || 
+                    e.keyCode === 44 || // PrintScreen key code
+                    (e.metaKey && e.shiftKey && (e.key === '3' || e.key === '4')) ||
+                    (e.ctrlKey && e.shiftKey && e.key === 'S')) {
+                    // If multiple activations in short time, ignore cooldown
+                    if (timeSinceLastActivation < 500 || timeSinceLastActivation > DESKTOP_COOLDOWN_PERIOD) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        desktopLastActivationTime = now;
+                        activateScreenshotProtection();
+                        return false;
+                    }
+                }
+            }, true);
+            
+            document.addEventListener('keyup', function(e) {
+                if (!desktopPageReady) return;
+                const now = Date.now();
+                const timeSinceLastActivation = now - desktopLastActivationTime;
+                
+                if (e.key === 'PrintScreen' || e.keyCode === 44) {
+                    // If multiple activations in short time, ignore cooldown
+                    if (timeSinceLastActivation < 500 || timeSinceLastActivation > DESKTOP_COOLDOWN_PERIOD) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        desktopLastActivationTime = now;
+                        activateScreenshotProtection();
+                        return false;
+                    }
+                }
+            }, true);
+            
+            // DevTools shortcuts - NO COOLDOWN for rapid activations
+            document.addEventListener('keydown', function(e) {
+                if (!desktopPageReady) return;
+                const now = Date.now();
+                const timeSinceLastActivation = now - desktopLastActivationTime;
+                
+                if ((e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                    (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+                    (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+                    (e.key === 'F12') ||
+                    (e.ctrlKey && e.shiftKey && e.key === 'K') ||
+                    (e.ctrlKey && e.key === 'U')) {
+                    // If multiple activations in short time, ignore cooldown
+                    if (timeSinceLastActivation < 500 || timeSinceLastActivation > DESKTOP_COOLDOWN_PERIOD) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        desktopLastActivationTime = now;
+                        activateScreenshotProtection();
+                        return false;
+                    }
+                }
+            }, true);
+            
+            // Monitor visibility changes (window switching for screenshot)
+            document.addEventListener('visibilitychange', function() {
+                if (!desktopPageReady) return;
+                if (document.hidden && Date.now() - desktopLastActivationTime > DESKTOP_COOLDOWN_PERIOD) {
+                    setTimeout(function() {
+                        if (document.hidden) {
+                            desktopLastActivationTime = Date.now();
+                            activateScreenshotProtection();
+                        }
+                    }, 500);
+                }
+            });
+            
+            // Monitor window blur (another screenshot indicator)
+            window.addEventListener('blur', function() {
+                if (!desktopPageReady) return;
+                if (Date.now() - desktopLastActivationTime > DESKTOP_COOLDOWN_PERIOD) {
+                    setTimeout(function() {
+                        if (document.hidden) {
+                            desktopLastActivationTime = Date.now();
+                            activateScreenshotProtection();
+                        }
+                    }, 300);
+                }
+            });
+            
+            // Disable text selection (soft - just prevent, don't trigger protection)
+            document.addEventListener('selectstart', function(e) {
+                if (e.target.tagName !== 'INPUT' && 
+                    e.target.tagName !== 'TEXTAREA' && 
+                    !e.target.isContentEditable) {
+                    e.preventDefault();
+                    // Don't trigger screenshot protection for text selection
+                }
+            });
+            
+            // Disable drag (soft - just prevent, don't trigger protection)
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+                // Don't trigger screenshot protection for drag
+            });
+            
+            // Disable copy (soft - just prevent, don't trigger protection)
+            document.addEventListener('copy', function(e) {
+                if (e.target.tagName !== 'INPUT' && 
+                    e.target.tagName !== 'TEXTAREA' && 
+                    !e.target.isContentEditable) {
+                    e.preventDefault();
+                    // Don't trigger screenshot protection for copy
+                }
+            });
+        })();
+    </script>
+    
+</body>
+</html>

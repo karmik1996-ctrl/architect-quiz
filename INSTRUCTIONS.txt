@@ -1,0 +1,8 @@
+Command Prompt-ում գրեք այս commands-ները հերթով:
+
+1) cd /d D:\Programs\CursorTest\netlify-deploy
+
+2) COMPLETE-GIT-SETUP.bat
+
+ԿԱՐԵՎՈՐ: /d flag-ը պետք է, Windows-ում directory փոխելու համար!
+
