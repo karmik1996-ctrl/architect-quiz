@@ -11,7 +11,7 @@ let auth;
 let db;
 
 let authInitAttempts = 0;
-const MAX_AUTH_INIT_ATTEMPTS = 50; // 5 seconds max wait
+const MAX_AUTH_INIT_ATTEMPTS = 100; // 10 seconds max wait
 
 function initializeAuthWhenReady() {
   authInitAttempts++;
@@ -45,8 +45,10 @@ function initializeAuthWhenReady() {
       } else if (typeof window !== 'undefined') {
         // Wait for Firebase initialization event
         window.addEventListener('firebaseInitialized', function() {
-          setTimeout(initializeAuthWhenReady, 100);
+          setTimeout(initializeAuthWhenReady, 200);
         }, { once: true });
+        // Also retry in case event already fired
+        setTimeout(initializeAuthWhenReady, 200);
       } else {
         // Retry after a short delay
         setTimeout(initializeAuthWhenReady, 100);
@@ -59,12 +61,8 @@ function initializeAuthWhenReady() {
   }
 }
 
-// Start initialization
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeAuthWhenReady);
-} else {
-  initializeAuthWhenReady();
-}
+// Start initialization - wait for Firebase to be ready
+initializeAuthWhenReady();
 
 // ============================================
 // AUTHENTICATION FUNCTIONS

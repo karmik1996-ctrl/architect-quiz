@@ -14,7 +14,7 @@ const firebaseConfig = {
 // Initialize Firebase (compat version - using firebase.initializeApp)
 // Wait for Firebase SDK to load with retry mechanism
 let firebaseInitAttempts = 0;
-const MAX_INIT_ATTEMPTS = 50; // 5 seconds max wait
+const MAX_INIT_ATTEMPTS = 100; // 10 seconds max wait
 
 function initializeFirebaseWhenReady() {
     firebaseInitAttempts++;
@@ -45,17 +45,13 @@ function initializeFirebaseWhenReady() {
         setTimeout(initializeFirebaseWhenReady, 100);
     } else {
         console.error("❌ Firebase SDK failed to load after", MAX_INIT_ATTEMPTS, "attempts");
+        console.error("Make sure Firebase SDK scripts are loaded in HTML before this script");
     }
 }
 
-// Start initialization when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(initializeFirebaseWhenReady, 100);
-    });
-} else {
-    setTimeout(initializeFirebaseWhenReady, 100);
-}
+// Start initialization - wait for Firebase SDK to be available
+// Check immediately and start retry loop
+initializeFirebaseWhenReady();
 
 // Expose firebaseConfig to the window for other modules
 if (typeof window !== 'undefined') {
