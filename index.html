@@ -507,32 +507,6 @@
         <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth-compat.js"></script>
         <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore-compat.js"></script>
         
-        <!-- Verify Firebase SDK loaded and execute initialization -->
-        <script>
-            // Wait for scripts to execute and verify Firebase SDK is available
-            (function verifyFirebaseSDK() {
-                // Check immediately (scripts execute synchronously)
-                if (typeof firebase !== 'undefined' && typeof firebase.initializeApp === 'function') {
-                    window.firebaseSDKVerified = true;
-                    return;
-                }
-                
-                // If not ready, retry after a short delay (scripts may still be executing)
-                let attempts = 0;
-                const maxAttempts = 50; // 5 seconds max
-                const checkInterval = setInterval(function() {
-                    attempts++;
-                    if (typeof firebase !== 'undefined' && typeof firebase.initializeApp === 'function') {
-                        window.firebaseSDKVerified = true;
-                        clearInterval(checkInterval);
-                    } else if (attempts >= maxAttempts) {
-                        console.error('Firebase SDK verification failed: typeof firebase =', typeof firebase);
-                        clearInterval(checkInterval);
-                    }
-                }, 100);
-            })();
-        </script>
-        
         <!-- Firebase Config and Auth Modules - Load after SDK (scripts execute in order, modules have retry mechanisms) -->
         <script src="js/firebase.config.js" charset="UTF-8"></script>
         <script src="js/firebase.auth.js" charset="UTF-8"></script>

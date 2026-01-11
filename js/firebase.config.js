@@ -61,18 +61,18 @@ function initializeFirebaseWhenReady() {
 }
 
 // Start initialization - wait for Firebase SDK to be available
-// Use window.onload to ensure all scripts are loaded
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    // DOM is already loaded, start checking
-    setTimeout(initializeFirebaseWhenReady, 100);
-} else {
-    // Wait for window load event
+// Start checking immediately (scripts execute synchronously, Firebase SDK should be available)
+// Also set up window.onload as backup
+setTimeout(initializeFirebaseWhenReady, 0);
+
+// Backup: also wait for window.onload event
+if (typeof window !== 'undefined') {
     window.addEventListener('load', function() {
-        setTimeout(initializeFirebaseWhenReady, 100);
+        // Only start if not already initialized
+        if (!window.firebaseInitialized) {
+            setTimeout(initializeFirebaseWhenReady, 0);
+        }
     }, { once: true });
-    
-    // Also try immediate check as fallback
-    setTimeout(initializeFirebaseWhenReady, 100);
 }
 
 // Expose firebaseConfig to the window for other modules
