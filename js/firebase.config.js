@@ -20,12 +20,18 @@ function initializeFirebaseWhenReady() {
     firebaseInitAttempts++;
     
     // Check if Firebase SDK is loaded (try multiple ways)
-    const firebaseLoaded = typeof firebase !== 'undefined' && 
-                          typeof firebase.initializeApp === 'function' &&
-                          typeof firebase.apps !== 'undefined';
+    // Try window.firebase first, then global firebase
+    const firebaseObj = (typeof window !== 'undefined' && window.firebase) || (typeof firebase !== 'undefined' ? firebase : null);
+    
+    const firebaseLoaded = firebaseObj && 
+                          typeof firebaseObj.initializeApp === 'function' &&
+                          typeof firebaseObj.apps !== 'undefined';
     
     if (firebaseLoaded) {
         try {
+            // Use the firebase object we found
+            const firebase = firebaseObj;
+            
             // Check if Firebase is already initialized
             if (!firebase.apps || firebase.apps.length === 0) {
                 firebase.initializeApp(firebaseConfig);
@@ -57,6 +63,7 @@ function initializeFirebaseWhenReady() {
         console.error("Make sure Firebase SDK scripts are loaded in HTML before this script");
         console.error("Debug: typeof firebase =", typeof firebase);
         console.error("Debug: typeof window.firebase =", typeof window !== 'undefined' ? typeof window.firebase : 'N/A');
+        console.error("Debug: window keys containing 'firebase':", typeof window !== 'undefined' ? Object.keys(window).filter(k => k.toLowerCase().includes('firebase')) : []);
     }
 }
 
