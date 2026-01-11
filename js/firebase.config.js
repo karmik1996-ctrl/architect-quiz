@@ -14,12 +14,17 @@ const firebaseConfig = {
 // Initialize Firebase (compat version - using firebase.initializeApp)
 // Wait for Firebase SDK to load with retry mechanism
 let firebaseInitAttempts = 0;
-const MAX_INIT_ATTEMPTS = 100; // 10 seconds max wait
+const MAX_INIT_ATTEMPTS = 200; // 20 seconds max wait (increased from 100)
 
 function initializeFirebaseWhenReady() {
     firebaseInitAttempts++;
     
-    if (typeof firebase !== 'undefined' && typeof firebase.initializeApp === 'function') {
+    // Check if Firebase SDK is loaded (try multiple ways)
+    const firebaseLoaded = typeof firebase !== 'undefined' && 
+                          typeof firebase.initializeApp === 'function' &&
+                          typeof firebase.apps !== 'undefined';
+    
+    if (firebaseLoaded) {
         try {
             // Check if Firebase is already initialized
             if (!firebase.apps || firebase.apps.length === 0) {
@@ -39,6 +44,10 @@ function initializeFirebaseWhenReady() {
             }
         } catch (error) {
             console.error("❌ Firebase initialization error:", error);
+            // Retry initialization if error occurs
+            if (firebaseInitAttempts < MAX_INIT_ATTEMPTS) {
+                setTimeout(initializeFirebaseWhenReady, 100);
+            }
         }
     } else if (firebaseInitAttempts < MAX_INIT_ATTEMPTS) {
         // Retry after a short delay
@@ -46,12 +55,22 @@ function initializeFirebaseWhenReady() {
     } else {
         console.error("❌ Firebase SDK failed to load after", MAX_INIT_ATTEMPTS, "attempts");
         console.error("Make sure Firebase SDK scripts are loaded in HTML before this script");
+        console.error("Debug: typeof firebase =", typeof firebase);
+        console.error("Debug: typeof window.firebase =", typeof window !== 'undefined' ? typeof window.firebase : 'N/A');
     }
 }
 
 // Start initialization - wait for Firebase SDK to be available
-// Check immediately and start retry loop
-initializeFirebaseWhenReady();
+// Use DOMContentLoaded to ensure scripts have loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait a bit more for Firebase SDK scripts to initialize
+        setTimeout(initializeFirebaseWhenReady, 200);
+    });
+} else {
+    // DOM already loaded, start initialization
+    setTimeout(initializeFirebaseWhenReady, 200);
+}
 
 // Expose firebaseConfig to the window for other modules
 if (typeof window !== 'undefined') {
