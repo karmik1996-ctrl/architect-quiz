@@ -728,14 +728,35 @@ async function initGame() {
 
 
 async function startQuiz() {
-    // Check payment status before starting (with security checks)
-    const paymentStatus = await checkPaymentStatus();
+    // Check access (payment or free trial) before starting
+    let accessCheck = null;
+    if (typeof checkQuizAccess === 'function') {
+        accessCheck = await checkQuizAccess();
+    } else {
+        // Fallback to old payment check if access module not loaded
+        const paymentStatus = await checkPaymentStatus();
+        accessCheck = {
+            canAccess: paymentStatus.paid,
+            reason: paymentStatus.paid ? 'paid' : 'payment_required',
+            isFreeTrial: false
+        };
+    }
     
-    if (!paymentStatus.paid) {
-        alert('⚠️ Խնդրում ենք վճարել հարցաթերթիկները մուտք գործելու համար');
+    if (!accessCheck.canAccess) {
+        // Check reason and show appropriate message
+        if (accessCheck.reason === 'free_trial_used') {
+            alert('⚠️ Անվճար demo-ն արդեն օգտագործված է:\nՎճարեք 15,000 դրամ կամ գրանցվեք նոր account-ով:');
+        } else {
+            alert('⚠️ Խնդրում ենք վճարել հարցաթերթիկները մուտք գործելու համար\nկամ օգտագործեք անվճար demo (1 անգամ, 10 հարց):');
+        }
         if (paymentSection) paymentSection.style.display = 'block';
         if (startSection) startSection.style.display = 'none';
         return;
+    }
+    
+    // Show info if using free trial
+    if (accessCheck.isFreeTrial && accessCheck.questionsRemaining !== undefined) {
+        console.log('✅ Free trial activated:', accessCheck.questionsRemaining, 'questions remaining');
     }
     
     // CRITICAL: Load attempts from cloud before starting quiz
@@ -1139,12 +1160,34 @@ function selectAnswer(selectedIndex) {
 // Move to next question
 
 
-function nextQuestion() {
+async function nextQuestion() {
     // Prevent double execution
     if (nextQuestion.inProgress) {
         return;
     }
     nextQuestion.inProgress = true;
+    
+    // Check if user can continue (within free trial limit if applicable)
+    if (typeof checkCanContinueQuiz === 'function') {
+        const canContinue = await checkCanContinueQuiz(currentQuestionIndex + 1); // Check next question index
+        if (!canContinue.canContinue) {
+            // Free trial limit reached
+            alert(canContinue.message || '⚠️ Անվճար demo-ի սահմանը հասել է: Վճարեք 15,000 դրամ:');
+            // Record trial usage
+            if (typeof recordFreeTrialUsage === 'function') {
+                await recordFreeTrialUsage(currentQuestionIndex + 1);
+            }
+            // Show payment section
+            if (paymentSection) paymentSection.style.display = 'block';
+            if (startSection) startSection.style.display = 'none';
+            if (topicSection) topicSection.style.display = 'none';
+            if (questionSection) questionSection.style.display = 'none';
+            if (answersSection) answersSection.style.display = 'none';
+            
+            nextQuestion.inProgress = false;
+            return;
+        }
+    }
     
     currentQuestionIndex++;
     loadQuestion();
@@ -1337,7 +1380,16 @@ function showAnswersReview(forceRefresh = false) {
 // Show results for current quiz set
 
 
-function showQuizSetResults() {
+async function showQuizSetResults() {
+    // Record free trial usage when quiz set completes (if within free trial)
+    if (typeof recordFreeTrialUsage === 'function' && typeof checkFreeTrialStatus === 'function') {
+        const trialStatus = await checkFreeTrialStatus();
+        if (!trialStatus.used) {
+            // Record the trial usage with current question count
+            await recordFreeTrialUsage(shuffledQuizData.length);
+        }
+    }
+    
     // Calculate results for current quiz set
     let correctCount = 0;
     let wrongCount = 0;

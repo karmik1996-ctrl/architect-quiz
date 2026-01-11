@@ -32,52 +32,89 @@
                 <div class="payment-instructions">
                     <h3>📋 Վճարման Հրահանգներ:</h3>
                     <ol>
-                        <li>Մուտքագրիր քո տվյալները և ուղարկիր վճարման հարցումը</li>
+                        <li>Գրանցվիր կամ մուտք գործիր (ստեղծիր քո account)</li>
                         <li>Փոխանցիր <strong>15,000 դրամ</strong> հետևյալ հաշվին</li>
                         <li>Ստացիր <strong>Վճարման Կոդ</strong> email-ով</li>
                         <li>Մուտքագրիր code-ը ներքևում և սկսիր հարցաթերթիկները</li>
                     </ol>
                 </div>
                 
-                <!-- Payment Request Form -->
-                <div id="payment-request-form" class="payment-request-form">
-                    <h3>📝 Մուտքագրիր Քո Տվյալները</h3>
-                    <form id="payment-form" name="payment-request" onsubmit="submitPaymentRequest(event)">
-                        <input type="hidden" name="form-name" value="payment-request">
-                        <div class="form-group">
-                            <label for="payment-name">Անուն *</label>
-                            <input type="text" id="payment-name" name="name" required placeholder="Մուտքագրիր քո անունը" autocomplete="name">
+                <!-- Registration/Login Section -->
+                <div id="auth-section" class="auth-section">
+                    <!-- Not Logged In: Show Registration/Login Forms -->
+                    <div id="auth-forms" class="auth-forms">
+                        <!-- Registration Form -->
+                        <div id="register-form-container" class="auth-form-container">
+                            <h3>📝 Գրանցում (Նոր Account)</h3>
+                            <form id="register-form" onsubmit="handleRegister(event); return false;">
+                                <div class="form-group">
+                                    <label for="register-name">Անուն *</label>
+                                    <input type="text" id="register-name" name="name" required placeholder="Մուտքագրիր քո անունը" autocomplete="name">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="register-phone">Հեռախոս *</label>
+                                    <input type="tel" id="register-phone" name="phone" required placeholder="Օրինակ: 091234567" autocomplete="tel">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="register-email">Email *</label>
+                                    <input type="email" id="register-email" name="email" required placeholder="email@example.com" autocomplete="email">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="register-password">Գաղտնաբառ *</label>
+                                    <input type="password" id="register-password" name="password" required placeholder="Առնվազն 6 նիշ" autocomplete="new-password" minlength="6">
+                                </div>
+                                
+                                <button type="submit" id="register-btn" class="btn-primary" style="width: 100%;">
+                                    ✅ Գրանցվել
+                                </button>
+                                <div id="register-status"></div>
+                                
+                                <p style="margin-top: 15px; text-align: center; color: #666;">
+                                    Արդեն account ունես? 
+                                    <a href="#" onclick="showLoginForm(); return false;" style="color: #007bff; text-decoration: underline;">Մուտք գործիր</a>
+                                </p>
+                            </form>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="payment-phone">Հեռախոս *</label>
-                            <input type="tel" id="payment-phone" name="phone" required placeholder="Օրինակ: 091234567" autocomplete="tel">
+                        <!-- Login Form (Hidden by default) -->
+                        <div id="login-form-container" class="auth-form-container" style="display: none;">
+                            <h3>🔑 Մուտք (Login)</h3>
+                            <form id="login-form" onsubmit="handleLogin(event); return false;">
+                                <div class="form-group">
+                                    <label for="login-email">Email *</label>
+                                    <input type="email" id="login-email" name="email" required placeholder="email@example.com" autocomplete="email">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="login-password">Գաղտնաբառ *</label>
+                                    <input type="password" id="login-password" name="password" required placeholder="Քո գաղտնաբառը" autocomplete="current-password">
+                                </div>
+                                
+                                <button type="submit" id="login-btn" class="btn-primary" style="width: 100%;">
+                                    🔓 Մուտք Գործել
+                                </button>
+                                <div id="login-status"></div>
+                                
+                                <p style="margin-top: 15px; text-align: center; color: #666;">
+                                    Account չունես? 
+                                    <a href="#" onclick="showRegisterForm(); return false;" style="color: #007bff; text-decoration: underline;">Գրանցվիր</a>
+                                </p>
+                            </form>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="payment-email">Email</label>
-                            <input type="email" id="payment-email" name="email" placeholder="email@example.com" autocomplete="email">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="payment-method">Վճարման Եղանակ *</label>
-                            <select id="payment-method" name="paymentMethod" required>
-                                <option value="">Ընտրիր վճարման եղանակը</option>
-                                <option value="IDram">IDram</option>
-                                <option value="ArCa">ArCa</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="payment-message">Հաղորդագրություն (ընտրովի)</label>
-                            <textarea id="payment-message" name="message" rows="3" placeholder="Լրացուցիչ տեղեկություններ..."></textarea>
-                        </div>
-                        
-                        <button type="submit" id="submit-payment-btn" class="btn-primary" style="width: 100%;">
-                            📤 Ուղարկել Վճարման Հարցում
+                    </div>
+                    
+                    <!-- Logged In: Show User Info -->
+                    <div id="user-info" class="user-info" style="display: none;">
+                        <h3>✅ Բարև, <span id="user-display-name"></span>!</h3>
+                        <p>Email: <strong id="user-email"></strong></p>
+                        <p>Հեռախոս: <strong id="user-phone"></strong></p>
+                        <button id="logout-btn" class="btn-secondary" onclick="handleLogout(); return false;" style="width: 100%; margin-top: 15px;">
+                            🚪 Ելք (Logout)
                         </button>
-                        <div id="payment-request-status"></div>
-                    </form>
+                    </div>
                 </div>
                 
                 <div class="bank-details">
@@ -92,24 +129,14 @@
                     <button class="copy-btn" onclick="copyToClipboard('arca-number')">📋</button>
                 </div>
                 
-                <!-- Payment Code Input - Always visible -->
-                <div id="payment-code-section" class="payment-code-input" style="display: block; margin-top: 30px;">
+                <!-- Payment Code Input - Only visible after login -->
+                <div id="payment-code-section" class="payment-code-input" style="display: none; margin-top: 30px;">
                     <h3 style="color: #1a1a1a; margin-bottom: 15px; font-size: 1.1em;">🔑 Վճարման Կոդ</h3>
-                    <p style="margin-bottom: 15px; color: #666; font-size: 0.9em;">Եթե արդեն ունես վճարման կոդ, մուտքագրիր այն ներքևում:</p>
+                    <p style="margin-bottom: 15px; color: #666; font-size: 0.9em;">Վճարիր 15,000 դրամ և ստացիր վճարման կոդը email-ով, ապա մուտքագրիր այն ներքևում:</p>
                     <label for="payment-code">Վճարման Կոդ:</label>
                     <input type="text" id="payment-code" placeholder="Մուտքագրիր վճարման կոդը" autocomplete="off">
                     <button id="verify-payment-btn" class="btn-primary" style="width: 100%; margin-top: 10px;" onclick="verifyPaymentCode(); return false;">✅ ՍՏՈՒԳԵԼ ԵՎ ՍԿՍԵԼ ՀԱՐՑԱԹԵՐԹԻԿՆԵՐԸ</button>
                     <div id="payment-status"></div>
-                </div>
-                
-                <!-- Payment Code Input - Shown after request submitted (alternative message) -->
-                <div id="payment-code-section-after-request" class="payment-code-input" style="display: none; margin-top: 30px;">
-                    <h3 style="color: #28a745; margin-bottom: 15px;">✅ Վճարման Հարցումը Ուղարկված է!</h3>
-                    <p style="margin-bottom: 15px; color: #555;">Վճարիր 15,000 դրամ և ստացիր վճարման կոդը email-ով:</p>
-                    <label for="payment-code-after">🔑 Վճարման Կոդ:</label>
-                    <input type="text" id="payment-code-after" placeholder="Մուտքագրիր վճարման կոդը" autocomplete="off">
-                    <button id="verify-payment-btn-after" class="btn-primary" style="width: 100%;" onclick="verifyPaymentCode(); return false;">✅ ՍՏՈՒԳԵԼ ԵՎ ՍԿՍԵԼ ՀԱՐՑԱԹԵՐԹԻԿՆԵՐԸ</button>
-                    <div id="payment-status-after"></div>
                 </div>
             </div>
         </div>
@@ -480,8 +507,30 @@
         window.startNextQuizSet = function() { return false; };
         window.showAllResults = function() { return false; };
         window.copyToClipboard = function() { return false; };
-        window.submitPaymentRequest = function() { return false; };
+        // Auth functions will be exposed by auth.ui.js
+        window.handleRegister = function(e) { if(e) e.preventDefault(); return false; };
+        window.handleLogin = function(e) { if(e) e.preventDefault(); return false; };
+        window.handleLogout = function() { return false; };
+        window.showRegisterForm = function() { return false; };
+        window.showLoginForm = function() { return false; };
     </script>
+        <!-- Firebase SDK - Load first (compat version for script tags) -->
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore-compat.js"></script>
+        
+        <!-- Firebase Config (after SDK) -->
+        <script src="js/firebase.config.js" charset="UTF-8"></script>
+        
+        <!-- Firebase Auth (after config) -->
+        <script src="js/firebase.auth.js" charset="UTF-8"></script>
+        
+        <!-- Auth UI (after Firebase Auth) -->
+        <script src="js/auth.ui.js" charset="UTF-8"></script>
+        
+        <!-- Access Control (after Auth UI) -->
+        <script src="js/quiz.access.js" charset="UTF-8"></script>
+        
         <!-- Modular JavaScript files - load in dependency order -->
         <script src="js/quiz.data.js" charset="UTF-8"></script>
         <script src="js/quiz.storage.js" charset="UTF-8"></script>
