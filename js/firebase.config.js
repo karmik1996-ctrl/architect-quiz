@@ -61,28 +61,40 @@ function initializeFirebaseWhenReady() {
 }
 
 // Start initialization - wait for Firebase SDK to be available
-// Try multiple strategies: immediate check, DOMContentLoaded, and window.onload
+// Try multiple strategies: script onload event, immediate check, DOMContentLoaded, and window.onload
 (function initFirebase() {
-    // Strategy 1: If DOM is already loaded, start immediately
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        setTimeout(initializeFirebaseWhenReady, 50);
-        return;
-    }
-    
-    // Strategy 2: Wait for DOMContentLoaded
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
+    // Strategy 1: Wait for Firebase SDK scripts onload event (if available)
+    if (typeof window !== 'undefined') {
+        if (window.firebaseSDKScriptsReady) {
+            // Scripts already loaded
             setTimeout(initializeFirebaseWhenReady, 50);
-        });
+        } else {
+            // Wait for script onload event
+            window.addEventListener('firebaseSDKScriptsReady', function() {
+                setTimeout(initializeFirebaseWhenReady, 50);
+            }, { once: true });
+        }
     }
     
-    // Strategy 3: Also wait for window.onload as fallback
-    window.addEventListener('load', function() {
-        setTimeout(initializeFirebaseWhenReady, 50);
-    }, { once: true });
+    // Strategy 2: If DOM is already loaded, start immediately
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        setTimeout(initializeFirebaseWhenReady, 100);
+    } else {
+        // Strategy 3: Wait for DOMContentLoaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(initializeFirebaseWhenReady, 100);
+            });
+        }
+        
+        // Strategy 4: Also wait for window.onload as fallback
+        window.addEventListener('load', function() {
+            setTimeout(initializeFirebaseWhenReady, 100);
+        }, { once: true });
+    }
     
-    // Strategy 4: Immediate check as fallback (for already loaded scripts)
-    setTimeout(initializeFirebaseWhenReady, 50);
+    // Strategy 5: Immediate check as fallback (for already loaded scripts)
+    setTimeout(initializeFirebaseWhenReady, 200);
 })();
 
 // Expose firebaseConfig to the window for other modules
