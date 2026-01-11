@@ -61,19 +61,25 @@ function initializeFirebaseWhenReady() {
 }
 
 // Start initialization - wait for Firebase SDK to be available
-// Start checking immediately (scripts execute synchronously, Firebase SDK should be available)
-// Also set up window.onload as backup
-setTimeout(initializeFirebaseWhenReady, 0);
-
-// Backup: also wait for window.onload event
-if (typeof window !== 'undefined') {
-    window.addEventListener('load', function() {
-        // Only start if not already initialized
-        if (!window.firebaseInitialized) {
-            setTimeout(initializeFirebaseWhenReady, 0);
+// Scripts execute synchronously, so Firebase SDK should be available immediately
+// Start checking immediately with minimal delay
+(function startFirebaseInit() {
+    // Check immediately (scripts execute synchronously)
+    if (typeof firebase !== 'undefined') {
+        initializeFirebaseWhenReady();
+    } else {
+        // If not ready, start with setTimeout (may need time to execute)
+        setTimeout(initializeFirebaseWhenReady, 10);
+        // Also try after window.onload as backup
+        if (typeof window !== 'undefined') {
+            window.addEventListener('load', function() {
+                if (!window.firebaseInitialized) {
+                    setTimeout(initializeFirebaseWhenReady, 10);
+                }
+            }, { once: true });
         }
-    }, { once: true });
-}
+    }
+})();
 
 // Expose firebaseConfig to the window for other modules
 if (typeof window !== 'undefined') {
