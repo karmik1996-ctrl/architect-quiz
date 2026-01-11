@@ -1,0 +1,21 @@
+✅ Authentication Succeeded!
+
+Ինչ անել:
+1. Browser tab-ը փակեք
+2. Command Prompt-ին վերադառնալ
+3. Push-ը կշարունակվի ավտոմատ
+
+Command Prompt-ում պետք է տեսնեք:
+- "Enumerating objects..."
+- "Counting objects..."
+- "Writing objects..."
+- "remote: Resolving deltas..."
+- "To https://github.com/karmik1996-ctrl/architect-quiz.git"
+- Success message
+
+⚠️ Եթե error է:
+- Ստուգեք Command Prompt-ում
+- Error message-ը կտեսնեք
+
+✅ Push-ը կհաջողվի authorization-ից հետո:
+

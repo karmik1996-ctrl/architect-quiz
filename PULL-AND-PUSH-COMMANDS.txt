@@ -1,0 +1,24 @@
+Push Rejected Error - Լուծում
+
+ՊՐՈԲԼԵՄ:
+Remote repository-ում կան files, որոնք local-ում չկան
+(հավանաբար web interface-ով upload արված files)
+
+ԼՈՒԾՈՒՄ:
+1. Pull անել remote changes-ները
+2. Merge անել
+3. Push անել
+
+Command Prompt-ում գրեք (հերթով):
+
+1) git pull origin main --allow-unrelated-histories
+
+   (Եթե merge conflict է, բացեք file-ները և resolve արեք, հետո:)
+   git add .
+   git commit -m "Merge remote and local changes"
+
+2) git push -u origin main
+
+ԿԱՐԵՎՈՐ:
+--allow-unrelated-histories flag-ը անհրաժեշտ է, եթե remote և local histories-ը տարբեր են
+

@@ -1,0 +1,28 @@
+Command-ները պետք է գործարկվեն առանձին!
+
+ՊՐՈԲԼԵՄ:
+Command-ները concatenated են եղել (միասին գրված):
+git commit -m "Merge remote and local changes"git push -u origin main
+
+ՍԱ ՍԽԱԼ Է!
+
+ԼՈՒԾՈՒՄ 1: Batch File (Ամենահեշտ)
+Command Prompt-ում գրեք:
+D:\Programs\CursorTest\netlify-deploy\FIX-PUSH-REJECTED.bat
+
+Կամ:
+D:\Programs\CursorTest\netlify-deploy\SIMPLE-PULL-AND-PUSH.bat
+
+ԼՈՒԾՈՒՄ 2: Command-ները առանձին (մեկ առ մեկ)
+Command Prompt-ում գրեք (հերթով, Enter սեղմելով յուրաքանչյուր command-ից հետո):
+
+1) git pull origin main --allow-unrelated-histories
+   (Enter սեղմեք և սպասեք ավարտին)
+
+2) git push -u origin main
+   (Enter սեղմեք)
+
+ԿԱՐԵՎՈՐ:
+- Command-ները պետք է գործարկվեն առանձին (Enter սեղմելով յուրաքանչյուր command-ից հետո)
+- Կամ օգտագործեք batch file-ը (ավելի հեշտ է)
+

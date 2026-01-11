@@ -1,0 +1,19 @@
+GitHub Authorization - Գործընթաց
+
+Սա նորմալ գործընթաց է Windows-ում Git Credential Manager-ի հետ:
+
+Ինչ անել:
+1. "Authorize git-ecosystem" կոճակը սեղմեք (կանաչ կոճակ)
+2. Push-ը կշարունակվի ավտոմատ
+
+Ինչ է սա:
+- Git Credential Manager-ը GitHub-ի հետ authenticate լինելու համար թույլտվություն է խնդրում
+- Սա անվտանգ է - GitHub-ի պաշտոնական application է
+- Push-ը կհաջողվի authorization-ից հետո
+
+⚠️ Եթե "Cancel" սեղմեք:
+- Push-ը չի աշխատի
+- Անհրաժեշտ կլինի նորից փորձել
+
+✅ "Authorize git-ecosystem" սեղմեք:
+

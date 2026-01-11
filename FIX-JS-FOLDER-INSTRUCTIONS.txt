@@ -1,0 +1,26 @@
+GitHub-ում JavaScript files-ները root-ում են, բայց պետք է js/ folder-ում լինեն!
+
+ՊՐՈԲԼԵՄ:
+- GitHub-ում files-ները root-ում են (main.js, quiz.core.js, etc.)
+- Բայց index.html-ում script tags-ները src="js/quiz.data.js" են
+- Կայքը չի աշխատի, քանի որ files-ները js/ folder-ում չեն
+
+ԼՈՒԾՈՒՄ:
+1. Local-ում move անել JavaScript files-ները js/ folder-ի մեջ
+2. Commit և push անել
+
+ԻՆՉ ԱՆԵԼ:
+
+Command Prompt-ում գրեք:
+D:\Programs\CursorTest\netlify-deploy\MOVE-JS-FILES-TO-FOLDER.bat
+
+Batch file-ը կ:
+1. Ստուգի js/ folder-ը
+2. Move անի JavaScript files-ները js/ folder-ի մեջ
+3. Commit անի
+4. Push անի GitHub
+
+ԿԱՐԵՎՈՐ:
+Batch file-ը local-ում move անում է files-ները, հետո commit և push է անում:
+GitHub-ում files-ները js/ folder-ում կլինեն:
+

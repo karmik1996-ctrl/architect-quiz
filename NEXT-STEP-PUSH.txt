@@ -1,0 +1,10 @@
+✅ SUCCESS: All files committed!
+
+Հիմա push անել GitHub:
+
+Command Prompt-ում գրեք:
+
+git push -u origin main
+
+Password-ի փոխարեն Personal Access Token օգտագործեք!
+
