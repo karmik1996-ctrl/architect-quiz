@@ -174,12 +174,19 @@ async function logoutUser() {
  */
 async function getCurrentUser() {
   try {
+    if (!auth) {
+      // Auth not initialized yet
+      return null;
+    }
     const user = auth.currentUser;
     if (!user) {
       return null;
     }
     
     // Get user data from Firestore
+    if (!db) {
+      return null;
+    }
     const userDoc = await db.collection('users').doc(user.uid).get();
     const userData = userDoc.data();
     
@@ -199,6 +206,9 @@ async function getCurrentUser() {
  * @returns {boolean}
  */
 function isUserLoggedIn() {
+  if (!auth) {
+    return false;
+  }
   return auth.currentUser !== null;
 }
 
@@ -208,6 +218,33 @@ function isUserLoggedIn() {
  * @returns {Function} Unsubscribe function
  */
 function onAuthStateChanged(callback) {
+  if (!auth) {
+    // Auth not initialized yet, set up listener for when it's ready
+    if (typeof window !== 'undefined') {
+      let unsubscribe = null;
+      const checkAndSetup = () => {
+        if (auth) {
+          unsubscribe = auth.onAuthStateChanged(callback);
+        }
+      };
+      // Wait for auth to be ready
+      if (window.firebaseAuthReady) {
+        // Already ready, set up immediately
+        setTimeout(checkAndSetup, 100);
+      } else {
+        // Wait for event
+        window.addEventListener('firebaseAuthReady', checkAndSetup, { once: true });
+      }
+      // Return unsubscribe function
+      return () => {
+        if (unsubscribe && typeof unsubscribe === 'function') {
+          unsubscribe();
+        }
+      };
+    }
+    // Return no-op unsubscribe if no window
+    return () => {};
+  }
   return auth.onAuthStateChanged(callback);
 }
 
