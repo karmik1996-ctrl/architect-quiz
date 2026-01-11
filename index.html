@@ -503,35 +503,41 @@
         window.showLoginForm = function() { return false; };
     </script>
         <!-- Firebase SDK - Load first (compat version for script tags) -->
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app-compat.js" onload="window.firebaseAppLoaded = true;"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth-compat.js" onload="window.firebaseAuthLoaded = true;"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore-compat.js" onload="window.firebaseFirestoreLoaded = true; loadFirebaseModules();"></script>
-        
         <!-- Firebase Config (after SDK) - loaded when Firebase SDK is ready -->
         <script>
             function loadFirebaseModules() {
                 if (typeof firebase !== 'undefined' && window.firebaseAppLoaded && window.firebaseAuthLoaded && window.firebaseFirestoreLoaded) {
+                    console.log('✅ Loading Firebase modules...');
                     // Load our Firebase modules
                     const configScript = document.createElement('script');
                     configScript.src = 'js/firebase.config.js';
                     configScript.charset = 'UTF-8';
                     configScript.onload = function() {
+                        console.log('✅ firebase.config.js loaded');
                         const authScript = document.createElement('script');
                         authScript.src = 'js/firebase.auth.js';
                         authScript.charset = 'UTF-8';
                         authScript.onload = function() {
+                            console.log('✅ firebase.auth.js loaded');
                             const authUIScript = document.createElement('script');
                             authUIScript.src = 'js/auth.ui.js';
                             authUIScript.charset = 'UTF-8';
                             authUIScript.onload = function() {
+                                console.log('✅ auth.ui.js loaded');
                                 const accessScript = document.createElement('script');
                                 accessScript.src = 'js/quiz.access.js';
                                 accessScript.charset = 'UTF-8';
+                                accessScript.onload = function() {
+                                    console.log('✅ quiz.access.js loaded');
+                                };
                                 document.head.appendChild(accessScript);
                             };
                             document.head.appendChild(authUIScript);
                         };
                         document.head.appendChild(authScript);
+                    };
+                    configScript.onerror = function() {
+                        console.error('❌ Failed to load firebase.config.js');
                     };
                     document.head.appendChild(configScript);
                 } else {
@@ -540,6 +546,9 @@
                 }
             }
         </script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app-compat.js" onload="window.firebaseAppLoaded = true; console.log('✅ firebase-app-compat.js loaded');"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth-compat.js" onload="window.firebaseAuthLoaded = true; console.log('✅ firebase-auth-compat.js loaded');"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore-compat.js" onload="window.firebaseFirestoreLoaded = true; console.log('✅ firebase-firestore-compat.js loaded'); setTimeout(loadFirebaseModules, 100);"></script>
         
         <!-- Modular JavaScript files - load in dependency order -->
         <script src="js/quiz.data.js" charset="UTF-8"></script>
