@@ -3704,32 +3704,43 @@ body:not(.dark-mode) .quiz-type-option {
 
 /* Door Icon Animations */
 .door-icon {
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
     transform-origin: center;
+    display: inline-block;
 }
 
 /* Login Icon - Door opens inward (to the right) */
 .login-btn-with-icon:hover .login-icon .door-panel {
-    transform: rotateY(-45deg);
+    transform: rotateY(-60deg) translateX(2px);
     transform-origin: left center;
     transition: transform 0.3s ease;
 }
 
 .login-btn-with-icon:hover .login-icon .door-arrow {
-    transform: translateX(2px);
+    transform: translateX(4px);
     transition: transform 0.3s ease;
+    opacity: 1;
+}
+
+.login-btn-with-icon .login-icon .door-arrow {
+    opacity: 0.8;
 }
 
 /* Logout Icon - Door opens outward (to the left) */
 .logout-btn-with-icon:hover .logout-icon .door-panel {
-    transform: rotateY(45deg);
+    transform: rotateY(60deg) translateX(-2px);
     transform-origin: right center;
     transition: transform 0.3s ease;
 }
 
 .logout-btn-with-icon:hover .logout-icon .door-arrow {
-    transform: translateX(-2px);
+    transform: translateX(-4px);
     transition: transform 0.3s ease;
+    opacity: 1;
+}
+
+.logout-btn-with-icon .logout-icon .door-arrow {
+    opacity: 0.8;
 }
 
 /* Ensure door panel is positioned correctly for 3D effect */
@@ -3739,5 +3750,10 @@ body:not(.dark-mode) .quiz-type-option {
 }
 
 .door-icon .door-arrow {
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Door frame stays static */
+.door-icon .door-frame {
+    transition: none;
 }
