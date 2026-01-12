@@ -800,8 +800,8 @@ async function initGame() {
         
         // Update attempts header display (use current quiz set attempts if available)
         let attempts;
-        if (typeof currentQuizSetIndex !== 'undefined' && currentQuizSetIndex >= 0) {
-            const quizSetNumber = currentQuizSetIndex < 17 ? currentQuizSetIndex + 1 : 18;
+        if (typeof currentQuizSetIndex !== 'undefined' && currentQuizSetIndex >= 0 && quizSets && quizSets.length > 0) {
+            const quizSetNumber = currentQuizSetIndex + 1; // 1-based index
             attempts = getQuizSetAttempts(quizSetNumber.toString());
         } else {
             attempts = getQuizAttempts();
@@ -980,12 +980,12 @@ async function startQuiz() {
     startSessionValidityCheck();
     
     // Track quiz start in Google Apps Script
-    const quizSetNumber = currentQuizSetIndex < 17 ? currentQuizSetIndex + 1 : 18;
+    const quizSetNumber = currentQuizSetIndex + 1; // 1-based index
     trackQuizProgress('start', quizSetNumber);
     
     // Update attempts display for current quiz set after sections are visible
     setTimeout(() => {
-        const quizSetNumber = currentQuizSetIndex < 17 ? currentQuizSetIndex + 1 : 18;
+        const quizSetNumber = currentQuizSetIndex + 1; // 1-based index
         const quizSetAttempts = getQuizSetAttempts(quizSetNumber.toString());
         updateAttemptsDisplay(quizSetAttempts);
     }, 100);
@@ -1225,7 +1225,7 @@ function loadQuestion() {
     // Use current quiz set attempts instead of global attempts
     // IMPORTANT: Load attempts from localStorage first to ensure we have the latest data
     loadQuizSetAttempts();
-    const quizSetNumber = currentQuizSetIndex < 17 ? currentQuizSetIndex + 1 : 18;
+    const quizSetNumber = currentQuizSetIndex + 1; // 1-based index
     const attempts = getQuizSetAttempts(quizSetNumber.toString());
     updateAttemptsDisplay(attempts);
     
@@ -1263,13 +1263,9 @@ function loadQuestion() {
     
     // Update quiz set number display
     const quizSetNumberDisplay = document.getElementById('quiz-set-number-display');
-    if (quizSetNumberDisplay) {
-        // Display 1-17 for first 17 tests, then 18 for the last test (18th test)
-        if (currentQuizSetIndex < 17) {
-            quizSetNumberDisplay.textContent = currentQuizSetIndex + 1;
-        } else {
-            quizSetNumberDisplay.textContent = 18; // Last test is the 18th test
-        }
+    if (quizSetNumberDisplay && typeof currentQuizSetIndex !== 'undefined' && currentQuizSetIndex >= 0) {
+        // Display quiz set number (1-based index)
+        quizSetNumberDisplay.textContent = currentQuizSetIndex + 1;
     }
     
     // Update exhausted quiz sets display
@@ -1679,8 +1675,8 @@ async function showQuizSetResults() {
     };
     
     // Increment attempt for this quiz set
-    const quizSetNumber = currentQuizSetIndex < 17 ? currentQuizSetIndex + 1 : 18;
-    const newAttempts = incrementQuizSetAttempt(quizSetNumber);
+    const quizSetNumber = currentQuizSetIndex + 1; // 1-based index
+    const newAttempts = incrementQuizSetAttempt(quizSetNumber.toString());
     // Track quiz complete in Google Apps Script
     trackQuizProgress('complete', quizSetNumber);
     
@@ -1900,13 +1896,9 @@ function displayQuizSetResults(correctCount, wrongCount) {
     const nextQuizSetBtn = document.getElementById('next-quiz-set-btn');
     const finishAllBtn = document.getElementById('finish-all-quiz-sets-btn');
     
-    // Display quiz set number: 1-17 for first 17 tests, 18 for last test
-    if (quizSetNumber) {
-        if (currentQuizSetIndex < 17) {
-            quizSetNumber.textContent = currentQuizSetIndex + 1;
-        } else {
-            quizSetNumber.textContent = 18; // Last test is the 18th test
-        }
+    // Display quiz set number (1-based index)
+    if (quizSetNumber && typeof currentQuizSetIndex !== 'undefined' && currentQuizSetIndex >= 0) {
+        quizSetNumber.textContent = currentQuizSetIndex + 1;
     }
     if (quizSetCorrect) quizSetCorrect.textContent = correctCount;
     if (quizSetWrong) quizSetWrong.textContent = wrongCount;
@@ -2031,7 +2023,7 @@ function startNextQuizSet() {
     userAnswers = [];
     
     // Update attempts display for the new quiz set
-    const quizSetNumber = currentQuizSetIndex < 17 ? currentQuizSetIndex + 1 : 18;
+    const quizSetNumber = currentQuizSetIndex + 1; // 1-based index
     const attempts = getQuizSetAttempts(quizSetNumber.toString());
     updateAttemptsDisplay(attempts);
     
