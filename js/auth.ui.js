@@ -196,6 +196,16 @@ function showUserInfo(userData) {
                 choiceSection.style.setProperty('display', 'none', 'important');
             }
             if (quizTypeSection) {
+                // CRITICAL: Ensure payment-section is visible (it contains quiz-type-section)
+                if (paymentSection) {
+                    paymentSection.style.display = 'block';
+                    paymentSection.style.setProperty('display', 'block', 'important');
+                    paymentSection.style.visibility = 'visible';
+                    paymentSection.style.opacity = '1';
+                    console.log('✅ Payment section made visible for quiz-type-section');
+                    console.log('Payment section computed style:', window.getComputedStyle(paymentSection).display);
+                }
+                
                 quizTypeSection.style.display = 'block';
                 quizTypeSection.style.setProperty('display', 'block', 'important');
                 quizTypeSection.style.visibility = 'visible';
@@ -235,6 +245,8 @@ function showUserInfo(userData) {
                 
                 console.log('✅ Quiz type section shown');
                 console.log('Quiz type section computed style:', window.getComputedStyle(quizTypeSection).display);
+                console.log('Quiz type section offsetHeight:', quizTypeSection.offsetHeight);
+                console.log('Quiz type section parent:', quizTypeSection.parentElement?.id);
                 // Scroll to quiz type section
                 setTimeout(() => {
                     if (quizTypeSection) {
