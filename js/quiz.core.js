@@ -106,6 +106,45 @@ function calculateQuizSetsInfo(quizDataArray) {
     return { totalQuestions, totalTests, questionsPerTest };
 }
 
+/**
+ * Update quiz type indicator in quiz header
+ */
+function updateQuizTypeIndicator() {
+    const selectedType = localStorage.getItem('selectedQuizType');
+    const indicator = document.getElementById('quiz-type-indicator');
+    const indicatorText = document.getElementById('quiz-type-indicator-text');
+    
+    if (!indicator || !indicatorText) {
+        return;
+    }
+    
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    
+    if (selectedType === 'constructor') {
+        indicatorText.textContent = '🔧 Կոնստրուկտորի Թեստեր';
+        if (isDarkMode) {
+            indicator.style.background = '#1e4620';
+            indicator.style.color = '#4caf50';
+        } else {
+            indicator.style.background = '#e8f5e9';
+            indicator.style.color = '#28a745';
+        }
+    } else {
+        // Default to architect
+        indicatorText.textContent = '🏛️ Ճարտարապետի Թեստեր';
+        if (isDarkMode) {
+            indicator.style.background = '#0d47a1';
+            indicator.style.color = '#64b5f6';
+        } else {
+            indicator.style.background = '#e3f2fd';
+            indicator.style.color = '#007bff';
+        }
+    }
+    
+    // Show indicator
+    indicator.style.display = 'inline-block';
+}
+
 // DOM elements (will be initialized when DOM is ready)
 let startSection = null;
 let paymentSection = null;
