@@ -244,6 +244,11 @@ async function handleLogin(event) {
  */
 async function handleLogout() {
     try {
+        // Clear test data if test mode is enabled (TEMPORARY - WILL BE REMOVED)
+        if (typeof clearTestData === 'function') {
+            clearTestData();
+        }
+        
         // Check if logoutUser function exists
         if (typeof logoutUser !== 'function') {
             throw new Error('Firebase Auth functions not loaded.');
@@ -441,6 +446,29 @@ if (typeof window !== 'undefined') {
     window.showPaymentCodeSection = showPaymentCodeSection;
     window.showChoiceSection = showChoiceSection;
     window.startFreeTrial = startFreeTrial;
+    window.togglePasswordVisibility = togglePasswordVisibility;
+}
+
+/**
+ * Toggle password visibility
+ * @param {string} inputId - ID of password input
+ * @param {string} buttonId - ID of toggle button
+ */
+function togglePasswordVisibility(inputId, buttonId) {
+    const passwordInput = document.getElementById(inputId);
+    const toggleButton = document.getElementById(buttonId);
+    
+    if (!passwordInput || !toggleButton) return;
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleButton.textContent = '🙈';
+        toggleButton.title = 'Թաքցնել գաղտնաբառը';
+    } else {
+        passwordInput.type = 'password';
+        toggleButton.textContent = '👁️';
+        toggleButton.title = 'Ցուցադրել գաղտնաբառը';
+    }
 }
 
 // Auto-initialize when script loads
