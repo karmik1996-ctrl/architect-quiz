@@ -1223,18 +1223,17 @@
         })();
     </script>
     
-    <!-- Logout Button - Fixed at bottom of viewport (doesn't move with scroll) -->
+    <!-- Logout Button - Fixed at top-left corner -->
     <div id="logout-container" style="display: none;">
-        <button id="logout-btn" class="btn-secondary logout-btn-with-icon" style="display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="handleLogout(); return false;">
-            <svg class="door-icon logout-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <button id="logout-btn" class="btn-secondary logout-btn-with-icon" style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0; border-radius: 8px;" onclick="handleLogout(); return false;" title="Ելք">
+            <svg class="door-icon logout-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <!-- Door frame (U-shaped) -->
-                <path d="M6 4 L6 20 M18 4 L18 20 M6 4 L18 4 M6 20 L18 20" class="door-frame"/>
-                <!-- Door panel (solid black trapezoid, angled to the left) -->
-                <path d="M12 4 L8 4 L8 20 L12 20 Z" class="door-panel" fill="currentColor"/>
+                <path d="M4 4 L4 20 M20 4 L20 20 M4 4 L20 4 M4 20 L20 20" class="door-frame"/>
+                <!-- Door panel (solid black trapezoid on left, angled) -->
+                <path d="M12 4 L8 4 L7 6 L7 18 L8 20 L12 20 Z" class="door-panel" fill="currentColor"/>
                 <!-- Arrow pointing out of door (to the right) -->
-                <path d="M20 12 L16 12 M18 10 L20 12 L18 14" class="door-arrow" stroke-width="2.5"/>
+                <path d="M16 12 L20 12 M18 10 L20 12 L18 14" class="door-arrow" stroke-width="2.5"/>
             </svg>
-            <span>Ելք (Logout)</span>
         </button>
     </div>
 </body>

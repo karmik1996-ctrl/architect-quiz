@@ -3593,11 +3593,14 @@ body.dark-mode #login-password-toggle:hover {
 }
 
 #logout-container #logout-btn {
-    width: auto;
-    padding: 10px 20px;
+    width: 48px !important;
+    height: 48px !important;
+    padding: 0 !important;
     margin: 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     pointer-events: auto !important;
+    border-radius: 8px;
+    min-width: 48px;
 }
 
 body.dark-mode #logout-container #logout-btn {
