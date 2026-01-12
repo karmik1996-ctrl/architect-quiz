@@ -1678,13 +1678,40 @@ function showAnswersReview(forceRefresh = false) {
 
 
 async function showQuizSetResults() {
-    // Record free trial usage when quiz set completes (if within free trial)
-    if (typeof recordFreeTrialUsage === 'function' && typeof checkFreeTrialStatus === 'function') {
-        const trialStatus = await checkFreeTrialStatus();
-        if (!trialStatus.used) {
-            // Record the trial usage with current question count
-            await recordFreeTrialUsage(shuffledQuizData.length);
+    // Prevent double execution
+    if (showQuizSetResults.inProgress) {
+        console.warn('⚠️ showQuizSetResults already in progress, skipping...');
+        return;
+    }
+    showQuizSetResults.inProgress = true;
+    
+    try {
+        // Record free trial usage when quiz set completes (if within free trial)
+        // Add timeout to prevent hanging
+        if (typeof recordFreeTrialUsage === 'function' && typeof checkFreeTrialStatus === 'function') {
+            try {
+                const trialStatusPromise = checkFreeTrialStatus();
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Timeout')), 5000)
+                );
+                const trialStatus = await Promise.race([trialStatusPromise, timeoutPromise]);
+                
+                if (!trialStatus.used) {
+                    // Record the trial usage with current question count
+                    const recordPromise = recordFreeTrialUsage(shuffledQuizData.length);
+                    const recordTimeoutPromise = new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Timeout')), 5000)
+                    );
+                    await Promise.race([recordPromise, recordTimeoutPromise]);
+                }
+            } catch (error) {
+                console.warn('⚠️ Error checking/recording free trial status:', error);
+                // Continue anyway - don't block results display
+            }
         }
+    } catch (error) {
+        console.error('❌ Error in showQuizSetResults:', error);
+        // Continue anyway - don't block results display
     }
     
     // Calculate results for current quiz set
