@@ -16,16 +16,14 @@ button {
     z-index: 1000001 !important;
 }
 
-/* Ensure user-info and choice-section are above overlays */
-#user-info,
+/* Ensure choice-section are above overlays */
 .choice-section,
 #choice-section {
     position: relative;
     z-index: 1000002 !important;
 }
 
-/* Ensure all buttons inside user-info and choice-section are above overlays */
-#user-info button,
+/* Ensure all buttons inside choice-section are above overlays */
 .choice-section button,
 #choice-section button {
     position: relative;
