@@ -20,6 +20,10 @@ const DEMO_MAX_ATTEMPTS = 1; // Only 1 free test allowed
 const TEST_MODE_ENABLED = true; // Set to false to disable test mode
 const TEST_MODE_KEY = 'architectQuizTestMode';
 
+// Test account credentials (TEMPORARY - WILL BE REMOVED)
+const TEST_ACCOUNT_EMAIL = 'test@architect-quiz.com';
+const TEST_ACCOUNT_PASSWORD = 'Test123456!';
+
 /**
  * Check if test mode is enabled
  * @returns {boolean}

@@ -314,10 +314,24 @@ function initializeAuthUI() {
     // Check auth state on page load
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(checkAuthState, 1000); // Wait for Firebase to load
+            setTimeout(() => {
+                // Auto-login with test account if test mode is enabled (TEMPORARY - WILL BE REMOVED)
+                if (typeof isTestModeEnabled === 'function' && isTestModeEnabled()) {
+                    autoLoginTestAccount();
+                } else {
+                    checkAuthState();
+                }
+            }, 1000); // Wait for Firebase to load
         });
     } else {
-        setTimeout(checkAuthState, 1000); // Wait for Firebase to load
+        setTimeout(() => {
+            // Auto-login with test account if test mode is enabled (TEMPORARY - WILL BE REMOVED)
+            if (typeof isTestModeEnabled === 'function' && isTestModeEnabled()) {
+                autoLoginTestAccount();
+            } else {
+                checkAuthState();
+            }
+        }, 1000); // Wait for Firebase to load
     }
     
     // Listen for auth state changes (wait for Firebase Auth to be ready)
@@ -447,6 +461,87 @@ if (typeof window !== 'undefined') {
     window.showChoiceSection = showChoiceSection;
     window.startFreeTrial = startFreeTrial;
     window.togglePasswordVisibility = togglePasswordVisibility;
+    window.autoLoginTestAccount = autoLoginTestAccount;
+}
+
+/**
+ * Auto-login with test account (TEMPORARY - WILL BE REMOVED)
+ */
+async function autoLoginTestAccount() {
+    try {
+        // Check if test account credentials are available
+        if (typeof TEST_ACCOUNT_EMAIL === 'undefined' || typeof TEST_ACCOUNT_PASSWORD === 'undefined') {
+            console.log('🧪 Test account credentials not found, checking auth state normally');
+            checkAuthState();
+            return;
+        }
+        
+        // Check if Firebase Auth is ready
+        if (typeof firebase === 'undefined' || !firebase.auth) {
+            console.log('🧪 Firebase Auth not ready, retrying...');
+            setTimeout(autoLoginTestAccount, 500);
+            return;
+        }
+        
+        const auth = firebase.auth();
+        
+        // Check if already logged in
+        const currentUser = auth.currentUser;
+        if (currentUser && currentUser.email === TEST_ACCOUNT_EMAIL) {
+            console.log('🧪 Already logged in with test account');
+            checkAuthState();
+            return;
+        }
+        
+        // Try to login with test account
+        console.log('🧪 Attempting auto-login with test account...');
+        try {
+            await auth.signInWithEmailAndPassword(TEST_ACCOUNT_EMAIL, TEST_ACCOUNT_PASSWORD);
+            console.log('✅ Auto-logged in with test account');
+            checkAuthState();
+        } catch (loginError) {
+            // If login fails, try to register test account
+            if (loginError.code === 'auth/user-not-found' || loginError.code === 'auth/wrong-password') {
+                console.log('🧪 Test account not found, attempting to register...');
+                try {
+                    // Register test account
+                    const nameInput = document.getElementById('register-name');
+                    const phoneInput = document.getElementById('register-phone');
+                    const emailInput = document.getElementById('register-email');
+                    const passwordInput = document.getElementById('register-password');
+                    
+                    if (nameInput) nameInput.value = 'Test User';
+                    if (phoneInput) phoneInput.value = '091234567';
+                    if (emailInput) emailInput.value = TEST_ACCOUNT_EMAIL;
+                    if (passwordInput) passwordInput.value = TEST_ACCOUNT_PASSWORD;
+                    
+                    // Call register function
+                    await handleRegister(null);
+                    
+                    // Wait a bit and try login again
+                    setTimeout(async () => {
+                        try {
+                            await auth.signInWithEmailAndPassword(TEST_ACCOUNT_EMAIL, TEST_ACCOUNT_PASSWORD);
+                            console.log('✅ Registered and logged in with test account');
+                            checkAuthState();
+                        } catch (error) {
+                            console.error('🧪 Failed to login after registration:', error);
+                            checkAuthState();
+                        }
+                    }, 1000);
+                } catch (registerError) {
+                    console.error('🧪 Failed to register test account:', registerError);
+                    checkAuthState();
+                }
+            } else {
+                console.error('🧪 Failed to login with test account:', loginError);
+                checkAuthState();
+            }
+        }
+    } catch (error) {
+        console.error('🧪 Auto-login error:', error);
+        checkAuthState();
+    }
 }
 
 /**
