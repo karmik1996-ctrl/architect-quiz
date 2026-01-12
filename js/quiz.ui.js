@@ -432,17 +432,23 @@ function initializeUIButtons() {
     const darkModeToggle = document.getElementById('dark-mode-toggle');
 
     // Load saved dark mode preference
-    // Only apply dark mode if explicitly set to 'true' in localStorage
-    // Default to light mode if not set or set to 'false'
+    // IMPORTANT: Default to light mode - only apply dark mode if explicitly set to 'true'
+    // First, always remove dark-mode class to ensure light mode is default
+    document.body.classList.remove('dark-mode');
+    
+    // Check localStorage for saved preference
     const savedDarkMode = localStorage.getItem('darkMode');
+    
+    // Only apply dark mode if explicitly set to 'true'
     if (savedDarkMode === 'true') {
         document.body.classList.add('dark-mode');
     } else {
         // Ensure light mode is active (remove dark-mode class if present)
         document.body.classList.remove('dark-mode');
-        // Clear any invalid darkMode values from localStorage
-        if (savedDarkMode && savedDarkMode !== 'false') {
-            localStorage.setItem('darkMode', 'false');
+        // Don't set localStorage to 'false' - let it be null/undefined for default light mode
+        // Only clear invalid values
+        if (savedDarkMode && savedDarkMode !== 'false' && savedDarkMode !== 'true') {
+            localStorage.removeItem('darkMode');
         }
     }
 
