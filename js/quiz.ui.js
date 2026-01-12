@@ -204,6 +204,38 @@ function initializeEventListeners() {
                     quizTypeSection.style.setProperty('display', 'none', 'important');
                 }
                 
+                // CRITICAL: payment-section contains choice-section, so we must keep it visible
+                // But hide its other children (auth-section, quiz-type-section, etc.)
+                if (paymentSection) {
+                    paymentSection.style.display = 'block';
+                    paymentSection.style.setProperty('display', 'block', 'important');
+                    paymentSection.style.visibility = 'visible';
+                    paymentSection.style.opacity = '1';
+                    
+                    // Hide payment section's initial content
+                    const paymentH1 = paymentSection.querySelector('h1');
+                    const infoBtn = paymentSection.querySelector('#info-btn');
+                    const authSection = paymentSection.querySelector('#auth-section');
+                    const paymentInstructions = paymentSection.querySelector('.payment-instructions');
+                    
+                    if (paymentH1) {
+                        paymentH1.style.display = 'none';
+                        paymentH1.style.setProperty('display', 'none', 'important');
+                    }
+                    if (infoBtn) {
+                        infoBtn.style.display = 'none';
+                        infoBtn.style.setProperty('display', 'none', 'important');
+                    }
+                    if (authSection) {
+                        authSection.style.display = 'none';
+                        authSection.style.setProperty('display', 'none', 'important');
+                    }
+                    if (paymentInstructions) {
+                        paymentInstructions.style.display = 'none';
+                        paymentInstructions.style.setProperty('display', 'none', 'important');
+                    }
+                }
+                
                 // Show choice section
                 if (choiceSection) {
                     choiceSection.style.display = 'block';
@@ -213,12 +245,6 @@ function initializeEventListeners() {
                     console.log('✅ Choice section shown from back button');
                 } else {
                     console.warn('⚠️ Choice section not found');
-                }
-                
-                // Hide payment section
-                if (paymentSection) {
-                    paymentSection.style.display = 'none';
-                    paymentSection.style.setProperty('display', 'none', 'important');
                 }
             } else {
                 // User is not logged in - show payment section
@@ -284,6 +310,38 @@ function initializeEventListeners() {
                     quizTypeSection.style.setProperty('display', 'none', 'important');
                 }
                 
+                // CRITICAL: payment-section contains choice-section, so we must keep it visible
+                // But hide its other children (auth-section, quiz-type-section, etc.)
+                if (paymentSection) {
+                    paymentSection.style.display = 'block';
+                    paymentSection.style.setProperty('display', 'block', 'important');
+                    paymentSection.style.visibility = 'visible';
+                    paymentSection.style.opacity = '1';
+                    
+                    // Hide payment section's initial content
+                    const paymentH1 = paymentSection.querySelector('h1');
+                    const infoBtn = paymentSection.querySelector('#info-btn');
+                    const authSection = paymentSection.querySelector('#auth-section');
+                    const paymentInstructions = paymentSection.querySelector('.payment-instructions');
+                    
+                    if (paymentH1) {
+                        paymentH1.style.display = 'none';
+                        paymentH1.style.setProperty('display', 'none', 'important');
+                    }
+                    if (infoBtn) {
+                        infoBtn.style.display = 'none';
+                        infoBtn.style.setProperty('display', 'none', 'important');
+                    }
+                    if (authSection) {
+                        authSection.style.display = 'none';
+                        authSection.style.setProperty('display', 'none', 'important');
+                    }
+                    if (paymentInstructions) {
+                        paymentInstructions.style.display = 'none';
+                        paymentInstructions.style.setProperty('display', 'none', 'important');
+                    }
+                }
+                
                 // Show choice section
                 if (choiceSection) {
                     choiceSection.style.display = 'block';
@@ -293,12 +351,6 @@ function initializeEventListeners() {
                     console.log('✅ Choice section shown from quiz back button');
                 } else {
                     console.warn('⚠️ Choice section not found');
-                }
-                
-                // Hide payment section
-                if (paymentSection) {
-                    paymentSection.style.display = 'none';
-                    paymentSection.style.setProperty('display', 'none', 'important');
                 }
             } else {
                 // User is not logged in - show payment section
