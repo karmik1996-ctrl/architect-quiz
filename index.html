@@ -613,12 +613,7 @@
         window.showAllResults = function() { return false; };
         window.copyToClipboard = function() { return false; };
         // Auth functions will be exposed by auth.ui.js
-        window.handleRegister = function(e) { if(e) e.preventDefault(); return false; };
-        window.handleLogin = function(e) { if(e) e.preventDefault(); return false; };
-        window.handleLogout = function() { return false; };
-        window.showRegisterForm = function() { return false; };
-        window.showLoginForm = function() { return false; };
-        // togglePasswordVisibility will be set by auth.ui.js
+        // Don't override them here - let auth.ui.js set them properly
     </script>
         <!-- Firebase SDK v8 Compat - Load first (most reliable for script tags) -->
         <!-- IMPORTANT: Do NOT use async or defer - scripts must load synchronously -->
