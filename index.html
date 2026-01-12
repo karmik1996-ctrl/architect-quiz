@@ -1151,9 +1151,9 @@
         })();
     </script>
     
-    <!-- Logout Button - Fixed at bottom of page -->
-    <div id="logout-container" style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000004; display: none;">
-        <button id="logout-btn" class="btn-secondary" onclick="handleLogout(); return false;" style="width: auto; padding: 10px 20px; margin: 0;">
+    <!-- Logout Button - Fixed at bottom of viewport (doesn't move with scroll) -->
+    <div id="logout-container" style="display: none;">
+        <button id="logout-btn" class="btn-secondary" onclick="handleLogout(); return false;">
             🚪 Ելք (Logout)
         </button>
     </div>

@@ -3553,14 +3553,16 @@ body.dark-mode #login-password-toggle:hover {
     color: #e0e0e0;
 }
 
-/* Logout button container - fixed at bottom */
+/* Logout button container - fixed at bottom of viewport */
 #logout-container {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
     z-index: 1000004 !important;
     display: none;
+    width: auto;
+    pointer-events: auto !important;
 }
 
 #logout-container #logout-btn {
@@ -3568,6 +3570,7 @@ body.dark-mode #login-password-toggle:hover {
     padding: 10px 20px;
     margin: 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    pointer-events: auto !important;
 }
 
 body.dark-mode #logout-container #logout-btn {
