@@ -791,6 +791,18 @@ async function initGame() {
 
 
 async function startQuiz() {
+    // Check if quiz type is selected
+    const selectedType = localStorage.getItem('selectedQuizType');
+    if (!selectedType) {
+        alert('⚠️ Խնդրում ենք նախ ընտրել թեստի տեսակը (Ճարտարապետ կամ Կոնստրուկտոր):');
+        // Show quiz type selection section
+        const quizTypeSection = document.getElementById('quiz-type-section');
+        const startSection = document.getElementById('start-section');
+        if (quizTypeSection) quizTypeSection.style.display = 'block';
+        if (startSection) startSection.style.display = 'none';
+        return;
+    }
+    
     // Check access (payment or free trial) before starting
     let accessCheck = null;
     if (typeof checkQuizAccess === 'function') {
