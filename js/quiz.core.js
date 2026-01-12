@@ -892,21 +892,24 @@ async function startQuiz() {
     
     // Get current quiz data based on selected type
     const currentQuizData = getCurrentQuizData();
+    const quizSetsInfo = calculateQuizSetsInfo(currentQuizData);
     
     // Don't shuffle - keep questions in same order for consistent quiz sets
     // Each quiz set will always have the same questions
     const orderedQuizData = [...currentQuizData]; // Use original order, no shuffle
     
-    // Divide into 18 quiz sets: 17 sets of 10 + 1 set of 5 (18th test) = 175 questions
+    // Divide into quiz sets: 10 questions per test
     quizSets = [];
     quizSetResults = [];
-    for (let i = 0; i < 17; i++) {
-        quizSets.push(orderedQuizData.slice(i * 10, (i + 1) * 10));
+    const questionsPerTest = quizSetsInfo.questionsPerTest;
+    const totalTests = quizSetsInfo.totalTests;
+    
+    for (let i = 0; i < totalTests; i++) {
+        const startIndex = i * questionsPerTest;
+        const endIndex = Math.min(startIndex + questionsPerTest, orderedQuizData.length);
+        quizSets.push(orderedQuizData.slice(startIndex, endIndex));
         quizSetResults.push({ correct: 0, wrong: 0 });
     }
-    // Last set (18th test) with 5 questions
-    quizSets.push(orderedQuizData.slice(170, 175));
-    quizSetResults.push({ correct: 0, wrong: 0 });
     
     // Find first available (not exhausted) quiz set
     currentQuizSetIndex = findNextAvailableQuizSet();
