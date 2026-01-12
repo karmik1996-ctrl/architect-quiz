@@ -77,12 +77,23 @@ function showUserInfo(userData) {
     try {
         const authForms = document.getElementById('auth-forms');
         const authSection = document.getElementById('auth-section');
+        const quizContainer = document.querySelector('.quiz-container');
         const quizTypeSection = document.getElementById('quiz-type-section');
         const choiceSection = document.getElementById('choice-section');
         const paymentCodeSection = document.getElementById('payment-code-section');
         const paymentSection = document.getElementById('payment-section');
         const logoutContainer = document.getElementById('logout-container');
         const startSection = document.getElementById('start-section');
+        
+        // Ensure quiz-container is visible
+        if (quizContainer) {
+            quizContainer.style.display = 'block';
+            quizContainer.style.setProperty('display', 'block', 'important');
+            quizContainer.style.visibility = 'visible';
+            console.log('✅ Quiz container shown');
+        } else {
+            console.warn('⚠️ Quiz container not found');
+        }
         
         // Hide auth forms (IMPORTANT: Must be hidden when user is logged in)
         if (authForms) {
