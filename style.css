@@ -3500,3 +3500,35 @@ body.dark-mode .correct-indicator {
         font-size: 1.2em !important;
     }
 }
+
+/* Password toggle button */
+#register-password-toggle,
+#login-password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 5px;
+    color: #666;
+    z-index: 10;
+    transition: color 0.2s;
+}
+
+#register-password-toggle:hover,
+#login-password-toggle:hover {
+    color: #1a1a1a;
+}
+
+body.dark-mode #register-password-toggle,
+body.dark-mode #login-password-toggle {
+    color: #b0b0b0;
+}
+
+body.dark-mode #register-password-toggle:hover,
+body.dark-mode #login-password-toggle:hover {
+    color: #e0e0e0;
+}
