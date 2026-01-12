@@ -131,31 +131,44 @@ function showUserInfo(userData) {
             startSection.style.setProperty('display', 'none', 'important');
         }
         
-        // Hide payment section (IMPORTANT: Must be hidden when user is logged in)
-        // BUT keep payment-info visible if quiz-type-section needs to be shown
+        // Check if quiz type is already selected
+        const selectedType = localStorage.getItem('selectedQuizType');
+        
+        // Validate selected type
+        const isValidType = selectedType && (selectedType === 'architect' || selectedType === 'constructor');
+        
+        // Hide payment section content BUT keep payment-section visible if quiz-type-section needs to be shown
         if (paymentSection) {
-            // Don't hide payment-section completely - just hide its initial content
-            // The quiz-type-section is inside payment-info, which is inside payment-section
+            // Hide payment section's initial content (h1, info-btn, payment-instructions, auth-section)
+            const paymentH1 = paymentSection.querySelector('h1');
+            const infoBtn = paymentSection.querySelector('#info-btn');
             const paymentInfo = paymentSection.querySelector('.payment-info');
+            
+            if (paymentH1) {
+                paymentH1.style.display = 'none';
+                paymentH1.style.setProperty('display', 'none', 'important');
+            }
+            if (infoBtn) {
+                infoBtn.style.display = 'none';
+                infoBtn.style.setProperty('display', 'none', 'important');
+            }
+            
+            // Hide payment-instructions but keep payment-info visible for quiz-type-section
             if (paymentInfo) {
-                // Hide payment-instructions but keep payment-info visible for quiz-type-section
                 const paymentInstructions = paymentInfo.querySelector('.payment-instructions');
                 if (paymentInstructions) {
                     paymentInstructions.style.display = 'none';
                     paymentInstructions.style.setProperty('display', 'none', 'important');
                 }
             }
-            // Don't hide payment-section itself - it contains quiz-type-section
+            
+            // IMPORTANT: Keep payment-section visible - it contains quiz-type-section
+            paymentSection.style.display = 'block';
+            paymentSection.style.setProperty('display', 'block', 'important');
             console.log('✅ Payment section content hidden (keeping container visible for quiz-type-section)');
         } else {
             console.warn('⚠️ Payment section not found');
         }
-        
-        // Check if quiz type is already selected
-        const selectedType = localStorage.getItem('selectedQuizType');
-        
-        // Validate selected type
-        const isValidType = selectedType && (selectedType === 'architect' || selectedType === 'constructor');
         
         if (isValidType) {
             // Quiz type already selected, show choice section
