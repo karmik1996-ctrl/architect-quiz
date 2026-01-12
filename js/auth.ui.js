@@ -915,6 +915,7 @@ function showQuizTypeSelection() {
         // Show quiz type section
         const quizTypeSection = document.getElementById('quiz-type-section');
         const paymentSection = document.getElementById('payment-section');
+        const paymentInfo = document.querySelector('.payment-info');
         
         // CRITICAL: Ensure payment-section is visible (it contains quiz-type-section)
         if (paymentSection) {
@@ -923,10 +924,24 @@ function showQuizTypeSelection() {
             paymentSection.style.visibility = 'visible';
             paymentSection.style.opacity = '1';
             
+            // Ensure payment-info is visible (it contains quiz-type-section)
+            if (paymentInfo) {
+                paymentInfo.style.display = 'block';
+                paymentInfo.style.setProperty('display', 'block', 'important');
+                paymentInfo.style.visibility = 'visible';
+                paymentInfo.style.opacity = '1';
+                console.log('✅ Payment info made visible');
+                console.log('Payment info computed style:', window.getComputedStyle(paymentInfo).display);
+                console.log('Payment info offsetHeight:', paymentInfo.offsetHeight);
+            } else {
+                console.error('❌ Payment info not found!');
+            }
+            
             // Hide payment section's initial content (h1, info-btn, payment-instructions, auth-section)
             const paymentH1 = paymentSection.querySelector('h1');
             const infoBtn = paymentSection.querySelector('#info-btn');
             const authSection = paymentSection.querySelector('#auth-section');
+            const authForms = document.getElementById('auth-forms');
             const paymentInstructions = paymentSection.querySelector('.payment-instructions');
             
             if (paymentH1) {
@@ -940,6 +955,10 @@ function showQuizTypeSelection() {
             if (authSection) {
                 authSection.style.display = 'none';
                 authSection.style.setProperty('display', 'none', 'important');
+            }
+            if (authForms) {
+                authForms.style.display = 'none';
+                authForms.style.setProperty('display', 'none', 'important');
             }
             if (paymentInstructions) {
                 paymentInstructions.style.display = 'none';
@@ -990,6 +1009,11 @@ function showQuizTypeSelection() {
             console.log('✅ Quiz type section shown');
             console.log('Quiz type section computed style:', window.getComputedStyle(quizTypeSection).display);
             console.log('Quiz type section offsetHeight:', quizTypeSection.offsetHeight);
+            console.log('Quiz type section parent:', quizTypeSection.parentElement?.className || quizTypeSection.parentElement?.id || 'unknown');
+            console.log('Quiz type section parent display:', quizTypeSection.parentElement ? window.getComputedStyle(quizTypeSection.parentElement).display : 'N/A');
+            
+            // Force a reflow to ensure styles are applied
+            void quizTypeSection.offsetHeight;
             
             // Scroll to quiz type section
             setTimeout(() => {
