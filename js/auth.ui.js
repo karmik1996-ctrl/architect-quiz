@@ -74,41 +74,60 @@ function showLoginForm() {
  * @param {Object} userData - User data from Firebase
  */
 function showUserInfo(userData) {
-    const authForms = document.getElementById('auth-forms');
-    const quizTypeSection = document.getElementById('quiz-type-section');
-    const choiceSection = document.getElementById('choice-section');
-    const paymentCodeSection = document.getElementById('payment-code-section');
-    const paymentSection = document.getElementById('payment-section');
-    const logoutContainer = document.getElementById('logout-container');
-    
-    // Hide auth forms
-    if (authForms) authForms.style.display = 'none';
-    
-    // Show logout button at bottom
-    if (logoutContainer) logoutContainer.style.display = 'block';
-    
-    // Hide payment code section (will show when user chooses to pay)
-    if (paymentCodeSection) paymentCodeSection.style.display = 'none';
-    
-    // Hide choice section (will show after quiz type selection)
-    if (choiceSection) choiceSection.style.display = 'none';
-    
-    // Check if quiz type is already selected
-    const selectedType = localStorage.getItem('selectedQuizType');
-    
-    if (selectedType) {
-        // Quiz type already selected, show choice section
-        if (choiceSection) choiceSection.style.display = 'block';
-        if (quizTypeSection) quizTypeSection.style.display = 'none';
-    } else {
-        // Quiz type not selected, show quiz type selection section first (choose Architect or Constructor)
-        if (quizTypeSection) {
-            quizTypeSection.style.display = 'block';
-            // Scroll to quiz type section
-            setTimeout(() => {
-                quizTypeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
+    try {
+        const authForms = document.getElementById('auth-forms');
+        const quizTypeSection = document.getElementById('quiz-type-section');
+        const choiceSection = document.getElementById('choice-section');
+        const paymentCodeSection = document.getElementById('payment-code-section');
+        const paymentSection = document.getElementById('payment-section');
+        const logoutContainer = document.getElementById('logout-container');
+        const startSection = document.getElementById('start-section');
+        
+        // Hide auth forms
+        if (authForms) authForms.style.display = 'none';
+        
+        // Show logout button at bottom
+        if (logoutContainer) logoutContainer.style.display = 'block';
+        
+        // Hide payment code section (will show when user chooses to pay)
+        if (paymentCodeSection) paymentCodeSection.style.display = 'none';
+        
+        // Hide start section (will show when user starts quiz)
+        if (startSection) startSection.style.display = 'none';
+        
+        // Hide payment section
+        if (paymentSection) paymentSection.style.display = 'none';
+        
+        // Check if quiz type is already selected
+        const selectedType = localStorage.getItem('selectedQuizType');
+        
+        if (selectedType && (selectedType === 'architect' || selectedType === 'constructor')) {
+            // Quiz type already selected, show choice section
+            if (choiceSection) {
+                choiceSection.style.display = 'block';
+            }
+            if (quizTypeSection) {
+                quizTypeSection.style.display = 'none';
+            }
+        } else {
+            // Quiz type not selected, show quiz type selection section first (choose Architect or Constructor)
+            if (choiceSection) {
+                choiceSection.style.display = 'none';
+            }
+            if (quizTypeSection) {
+                quizTypeSection.style.display = 'block';
+                // Scroll to quiz type section
+                setTimeout(() => {
+                    if (quizTypeSection) {
+                        quizTypeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 100);
+            }
         }
+        
+        console.log('✅ User info shown, quiz type:', selectedType || 'not selected');
+    } catch (error) {
+        console.error('Error in showUserInfo:', error);
     }
 }
 
@@ -475,29 +494,52 @@ async function startFreeTrial() {
  * @param {string} type - 'architect' or 'constructor'
  */
 function selectQuizType(type) {
-    // Store selected quiz type
-    if (typeof window !== 'undefined') {
-        window.selectedQuizType = type;
-        localStorage.setItem('selectedQuizType', type);
+    try {
+        // Validate type
+        if (type !== 'architect' && type !== 'constructor') {
+            console.error('Invalid quiz type:', type);
+            return;
+        }
+        
+        // Store selected quiz type
+        if (typeof window !== 'undefined') {
+            window.selectedQuizType = type;
+            localStorage.setItem('selectedQuizType', type);
+        }
+        
+        // Update title immediately
+        if (typeof getQuizTypeTitle === 'function') {
+            try {
+                const title = getQuizTypeTitle();
+                const pageTitle = document.getElementById('page-title');
+                if (pageTitle) pageTitle.textContent = title;
+                if (document.title) document.title = title;
+            } catch (error) {
+                console.warn('Error updating title:', error);
+            }
+        }
+        
+        // Hide quiz type section
+        const quizTypeSection = document.getElementById('quiz-type-section');
+        if (quizTypeSection) quizTypeSection.style.display = 'none';
+        
+        // Show choice section (payment or trial)
+        const choiceSection = document.getElementById('choice-section');
+        if (choiceSection) {
+            choiceSection.style.display = 'block';
+            // Scroll to choice section
+            setTimeout(() => {
+                if (choiceSection) {
+                    choiceSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
+        
+        console.log('✅ Quiz type selected:', type);
+    } catch (error) {
+        console.error('Error in selectQuizType:', error);
+        alert('Սխալ: Հնարավոր չէ ընտրել թեստի տեսակը: ' + (error.message || error));
     }
-    
-    // Update title immediately
-    if (typeof getQuizTypeTitle === 'function') {
-        const title = getQuizTypeTitle();
-        const pageTitle = document.getElementById('page-title');
-        if (pageTitle) pageTitle.textContent = title;
-        if (document.title) document.title = title;
-    }
-    
-    // Hide quiz type section
-    const quizTypeSection = document.getElementById('quiz-type-section');
-    if (quizTypeSection) quizTypeSection.style.display = 'none';
-    
-    // Show choice section (payment or trial)
-    const choiceSection = document.getElementById('choice-section');
-    if (choiceSection) choiceSection.style.display = 'block';
-    
-    console.log('✅ Quiz type selected:', type);
 }
 
 // ============================================
