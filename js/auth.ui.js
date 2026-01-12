@@ -83,14 +83,26 @@ function showUserInfo(userData) {
         const logoutContainer = document.getElementById('logout-container');
         const startSection = document.getElementById('start-section');
         
-        // Hide auth forms
-        if (authForms) authForms.style.display = 'none';
+        // Hide auth forms (IMPORTANT: Must be hidden when user is logged in)
+        if (authForms) {
+            authForms.style.display = 'none';
+            authForms.style.setProperty('display', 'none', 'important');
+            console.log('✅ Auth forms hidden');
+        } else {
+            console.warn('⚠️ Auth forms not found');
+        }
         
         // Show logout button at bottom
-        if (logoutContainer) logoutContainer.style.display = 'block';
+        if (logoutContainer) {
+            logoutContainer.style.display = 'block';
+            logoutContainer.style.setProperty('display', 'block', 'important');
+        }
         
         // Hide payment code section (will show when user chooses to pay)
-        if (paymentCodeSection) paymentCodeSection.style.display = 'none';
+        if (paymentCodeSection) {
+            paymentCodeSection.style.display = 'none';
+            paymentCodeSection.style.setProperty('display', 'none', 'important');
+        }
         
         // Hide start section (will show when user starts quiz)
         if (startSection) {
@@ -118,6 +130,9 @@ function showUserInfo(userData) {
             if (choiceSection) {
                 choiceSection.style.display = 'block';
                 choiceSection.style.setProperty('display', 'block', 'important');
+                console.log('✅ Choice section shown');
+            } else {
+                console.warn('⚠️ Choice section not found');
             }
             if (quizTypeSection) {
                 quizTypeSection.style.display = 'none';
