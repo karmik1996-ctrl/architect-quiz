@@ -40,6 +40,14 @@ let userName = '';
 let shuffledQuizData = []; // Shuffled version of quizData
 let savedShuffledQuizData = []; // Saved shuffled data for repeat
 
+// DOM elements (will be initialized when DOM is ready)
+let startSection = null;
+let paymentSection = null;
+let topicSection = null;
+let questionSection = null;
+let answersSection = null;
+let resultsSection = null;
+
 // Quiz sets: 17 sets of 10 questions + 1 set of 5 questions (18th test) = 175 questions
 let quizSets = []; // Array of quiz sets, each containing 10 or 5 questions
 let currentQuizSetIndex = 0; // Current quiz set (0-17)
@@ -841,6 +849,16 @@ async function startQuiz() {
     userAnswers = [];
     
     gameStarted = true;
+    
+    // Initialize DOM elements if not already initialized
+    if (!startSection) {
+        startSection = document.getElementById('start-section');
+        paymentSection = document.getElementById('payment-section');
+        topicSection = document.getElementById('topic-section');
+        questionSection = document.getElementById('question-section');
+        answersSection = document.getElementById('answers-section');
+        resultsSection = document.getElementById('results-section');
+    }
     
     // Start DevTools detection when quiz starts (security protection)
     if (typeof setupDevToolsDetection === 'function') {
