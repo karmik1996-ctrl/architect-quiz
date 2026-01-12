@@ -158,18 +158,74 @@ function initializeEventListeners() {
     // Back to payment/choice button
     if (backToPaymentBtn) {
         backToPaymentBtn.addEventListener('click', () => {
-            if (startSection) startSection.style.display = 'none';
+            if (startSection) {
+                startSection.style.display = 'none';
+                startSection.style.setProperty('display', 'none', 'important');
+            }
+            
+            // Hide quiz sections
+            if (topicSection) {
+                topicSection.style.display = 'none';
+                topicSection.style.setProperty('display', 'none', 'important');
+            }
+            if (questionSection) {
+                questionSection.style.display = 'none';
+                questionSection.style.setProperty('display', 'none', 'important');
+            }
+            if (answersSection) {
+                answersSection.style.display = 'none';
+                answersSection.style.setProperty('display', 'none', 'important');
+            }
+            if (nextSection) {
+                nextSection.style.display = 'none';
+                nextSection.style.setProperty('display', 'none', 'important');
+            }
+            if (resultsSection) {
+                resultsSection.style.display = 'none';
+                resultsSection.style.setProperty('display', 'none', 'important');
+            }
+            
             // Check if user is logged in - show choice section, otherwise show payment section
             if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
                 // User is logged in - show choice section
                 const choiceSection = document.getElementById('choice-section');
                 const paymentCodeSection = document.getElementById('payment-code-section');
-                if (choiceSection) choiceSection.style.display = 'block';
-                if (paymentCodeSection) paymentCodeSection.style.display = 'none';
-                if (paymentSection) paymentSection.style.display = 'none';
+                const quizTypeSection = document.getElementById('quiz-type-section');
+                
+                // Hide payment code section
+                if (paymentCodeSection) {
+                    paymentCodeSection.style.display = 'none';
+                    paymentCodeSection.style.setProperty('display', 'none', 'important');
+                }
+                
+                // Hide quiz type section
+                if (quizTypeSection) {
+                    quizTypeSection.style.display = 'none';
+                    quizTypeSection.style.setProperty('display', 'none', 'important');
+                }
+                
+                // Show choice section
+                if (choiceSection) {
+                    choiceSection.style.display = 'block';
+                    choiceSection.style.setProperty('display', 'block', 'important');
+                    choiceSection.style.visibility = 'visible';
+                    choiceSection.style.opacity = '1';
+                    console.log('✅ Choice section shown from back button');
+                } else {
+                    console.warn('⚠️ Choice section not found');
+                }
+                
+                // Hide payment section
+                if (paymentSection) {
+                    paymentSection.style.display = 'none';
+                    paymentSection.style.setProperty('display', 'none', 'important');
+                }
             } else {
                 // User is not logged in - show payment section
-                if (paymentSection) paymentSection.style.display = 'block';
+                if (paymentSection) {
+                    paymentSection.style.display = 'block';
+                    paymentSection.style.setProperty('display', 'block', 'important');
+                }
             }
         });
         }
@@ -177,12 +233,33 @@ function initializeEventListeners() {
     // Back to payment/choice from quiz button
     if (backToPaymentFromQuizBtn) {
         backToPaymentFromQuizBtn.addEventListener('click', () => {
-            if (topicSection) topicSection.style.display = 'none';
-            if (questionSection) questionSection.style.display = 'none';
-            if (answersSection) answersSection.style.display = 'none';
-            if (nextSection) nextSection.style.display = 'none';
-            if (resultsSection) resultsSection.style.display = 'none';
-            if (startSection) startSection.style.display = 'none';
+            // Hide all quiz sections
+            if (topicSection) {
+                topicSection.style.display = 'none';
+                topicSection.style.setProperty('display', 'none', 'important');
+            }
+            if (questionSection) {
+                questionSection.style.display = 'none';
+                questionSection.style.setProperty('display', 'none', 'important');
+            }
+            if (answersSection) {
+                answersSection.style.display = 'none';
+                answersSection.style.setProperty('display', 'none', 'important');
+            }
+            if (nextSection) {
+                nextSection.style.display = 'none';
+                nextSection.style.setProperty('display', 'none', 'important');
+            }
+            if (resultsSection) {
+                resultsSection.style.display = 'none';
+                resultsSection.style.setProperty('display', 'none', 'important');
+            }
+            if (startSection) {
+                startSection.style.display = 'none';
+                startSection.style.setProperty('display', 'none', 'important');
+            }
+            
+            // Reset game state
             gameStarted = false;
             currentQuestionIndex = 0;
             score = 0;
@@ -193,12 +270,42 @@ function initializeEventListeners() {
                 // User is logged in - show choice section
                 const choiceSection = document.getElementById('choice-section');
                 const paymentCodeSection = document.getElementById('payment-code-section');
-                if (choiceSection) choiceSection.style.display = 'block';
-                if (paymentCodeSection) paymentCodeSection.style.display = 'none';
-                if (paymentSection) paymentSection.style.display = 'none';
+                const quizTypeSection = document.getElementById('quiz-type-section');
+                
+                // Hide payment code section
+                if (paymentCodeSection) {
+                    paymentCodeSection.style.display = 'none';
+                    paymentCodeSection.style.setProperty('display', 'none', 'important');
+                }
+                
+                // Hide quiz type section
+                if (quizTypeSection) {
+                    quizTypeSection.style.display = 'none';
+                    quizTypeSection.style.setProperty('display', 'none', 'important');
+                }
+                
+                // Show choice section
+                if (choiceSection) {
+                    choiceSection.style.display = 'block';
+                    choiceSection.style.setProperty('display', 'block', 'important');
+                    choiceSection.style.visibility = 'visible';
+                    choiceSection.style.opacity = '1';
+                    console.log('✅ Choice section shown from quiz back button');
+                } else {
+                    console.warn('⚠️ Choice section not found');
+                }
+                
+                // Hide payment section
+                if (paymentSection) {
+                    paymentSection.style.display = 'none';
+                    paymentSection.style.setProperty('display', 'none', 'important');
+                }
             } else {
                 // User is not logged in - show payment section
-                if (paymentSection) paymentSection.style.display = 'block';
+                if (paymentSection) {
+                    paymentSection.style.display = 'block';
+                    paymentSection.style.setProperty('display', 'block', 'important');
+                }
             }
         });
         }
