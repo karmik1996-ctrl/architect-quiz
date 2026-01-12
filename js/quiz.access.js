@@ -174,6 +174,11 @@ async function checkFreeTrialStatus() {
  */
 async function recordFreeTrialUsage(questionsAnswered) {
     try {
+        // TEST ACCOUNT: Don't record usage for test account
+        if (isTestAccount()) {
+            return;
+        }
+        
         // Check if Firebase Auth and Firestore are available
         if (typeof firebase === 'undefined' || !firebase.auth || !firebase.firestore) {
             // Fallback to localStorage
