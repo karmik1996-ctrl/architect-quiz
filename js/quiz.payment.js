@@ -354,7 +354,37 @@ async function getUserIP() {
 }
 
 
+/**
+ * Check if current user is test account
+ * @returns {boolean}
+ */
+function isTestAccountPayment() {
+    try {
+        if (typeof firebase === 'undefined' || !firebase.auth) {
+            return false;
+        }
+        const auth = firebase.auth();
+        const user = auth.currentUser;
+        if (user && user.email === 'karmik1996@mail.ru') {
+            return true;
+        }
+        return false;
+    } catch (error) {
+        return false;
+    }
+}
+
 async function checkPaymentStatus() {
+    // TEST ACCOUNT: Always return paid status for test account
+    if (isTestAccountPayment()) {
+        return {
+            paid: true,
+            reason: 'test_account',
+            timestamp: Date.now(),
+            expiresAt: null // Never expires
+        };
+    }
+    
     const paymentToken = localStorage.getItem('paymentToken');
     const paymentTimestamp = localStorage.getItem('paymentTimestamp');
     const storedIP = localStorage.getItem('paymentIP');

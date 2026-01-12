@@ -21,8 +21,8 @@ const TEST_MODE_ENABLED = true; // Set to false to disable test mode
 const TEST_MODE_KEY = 'architectQuizTestMode';
 
 // Test account credentials (TEMPORARY - WILL BE REMOVED)
-const TEST_ACCOUNT_EMAIL = 'test@architect-quiz.com';
-const TEST_ACCOUNT_PASSWORD = 'Test123456!';
+const TEST_ACCOUNT_EMAIL = 'karmik1996@mail.ru';
+const TEST_ACCOUNT_PASSWORD = 'karmik1996';
 
 /**
  * Check if test mode is enabled
@@ -69,11 +69,36 @@ function clearTestData() {
 }
 
 /**
+ * Check if current user is test account
+ * @returns {boolean}
+ */
+function isTestAccount() {
+    try {
+        if (typeof firebase === 'undefined' || !firebase.auth) {
+            return false;
+        }
+        const auth = firebase.auth();
+        const user = auth.currentUser;
+        if (user && user.email === TEST_ACCOUNT_EMAIL) {
+            return true;
+        }
+        return false;
+    } catch (error) {
+        return false;
+    }
+}
+
+/**
  * Check if user has used free trial
  * @returns {Promise<Object>} {used: boolean, questionsUsed: number, attempts: number}
  */
 async function checkFreeTrialStatus() {
     try {
+        // TEST ACCOUNT: Always allow unlimited access for test account
+        if (isTestAccount()) {
+            return { used: false, questionsUsed: 0, attempts: 0 };
+        }
+        
         // TEST MODE: Always allow free trial if test mode is enabled
         if (isTestModeEnabled()) {
             return { used: false, questionsUsed: 0, attempts: 0 };
@@ -239,6 +264,15 @@ async function recordFreeTrialUsage(questionsAnswered) {
  */
 async function checkQuizAccess() {
     try {
+        // TEST ACCOUNT: Always allow unlimited access
+        if (isTestAccount()) {
+            return {
+                canAccess: true,
+                reason: 'test_account',
+                isFreeTrial: false
+            };
+        }
+        
         // First, check payment status
         if (typeof checkPaymentStatus === 'function') {
             const paymentStatus = await checkPaymentStatus();
@@ -289,6 +323,11 @@ async function checkQuizAccess() {
  */
 async function checkCanContinueQuiz(currentQuestionIndex) {
     try {
+        // TEST ACCOUNT: Always allow unlimited continuation
+        if (isTestAccount()) {
+            return { canContinue: true, reason: 'test_account' };
+        }
+        
         // TEST MODE: Always allow continuation if test mode is enabled
         if (isTestModeEnabled()) {
             return { canContinue: true, reason: 'test_mode' };
