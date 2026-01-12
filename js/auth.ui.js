@@ -117,9 +117,11 @@ function showUserInfo(userData) {
             // Quiz type already selected, show choice section
             if (choiceSection) {
                 choiceSection.style.display = 'block';
+                choiceSection.style.setProperty('display', 'block', 'important');
             }
             if (quizTypeSection) {
                 quizTypeSection.style.display = 'none';
+                quizTypeSection.style.setProperty('display', 'none', 'important');
             }
         } else {
             // Quiz type not selected or invalid, show quiz type selection section first (choose Architect or Constructor)
@@ -131,15 +133,20 @@ function showUserInfo(userData) {
             
             if (choiceSection) {
                 choiceSection.style.display = 'none';
+                choiceSection.style.setProperty('display', 'none', 'important');
             }
             if (quizTypeSection) {
                 quizTypeSection.style.display = 'block';
+                quizTypeSection.style.setProperty('display', 'block', 'important');
+                console.log('✅ Quiz type section shown');
                 // Scroll to quiz type section
                 setTimeout(() => {
                     if (quizTypeSection) {
                         quizTypeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                 }, 100);
+            } else {
+                console.warn('⚠️ Quiz type section not found');
             }
         }
         
