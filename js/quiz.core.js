@@ -920,7 +920,41 @@ async function startQuiz() {
         updateAttemptsDisplay(quizSetAttempts);
     }, 100);
     
-    loadQuestion();
+    // Check if quizData is loaded before loading question
+    if (typeof quizData === 'undefined' || !quizData || quizData.length === 0) {
+        console.error('❌ Quiz data not loaded! quizData:', typeof quizData, quizData);
+        alert('❌ Սխալ: Հարցաթերթիկների տվյալները բեռնված չեն:\nԽնդրում ենք թարմացնել էջը:');
+        // Show start section again
+        if (startSection) startSection.style.display = 'block';
+        if (topicSection) topicSection.style.display = 'none';
+        if (questionSection) questionSection.style.display = 'none';
+        if (answersSection) answersSection.style.display = 'none';
+        return;
+    }
+    
+    // Check if shuffledQuizData is valid
+    if (!shuffledQuizData || shuffledQuizData.length === 0) {
+        console.error('❌ Shuffled quiz data is empty! shuffledQuizData:', shuffledQuizData);
+        alert('❌ Սխալ: Հարցաթերթիկների տվյալները սխալ են:\nԽնդրում ենք թարմացնել էջը:');
+        // Show start section again
+        if (startSection) startSection.style.display = 'block';
+        if (topicSection) topicSection.style.display = 'none';
+        if (questionSection) questionSection.style.display = 'none';
+        if (answersSection) answersSection.style.display = 'none';
+        return;
+    }
+    
+    try {
+        loadQuestion();
+    } catch (error) {
+        console.error('❌ Error loading question:', error);
+        alert('❌ Սխալ: Հնարավոր չէ բեռնել հարցը:\n' + error.message + '\n\nԽնդրում ենք թարմացնել էջը:');
+        // Show start section again
+        if (startSection) startSection.style.display = 'block';
+        if (topicSection) topicSection.style.display = 'none';
+        if (questionSection) questionSection.style.display = 'none';
+        if (answersSection) answersSection.style.display = 'none';
+    }
 }
 
 // Update attempts display in header (based on current quiz set)
