@@ -93,14 +93,22 @@ function showUserInfo(userData) {
     // Hide choice section (will show after quiz type selection)
     if (choiceSection) choiceSection.style.display = 'none';
     
-    // Keep payment section visible but show quiz type selection inside it
-    // Show quiz type selection section first (choose Architect or Constructor)
-    if (quizTypeSection) {
-        quizTypeSection.style.display = 'block';
-        // Scroll to quiz type section
-        setTimeout(() => {
-            quizTypeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
+    // Check if quiz type is already selected
+    const selectedType = localStorage.getItem('selectedQuizType');
+    
+    if (selectedType) {
+        // Quiz type already selected, show choice section
+        if (choiceSection) choiceSection.style.display = 'block';
+        if (quizTypeSection) quizTypeSection.style.display = 'none';
+    } else {
+        // Quiz type not selected, show quiz type selection section first (choose Architect or Constructor)
+        if (quizTypeSection) {
+            quizTypeSection.style.display = 'block';
+            // Scroll to quiz type section
+            setTimeout(() => {
+                quizTypeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
     }
 }
 
@@ -393,14 +401,31 @@ async function startFreeTrial() {
             console.log('✅ Quiz type not selected, defaulting to "architect"');
         }
         
-        // Check if free trial is available
+        // Check if free trial is available (skip in test mode)
+        let canStartTrial = true;
         if (typeof checkFreeTrialStatus === 'function') {
-            const trialStatus = await checkFreeTrialStatus();
-            
-            if (trialStatus.used) {
-                alert('⚠️ Թեստային հարցերը արդեն օգտագործված են:\n\nԽնդրում ենք վճարել 15,000 դրամ ամբողջ թեստը մուտք գործելու համար:');
-                return;
+            try {
+                const trialStatus = await checkFreeTrialStatus();
+                if (trialStatus && trialStatus.used) {
+                    // Check if test mode is enabled
+                    if (typeof isTestModeEnabled === 'function' && isTestModeEnabled()) {
+                        canStartTrial = true; // Allow in test mode
+                    } else {
+                        alert('⚠️ Թեստային հարցերը արդեն օգտագործված են:\n\nԽնդրում ենք վճարել 15,000 դրամ ամբողջ թեստը մուտք գործելու համար:');
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.warn('Error checking free trial status:', error);
+                // Continue anyway in test mode
+                if (typeof isTestModeEnabled === 'function' && isTestModeEnabled()) {
+                    canStartTrial = true;
+                }
             }
+        }
+        
+        if (!canStartTrial) {
+            return;
         }
         
         // Hide choice section
@@ -417,35 +442,31 @@ async function startFreeTrial() {
         
         // Show start section and start quiz with free trial
         const startSection = document.getElementById('start-section');
-        if (startSection) {
-            startSection.style.display = 'block';
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // Show info message about free trial
-            const welcomeMessage = document.getElementById('welcome-message');
-            const welcomeGreeting = document.getElementById('welcome-greeting');
-            const welcomeInfo = document.getElementById('welcome-info');
-            
-            if (welcomeMessage && welcomeGreeting && welcomeInfo) {
-                welcomeGreeting.textContent = '🎯 Թեստային 10 Հարց (Անվճար)';
-                welcomeInfo.textContent = 'Դուք կարող եք լուծել 10 հարց անվճար: Սա օգնում է հասկանալ, թե արդյոք ցանկանում եք գնել ամբողջ թեստը:';
-                welcomeMessage.style.display = 'block';
-            }
-            
-            // REMOVED: Auto-start quiz - user should click start button manually
-            // setTimeout(() => {
-            //     if (typeof startQuiz === 'function') {
-            //         startQuiz();
-            //     } else {
-            //         console.error('startQuiz function not found');
-            //         alert('Սխալ: Quiz-ը չի կարող սկսվել:');
-            //     }
-            // }, 500);
+        if (!startSection) {
+            console.error('Start section not found');
+            alert('Սխալ: Start section-ը չի գտնվել:');
+            return;
         }
+        
+        startSection.style.display = 'block';
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Show info message about free trial
+        const welcomeMessage = document.getElementById('welcome-message');
+        const welcomeGreeting = document.getElementById('welcome-greeting');
+        const welcomeInfo = document.getElementById('welcome-info');
+        
+        if (welcomeMessage && welcomeGreeting && welcomeInfo) {
+            welcomeGreeting.textContent = '🎯 Թեստային 10 Հարց (Անվճար)';
+            welcomeInfo.textContent = 'Դուք կարող եք լուծել 10 հարց անվճար: Սա օգնում է հասկանալ, թե արդյոք ցանկանում եք գնել ամբողջ թեստը:';
+            welcomeMessage.style.display = 'block';
+        }
+        
+        console.log('✅ Free trial started successfully');
     } catch (error) {
         console.error('Error starting free trial:', error);
-        alert('Սխալ: Հնարավոր չէ սկսել թեստային հարցերը: ' + error.message);
+        alert('Սխալ: Հնարավոր չէ սկսել թեստային հարցերը: ' + (error.message || error));
     }
 }
 
