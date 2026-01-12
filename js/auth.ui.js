@@ -386,6 +386,13 @@ function showChoiceSection() {
  */
 async function startFreeTrial() {
     try {
+        // If quiz type is not selected, default to 'architect' (for test mode compatibility)
+        const selectedType = localStorage.getItem('selectedQuizType');
+        if (!selectedType) {
+            localStorage.setItem('selectedQuizType', 'architect');
+            console.log('✅ Quiz type not selected, defaulting to "architect"');
+        }
+        
         // Check if free trial is available
         if (typeof checkFreeTrialStatus === 'function') {
             const trialStatus = await checkFreeTrialStatus();
@@ -403,6 +410,10 @@ async function startFreeTrial() {
         // Hide payment section
         const paymentSection = document.getElementById('payment-section');
         if (paymentSection) paymentSection.style.display = 'none';
+        
+        // Hide quiz type section
+        const quizTypeSection = document.getElementById('quiz-type-section');
+        if (quizTypeSection) quizTypeSection.style.display = 'none';
         
         // Show start section and start quiz with free trial
         const startSection = document.getElementById('start-section');
