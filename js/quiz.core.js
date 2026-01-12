@@ -1685,82 +1685,107 @@ async function showQuizSetResults() {
     }
     showQuizSetResults.inProgress = true;
     
-    try {
-        // Record free trial usage when quiz set completes (if within free trial)
-        // Add timeout to prevent hanging
-        if (typeof recordFreeTrialUsage === 'function' && typeof checkFreeTrialStatus === 'function') {
-            try {
-                const trialStatusPromise = checkFreeTrialStatus();
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Timeout')), 5000)
-                );
-                const trialStatus = await Promise.race([trialStatusPromise, timeoutPromise]);
-                
-                if (!trialStatus.used) {
-                    // Record the trial usage with current question count
-                    const recordPromise = recordFreeTrialUsage(shuffledQuizData.length);
-                    const recordTimeoutPromise = new Promise((_, reject) => 
-                        setTimeout(() => reject(new Error('Timeout')), 5000)
-                    );
-                    await Promise.race([recordPromise, recordTimeoutPromise]);
-                }
-            } catch (error) {
-                console.warn('⚠️ Error checking/recording free trial status:', error);
-                // Continue anyway - don't block results display
-            }
-        }
-    } catch (error) {
-        console.error('❌ Error in showQuizSetResults:', error);
-        // Continue anyway - don't block results display
-    }
+    console.log('✅ showQuizSetResults started');
     
-    // Calculate results for current quiz set
+    // Calculate results for current quiz set FIRST (before any async operations)
     let correctCount = 0;
     let wrongCount = 0;
     
-    for (let i = 0; i < shuffledQuizData.length; i++) {
-        const question = shuffledQuizData[i];
-        const userAnswer = userAnswers[i];
-        if (userAnswer === question.correct) {
-            correctCount++;
-        } else if (userAnswer !== undefined) {
-            wrongCount++;
+    if (shuffledQuizData && shuffledQuizData.length > 0 && userAnswers) {
+        for (let i = 0; i < shuffledQuizData.length; i++) {
+            const question = shuffledQuizData[i];
+            const userAnswer = userAnswers[i];
+            if (userAnswer === question.correct) {
+                correctCount++;
+            } else if (userAnswer !== undefined) {
+                wrongCount++;
+            }
         }
     }
     
-    // Save results for this quiz set
-    quizSetResults[currentQuizSetIndex] = {
-        correct: correctCount,
-        wrong: wrongCount
-    };
+    console.log('✅ Results calculated:', { correctCount, wrongCount });
     
-    // Increment attempt for this quiz set
-    const quizSetNumber = currentQuizSetIndex + 1; // 1-based index
-    const newAttempts = incrementQuizSetAttempt(quizSetNumber.toString());
-    // Track quiz complete in Google Apps Script
-    trackQuizProgress('complete', quizSetNumber);
-    
-    // Hide quiz sections
+    // Hide quiz sections IMMEDIATELY
     if (topicSection) topicSection.style.display = 'none';
     if (questionSection) questionSection.style.display = 'none';
     if (answersSection) answersSection.style.display = 'none';
     if (nextSection) nextSection.style.display = 'none';
     
-    // Show results section
+    // Show results section IMMEDIATELY
     const resultsSection = document.getElementById('results-section');
     if (!resultsSection) {
+        console.error('❌ Results section not found!');
+        showQuizSetResults.inProgress = false;
         return;
     }
     resultsSection.style.display = 'block';
+    resultsSection.style.setProperty('display', 'block', 'important');
+    console.log('✅ Results section displayed');
     
-    // Show quiz set results
-    const quizSetResultsSection = document.getElementById('quiz-set-results-section');
+    // Show quiz set results IMMEDIATELY
+    let quizSetResultsSection = document.getElementById('quiz-set-results-section');
     if (!quizSetResultsSection) {
         // Create results section if it doesn't exist
         createQuizSetResultsSection();
+        quizSetResultsSection = document.getElementById('quiz-set-results-section');
     }
     
+    if (quizSetResultsSection) {
+        quizSetResultsSection.style.display = 'block';
+        quizSetResultsSection.style.setProperty('display', 'block', 'important');
+    }
+    
+    // Display results IMMEDIATELY
     displayQuizSetResults(correctCount, wrongCount);
+    console.log('✅ Results displayed');
+    
+    // Save results for this quiz set
+    if (typeof currentQuizSetIndex !== 'undefined' && currentQuizSetIndex >= 0) {
+        quizSetResults[currentQuizSetIndex] = {
+            correct: correctCount,
+            wrong: wrongCount
+        };
+        
+        // Increment attempt for this quiz set
+        const quizSetNumber = currentQuizSetIndex + 1; // 1-based index
+        incrementQuizSetAttempt(quizSetNumber.toString());
+        // Track quiz complete in Google Apps Script (non-blocking)
+        try {
+            trackQuizProgress('complete', quizSetNumber);
+        } catch (error) {
+            console.warn('⚠️ Error tracking quiz progress:', error);
+        }
+    }
+    
+    // Record free trial usage AFTER displaying results (non-blocking)
+    // Use setTimeout to make it non-blocking
+    setTimeout(async () => {
+        try {
+            if (typeof recordFreeTrialUsage === 'function' && typeof checkFreeTrialStatus === 'function') {
+                try {
+                    const trialStatusPromise = checkFreeTrialStatus();
+                    const timeoutPromise = new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Timeout')), 3000)
+                    );
+                    const trialStatus = await Promise.race([trialStatusPromise, timeoutPromise]);
+                    
+                    if (!trialStatus.used) {
+                        // Record the trial usage with current question count
+                        const recordPromise = recordFreeTrialUsage(shuffledQuizData.length);
+                        const recordTimeoutPromise = new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error('Timeout')), 3000)
+                        );
+                        await Promise.race([recordPromise, recordTimeoutPromise]);
+                    }
+                } catch (error) {
+                    console.warn('⚠️ Error checking/recording free trial status:', error);
+                    // Continue anyway - don't block results display
+                }
+            }
+        } catch (error) {
+            console.warn('⚠️ Error in async trial recording:', error);
+        }
+    }, 100);
     
     // Check if free trial was used - show payment option after results
     // User can view answers first, then decide to pay
