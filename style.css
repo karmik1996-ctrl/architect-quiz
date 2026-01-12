@@ -3582,6 +3582,12 @@ body.dark-mode #login-password-toggle:hover {
 /* Logout button container - fixed at bottom of viewport */
 #logout-container {
     position: fixed !important;
+    top: 20px !important;
+    left: 20px !important;
+    bottom: auto !important;
+    transform: none !important;
+    z-index: 1000004 !important;
+    position: fixed !important;
     bottom: 20px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
