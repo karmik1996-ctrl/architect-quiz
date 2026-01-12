@@ -317,6 +317,93 @@ async function handleLogin(event) {
 }
 
 /**
+ * Handle forgot password form submission
+ * @param {Event} event - Form submit event
+ */
+async function handleForgotPassword(event) {
+    if (event) event.preventDefault();
+    
+    const forgotPasswordBtn = document.getElementById('forgot-password-btn');
+    const statusDiv = document.getElementById('forgot-password-status');
+    
+    // Get form data
+    const email = document.getElementById('forgot-password-email')?.value.trim();
+    
+    // Validate
+    if (!email) {
+        setStatusMessage(statusDiv, 'error', '⚠️ Խնդրում ենք մուտքագրել email');
+        return;
+    }
+    
+    // Disable button and show loading
+    if (forgotPasswordBtn) forgotPasswordBtn.disabled = true;
+    setStatusMessage(statusDiv, 'info', '🔄 Վերականգնման հղում է ուղարկվում...');
+    
+    try {
+        // Check if sendPasswordResetEmail function exists
+        if (typeof sendPasswordResetEmail !== 'function') {
+            throw new Error('Firebase Auth functions not loaded. Make sure firebase.auth.js is loaded.');
+        }
+        
+        // Send password reset email
+        const result = await sendPasswordResetEmail(email);
+        
+        if (result.success) {
+            setStatusMessage(statusDiv, 'success', '✅ Վերականգնման հղում ուղարկվեց ձեր email-ին: Խնդրում ենք ստուգել ձեր inbox-ը (և spam folder-ը):');
+            
+            // Clear form after success
+            const forgotPasswordForm = document.getElementById('forgot-password-form');
+            if (forgotPasswordForm) forgotPasswordForm.reset();
+        } else {
+            throw new Error(result.error || 'Password reset failed');
+        }
+    } catch (error) {
+        console.error('Password reset error:', error);
+        const errorMsg = error && error.message ? error.message : 'Unknown error';
+        
+        // Translate common Firebase errors
+        let userFriendlyMsg = errorMsg;
+        if (errorMsg.includes('user-not-found')) {
+            userFriendlyMsg = '❌ Այս email-ով account չի գտնվել';
+        } else if (errorMsg.includes('invalid-email')) {
+            userFriendlyMsg = '❌ Սխալ email հասցե';
+        } else if (errorMsg.includes('too-many-requests')) {
+            userFriendlyMsg = '❌ Չափից շատ հարցումներ: Խնդրում ենք փորձել մի փոքր ուշ';
+        }
+        
+        setStatusMessage(statusDiv, 'error', userFriendlyMsg);
+    } finally {
+        if (forgotPasswordBtn) forgotPasswordBtn.disabled = false;
+    }
+}
+
+/**
+ * Show forgot password form
+ */
+function showForgotPasswordForm() {
+    const loginFormContainer = document.getElementById('login-form-container');
+    const registerFormContainer = document.getElementById('register-form-container');
+    const forgotPasswordFormContainer = document.getElementById('forgot-password-form-container');
+    
+    // Hide other forms
+    if (loginFormContainer) loginFormContainer.style.display = 'none';
+    if (registerFormContainer) registerFormContainer.style.display = 'none';
+    
+    // Show forgot password form
+    if (forgotPasswordFormContainer) {
+        forgotPasswordFormContainer.style.display = 'block';
+        // Clear status messages
+        const statusDiv = document.getElementById('forgot-password-status');
+        if (statusDiv) statusDiv.innerHTML = '';
+        // Focus on email input
+        setTimeout(() => {
+            const emailInput = document.getElementById('forgot-password-email');
+            if (emailInput) emailInput.focus();
+        }, 100);
+    }
+}
+
+/**
  * Handle logout
  */
 async function handleLogout() {

@@ -109,9 +109,33 @@
                                 </button>
                                 <div id="login-status"></div>
                                 
-                                <p style="margin-top: 15px; text-align: center; color: #666;">
+                                <p style="margin-top: 10px; text-align: center; color: #666; font-size: 0.9em;">
+                                    <a href="#" onclick="showForgotPasswordForm(); return false;" style="color: #007bff; text-decoration: underline;">Մոռացել եք գաղտնաբառը?</a>
+                                </p>
+                                
+                                <p style="margin-top: 10px; text-align: center; color: #666;">
                                     Account չունես? 
                                     <a href="#" onclick="showRegisterForm(); return false;" style="color: #007bff; text-decoration: underline;">Գրանցվիր</a>
+                                </p>
+                            </form>
+                        </div>
+                        
+                        <!-- Forgot Password Form (Hidden by default) -->
+                        <div id="forgot-password-form-container" class="auth-form-container" style="display: none;">
+                            <h3>🔐 Վերականգնել Գաղտնաբառը</h3>
+                            <form id="forgot-password-form" onsubmit="handleForgotPassword(event); return false;">
+                                <div class="form-group">
+                                    <label for="forgot-password-email">Email *</label>
+                                    <input type="email" id="forgot-password-email" name="email" required placeholder="Մուտքագրեք ձեր email-ը" autocomplete="email">
+                                </div>
+                                
+                                <button type="submit" id="forgot-password-btn" class="btn-primary" style="width: 100%;">
+                                    📧 Ուղարկել Վերականգնման Հղում
+                                </button>
+                                <div id="forgot-password-status"></div>
+                                
+                                <p style="margin-top: 15px; text-align: center; color: #666;">
+                                    <a href="#" onclick="showLoginForm(); return false;" style="color: #007bff; text-decoration: underline;">← Ետ գնալ մուտքի էջ</a>
                                 </p>
                             </form>
                         </div>

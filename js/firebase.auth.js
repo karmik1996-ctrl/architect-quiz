@@ -181,6 +181,35 @@ async function loginUser(email, password) {
 }
 
 /**
+ * Send password reset email
+ * @param {string} email - User email
+ * @returns {Promise<Object>} Result
+ */
+async function sendPasswordResetEmail(email) {
+  try {
+    // Wait for Firebase Auth to be ready
+    const authReady = await waitForAuthReady();
+    if (!authReady) {
+      throw new Error('Firebase Auth is not ready. Please refresh the page and try again.');
+    }
+    
+    await auth.sendPasswordResetEmail(email);
+    console.log('Password reset email sent successfully');
+    
+    return {
+      success: true,
+      message: 'Password reset email sent. Please check your inbox.'
+    };
+  } catch (error) {
+    console.error('Password reset error:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+/**
  * Logout user
  * @returns {Promise<void>}
  */
@@ -289,6 +318,7 @@ if (typeof window !== 'undefined') {
   window.getCurrentUser = getCurrentUser;
   window.isUserLoggedIn = isUserLoggedIn;
   window.onAuthStateChanged = onAuthStateChanged;
+  window.sendPasswordResetEmail = sendPasswordResetEmail;
   
   // Expose Firebase instances (if needed)
   window.firebaseAuth = auth;
