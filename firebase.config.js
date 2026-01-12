@@ -2,7 +2,7 @@
 
 // Firebase project configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyCTnTWCczvmRZHVrTWDtKRIyBf-d2I0qi4",
+    apiKey: "AIzaSyCTnTWCczvmRZHVrTWDtKRIyBf-d2IOqi4",
     authDomain: "architect-quiz-c5273.firebaseapp.com",
     projectId: "architect-quiz-c5273",
     storageBucket: "architect-quiz-c5273.firebasestorage.app",
