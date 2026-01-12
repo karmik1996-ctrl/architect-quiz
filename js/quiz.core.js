@@ -1045,13 +1045,15 @@ function updateAttemptsDisplay(attempts) {
     
     // Get questions used for current quiz set
     loadQuizSetQuestionsUsed();
+    let questionsUsed = 0;
     if (typeof currentQuizSetIndex !== 'undefined' && currentQuizSetIndex >= 0 && quizSets && quizSets.length > 0) {
         const quizSetNumber = currentQuizSetIndex + 1; // 1-based index
-        const questionsUsed = getQuizSetQuestionsUsed(quizSetNumber.toString());
+        questionsUsed = getQuizSetQuestionsUsed(quizSetNumber.toString());
+    }
     
     const attemptsHeaderText = document.getElementById('quiz-attempts-header-text');
     if (attemptsHeaderText) {
-        if (questionsUsed > 0) {
+        if (typeof questionsUsed !== 'undefined' && questionsUsed > 0) {
             attemptsHeaderText.textContent = `${questionsUsed} հարց օգտագործված, ${attempts}/3 փորձ`;
         } else {
             attemptsHeaderText.textContent = `3-ից ${attempts} սպառված`;
@@ -1063,8 +1065,7 @@ function updateAttemptsDisplay(attempts) {
         } else {
             attemptsHeaderText.style.color = '#28a745';
         }
-        } else {
-        }
+    }
 }
 
 // Repeat quiz with same questions (same test attempt, no new attempt)
