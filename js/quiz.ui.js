@@ -155,15 +155,26 @@ function initializeEventListeners() {
         } else {
         }
     
-    // Back to payment button
+    // Back to payment/choice button
     if (backToPaymentBtn) {
         backToPaymentBtn.addEventListener('click', () => {
             if (startSection) startSection.style.display = 'none';
-            if (paymentSection) paymentSection.style.display = 'block';
+            // Check if user is logged in - show choice section, otherwise show payment section
+            if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
+                // User is logged in - show choice section
+                const choiceSection = document.getElementById('choice-section');
+                const paymentCodeSection = document.getElementById('payment-code-section');
+                if (choiceSection) choiceSection.style.display = 'block';
+                if (paymentCodeSection) paymentCodeSection.style.display = 'none';
+                if (paymentSection) paymentSection.style.display = 'none';
+            } else {
+                // User is not logged in - show payment section
+                if (paymentSection) paymentSection.style.display = 'block';
+            }
         });
         }
     
-    // Back to payment from quiz button
+    // Back to payment/choice from quiz button
     if (backToPaymentFromQuizBtn) {
         backToPaymentFromQuizBtn.addEventListener('click', () => {
             if (topicSection) topicSection.style.display = 'none';
@@ -172,11 +183,23 @@ function initializeEventListeners() {
             if (nextSection) nextSection.style.display = 'none';
             if (resultsSection) resultsSection.style.display = 'none';
             if (startSection) startSection.style.display = 'none';
-            if (paymentSection) paymentSection.style.display = 'block';
             gameStarted = false;
             currentQuestionIndex = 0;
             score = 0;
             userAnswers = [];
+            
+            // Check if user is logged in - show choice section, otherwise show payment section
+            if (typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser) {
+                // User is logged in - show choice section
+                const choiceSection = document.getElementById('choice-section');
+                const paymentCodeSection = document.getElementById('payment-code-section');
+                if (choiceSection) choiceSection.style.display = 'block';
+                if (paymentCodeSection) paymentCodeSection.style.display = 'none';
+                if (paymentSection) paymentSection.style.display = 'none';
+            } else {
+                // User is not logged in - show payment section
+                if (paymentSection) paymentSection.style.display = 'block';
+            }
         });
         }
     
