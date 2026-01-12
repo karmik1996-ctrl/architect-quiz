@@ -144,34 +144,60 @@ function showUserInfo(userData) {
  * Hide user info and show auth forms
  */
 function hideUserInfo() {
-    const authForms = document.getElementById('auth-forms');
-    const quizTypeSection = document.getElementById('quiz-type-section');
-    const choiceSection = document.getElementById('choice-section');
-    const paymentCodeSection = document.getElementById('payment-code-section');
-    const paymentSection = document.getElementById('payment-section');
-    const logoutContainer = document.getElementById('logout-container');
-    const startSection = document.getElementById('start-section');
-    
-    // Show payment section (main page)
-    if (paymentSection) paymentSection.style.display = 'block';
-    
-    // Show auth forms
-    if (authForms) authForms.style.display = 'block';
-    
-    // Hide logout button
-    if (logoutContainer) logoutContainer.style.display = 'none';
-    
-    // Hide quiz type section
-    if (quizTypeSection) quizTypeSection.style.display = 'none';
-    
-    // Hide choice section
-    if (choiceSection) choiceSection.style.display = 'none';
-    
-    // Hide payment code section
-    if (paymentCodeSection) paymentCodeSection.style.display = 'none';
-    
-    // Hide start section
-    if (startSection) startSection.style.display = 'none';
+    try {
+        const authForms = document.getElementById('auth-forms');
+        const quizTypeSection = document.getElementById('quiz-type-section');
+        const choiceSection = document.getElementById('choice-section');
+        const paymentCodeSection = document.getElementById('payment-code-section');
+        const paymentSection = document.getElementById('payment-section');
+        const logoutContainer = document.getElementById('logout-container');
+        const startSection = document.getElementById('start-section');
+        
+        // Show payment section (main page)
+        if (paymentSection) {
+            paymentSection.style.display = 'block';
+            console.log('✅ Payment section shown');
+        } else {
+            console.warn('⚠️ Payment section not found');
+        }
+        
+        // Show auth forms
+        if (authForms) {
+            authForms.style.display = 'block';
+            console.log('✅ Auth forms shown');
+        } else {
+            console.warn('⚠️ Auth forms not found');
+        }
+        
+        // Hide logout button
+        if (logoutContainer) {
+            logoutContainer.style.display = 'none';
+        }
+        
+        // Hide quiz type section
+        if (quizTypeSection) {
+            quizTypeSection.style.display = 'none';
+        }
+        
+        // Hide choice section
+        if (choiceSection) {
+            choiceSection.style.display = 'none';
+        }
+        
+        // Hide payment code section
+        if (paymentCodeSection) {
+            paymentCodeSection.style.display = 'none';
+        }
+        
+        // Hide start section
+        if (startSection) {
+            startSection.style.display = 'none';
+        }
+        
+        console.log('✅ User info hidden, payment section shown');
+    } catch (error) {
+        console.error('Error in hideUserInfo:', error);
+    }
 }
 
 // ============================================
