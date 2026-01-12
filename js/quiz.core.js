@@ -1210,8 +1210,11 @@ function selectAnswer(selectedIndex) {
         answerButtons[selectedIndex].classList.add('incorrect');
         // Update score display (but don't increment score yet)
     } else {
-
         score++;
+        // Get scoreDisplay if not already initialized
+        if (!scoreDisplay) {
+            scoreDisplay = document.getElementById('score');
+        }
         if (scoreDisplay) scoreDisplay.textContent = score;
     }
     
