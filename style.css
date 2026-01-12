@@ -3554,3 +3554,31 @@ body.dark-mode #register-password-toggle:hover,
 body.dark-mode #login-password-toggle:hover {
     color: #e0e0e0;
 }
+
+/* Logout button container - fixed at bottom */
+#logout-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000004 !important;
+    display: none;
+}
+
+#logout-container #logout-btn {
+    width: auto;
+    padding: 10px 20px;
+    margin: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode #logout-container #logout-btn {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    border-color: #2a2a2a;
+}
+
+body.dark-mode #logout-container #logout-btn:hover {
+    background: #2a2a2a;
+    color: #ffffff;
+}
