@@ -3701,3 +3701,43 @@ body.dark-mode .quiz-type-option strong {
 body:not(.dark-mode) .quiz-type-option {
     background: #ffffff !important;
 }
+
+/* Door Icon Animations */
+.door-icon {
+    transition: transform 0.3s ease;
+    transform-origin: center;
+}
+
+/* Login Icon - Door opens inward (to the right) */
+.login-btn-with-icon:hover .login-icon .door-panel {
+    transform: rotateY(-45deg);
+    transform-origin: left center;
+    transition: transform 0.3s ease;
+}
+
+.login-btn-with-icon:hover .login-icon .door-arrow {
+    transform: translateX(2px);
+    transition: transform 0.3s ease;
+}
+
+/* Logout Icon - Door opens outward (to the left) */
+.logout-btn-with-icon:hover .logout-icon .door-panel {
+    transform: rotateY(45deg);
+    transform-origin: right center;
+    transition: transform 0.3s ease;
+}
+
+.logout-btn-with-icon:hover .logout-icon .door-arrow {
+    transform: translateX(-2px);
+    transition: transform 0.3s ease;
+}
+
+/* Ensure door panel is positioned correctly for 3D effect */
+.door-icon .door-panel {
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+
+.door-icon .door-arrow {
+    transition: transform 0.3s ease;
+}
