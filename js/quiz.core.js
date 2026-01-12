@@ -50,6 +50,7 @@ let resultsSection = null;
 let nextSection = null;
 let topicTitle = null;
 let questionText = null;
+let scoreDisplay = null;
 
 // Quiz sets: 17 sets of 10 questions + 1 set of 5 questions (18th test) = 175 questions
 let quizSets = []; // Array of quiz sets, each containing 10 or 5 questions
@@ -864,6 +865,7 @@ async function startQuiz() {
         nextSection = document.getElementById('next-section');
         topicTitle = document.getElementById('topic-title');
         questionText = document.getElementById('question-text');
+        scoreDisplay = document.getElementById('score');
     }
     
     // Start DevTools detection when quiz starts (security protection)
