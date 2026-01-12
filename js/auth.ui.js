@@ -148,7 +148,12 @@ function hideUserInfo() {
     const quizTypeSection = document.getElementById('quiz-type-section');
     const choiceSection = document.getElementById('choice-section');
     const paymentCodeSection = document.getElementById('payment-code-section');
+    const paymentSection = document.getElementById('payment-section');
     const logoutContainer = document.getElementById('logout-container');
+    const startSection = document.getElementById('start-section');
+    
+    // Show payment section (main page)
+    if (paymentSection) paymentSection.style.display = 'block';
     
     // Show auth forms
     if (authForms) authForms.style.display = 'block';
@@ -164,6 +169,9 @@ function hideUserInfo() {
     
     // Hide payment code section
     if (paymentCodeSection) paymentCodeSection.style.display = 'none';
+    
+    // Hide start section
+    if (startSection) startSection.style.display = 'none';
 }
 
 // ============================================
