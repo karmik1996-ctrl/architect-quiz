@@ -468,8 +468,11 @@ async function handleLogin(event) {
         if (result.success) {
             setStatusMessage(statusDiv, 'success', '✅ Մուտք գործվեց հաջողությամբ!');
             
-            // Show user info
-            showUserInfo(result.user);
+            // Show login animation - website comes out of door
+            showLoginAnimation(() => {
+                // Show user info after animation
+                showUserInfo(result.user);
+            });
         } else {
             throw new Error(result.error || 'Login failed');
         }
