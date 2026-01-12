@@ -75,25 +75,12 @@ function showLoginForm() {
  */
 function showUserInfo(userData) {
     const authForms = document.getElementById('auth-forms');
-    const userInfo = document.getElementById('user-info');
     const choiceSection = document.getElementById('choice-section');
     const paymentCodeSection = document.getElementById('payment-code-section');
     const logoutContainer = document.getElementById('logout-container');
     
     // Hide auth forms
     if (authForms) authForms.style.display = 'none';
-    
-    // Show user info
-    if (userInfo) {
-        userInfo.style.display = 'block';
-        const displayName = document.getElementById('user-display-name');
-        const userEmail = document.getElementById('user-email');
-        const userPhone = document.getElementById('user-phone');
-        
-        if (displayName) displayName.textContent = userData.name || userData.email || 'User';
-        if (userEmail) userEmail.textContent = userData.email || '';
-        if (userPhone) userPhone.textContent = userData.phone || '';
-    }
     
     // Show logout button at bottom
     if (logoutContainer) logoutContainer.style.display = 'block';
@@ -110,16 +97,12 @@ function showUserInfo(userData) {
  */
 function hideUserInfo() {
     const authForms = document.getElementById('auth-forms');
-    const userInfo = document.getElementById('user-info');
     const choiceSection = document.getElementById('choice-section');
     const paymentCodeSection = document.getElementById('payment-code-section');
     const logoutContainer = document.getElementById('logout-container');
     
     // Show auth forms
     if (authForms) authForms.style.display = 'block';
-    
-    // Hide user info
-    if (userInfo) userInfo.style.display = 'none';
     
     // Hide logout button
     if (logoutContainer) logoutContainer.style.display = 'none';
