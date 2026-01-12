@@ -1055,8 +1055,10 @@ function selectQuizType(type) {
             try {
                 const title = getQuizTypeTitle();
                 const pageTitle = document.getElementById('page-title');
+                const startSectionTitle = document.getElementById('start-section-title');
                 if (pageTitle) pageTitle.textContent = title;
                 if (document.title) document.title = title;
+                if (startSectionTitle) startSectionTitle.textContent = title;
             } catch (error) {
                 console.warn('Error updating title:', error);
             }

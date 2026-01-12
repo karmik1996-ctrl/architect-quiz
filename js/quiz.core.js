@@ -83,7 +83,7 @@ function getQuizTypeTitle() {
     }
     
     if (selectedType === 'constructor') {
-        return 'Կոնստրուկտորների արտոնագրման և որակավորման հարցաթերթիկներ';
+        return 'ՃԱՐՏԱՐԱԳԵՏ-ԿՈՆՍՏՐՈՒԿՏՈՐՆԵՐԻ ԱՐՏՈՆԱԳՐՄԱՆ ԵՎ ՈՐԱԿԱՎՈՐՄԱՆ ՀԱՐՑԱԹԵՐԹԻԿՆԵՐ';
     }
     
     return 'ճարտարապետների արտոնագրման և որակավորման հարցաթերթիկներ';
@@ -971,6 +971,19 @@ async function startQuiz() {
         topicTitle = document.getElementById('topic-title');
         questionText = document.getElementById('question-text');
         scoreDisplay = document.getElementById('score');
+    }
+    
+    // Update start-section-title based on selected quiz type
+    if (typeof getQuizTypeTitle === 'function') {
+        try {
+            const title = getQuizTypeTitle();
+            const startSectionTitle = document.getElementById('start-section-title');
+            if (startSectionTitle) {
+                startSectionTitle.textContent = title;
+            }
+        } catch (error) {
+            console.warn('Error updating start-section-title:', error);
+        }
     }
     
     // Start DevTools detection when quiz starts (security protection)
