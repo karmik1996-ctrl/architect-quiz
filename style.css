@@ -3707,24 +3707,30 @@ body:not(.dark-mode) .quiz-type-option {
 }
 
 /* Dark mode support for info modal sections */
-body.dark-mode .info-section div[style*="background: #e3f2fd"] {
+body.dark-mode .architect-test-info {
     background: #0d47a1 !important;
     border-left-color: #64b5f6 !important;
 }
 
-body.dark-mode .info-section div[style*="background: #e8f5e9"] {
+body.dark-mode .constructor-test-info {
     background: #1e4620 !important;
     border-left-color: #4caf50 !important;
 }
 
-body.dark-mode .info-section h3 {
-    color: #e0e0e0 !important;
+body.dark-mode .architect-test-info h3 {
+    color: #64b5f6 !important;
 }
 
-body.dark-mode .info-section div[style*="background: #e3f2fd"] p,
-body.dark-mode .info-section div[style*="background: #e3f2fd"] ul,
-body.dark-mode .info-section div[style*="background: #e8f5e9"] p,
-body.dark-mode .info-section div[style*="background: #e8f5e9"] ul {
+body.dark-mode .constructor-test-info h3 {
+    color: #4caf50 !important;
+}
+
+body.dark-mode .architect-test-info p,
+body.dark-mode .architect-test-info ul,
+body.dark-mode .architect-test-info li,
+body.dark-mode .constructor-test-info p,
+body.dark-mode .constructor-test-info ul,
+body.dark-mode .constructor-test-info li {
     color: #e0e0e0 !important;
 }
 
