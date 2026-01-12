@@ -1227,6 +1227,9 @@ function changeQuiz() {
 
 
 function loadQuestion() {
+    // Update quiz type indicator when loading question
+    updateQuizTypeIndicator();
+    
     // Get current quiz data based on selected type
     const currentQuizData = getCurrentQuizData();
     
