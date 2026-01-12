@@ -20,8 +20,26 @@ function initializeFirebaseWhenReady() {
     firebaseInitAttempts++;
     
     // Check if Firebase SDK is loaded (try multiple ways)
-    // Try window.firebase first, then global firebase
-    const firebaseObj = (typeof window !== 'undefined' && window.firebase) || (typeof firebase !== 'undefined' ? firebase : null);
+    // Try multiple methods to find firebase object
+    let firebaseObj = null;
+    
+    // Method 1: Global firebase
+    if (typeof firebase !== 'undefined') {
+        firebaseObj = firebase;
+    }
+    // Method 2: window.firebase
+    else if (typeof window !== 'undefined' && window.firebase) {
+        firebaseObj = window.firebase;
+    }
+    // Method 3: Search in window object
+    else if (typeof window !== 'undefined') {
+        for (const key in window) {
+            if (key.toLowerCase() === 'firebase' && window[key] && typeof window[key] === 'object') {
+                firebaseObj = window[key];
+                break;
+            }
+        }
+    }
     
     const firebaseLoaded = firebaseObj && 
                           typeof firebaseObj.initializeApp === 'function' &&
@@ -29,6 +47,11 @@ function initializeFirebaseWhenReady() {
     
     if (firebaseLoaded) {
         try {
+            // Ensure global firebase is set for compatibility
+            if (typeof window !== 'undefined' && !window.firebase) {
+                window.firebase = firebaseObj;
+            }
+            
             // Use the firebase object we found
             const firebase = firebaseObj;
             
@@ -50,6 +73,7 @@ function initializeFirebaseWhenReady() {
             }
         } catch (error) {
             console.error("❌ Firebase initialization error:", error);
+            console.error("Error details:", error.message, error.stack);
             // Retry initialization if error occurs
             if (firebaseInitAttempts < MAX_INIT_ATTEMPTS) {
                 setTimeout(initializeFirebaseWhenReady, 100);
@@ -64,26 +88,40 @@ function initializeFirebaseWhenReady() {
         console.error("Debug: typeof firebase =", typeof firebase);
         console.error("Debug: typeof window.firebase =", typeof window !== 'undefined' ? typeof window.firebase : 'N/A');
         console.error("Debug: window keys containing 'firebase':", typeof window !== 'undefined' ? Object.keys(window).filter(k => k.toLowerCase().includes('firebase')) : []);
+        
+        // Last resort: try to manually create firebase object from scripts
+        if (typeof window !== 'undefined') {
+            console.error("Attempting manual firebase object creation...");
+            // This is a fallback - scripts should have created it
+        }
     }
 }
 
 // Start initialization - wait for Firebase SDK to be available
-// Scripts execute synchronously, so Firebase SDK should be available immediately
-// Start checking immediately with minimal delay
+// Listen for firebaseSDKReady event from dynamic loader
 (function startFirebaseInit() {
-    // Check immediately (scripts execute synchronously)
+    // Check immediately (scripts might be loaded already)
     if (typeof firebase !== 'undefined') {
         initializeFirebaseWhenReady();
     } else {
-        // If not ready, start with setTimeout (may need time to execute)
-        setTimeout(initializeFirebaseWhenReady, 10);
-        // Also try after window.onload as backup
+        // Wait for firebaseSDKReady event (from dynamic loader)
         if (typeof window !== 'undefined') {
+            window.addEventListener('firebaseSDKReady', function() {
+                setTimeout(initializeFirebaseWhenReady, 50);
+            }, { once: true });
+            
+            // Also check periodically as fallback
+            setTimeout(initializeFirebaseWhenReady, 100);
+            
+            // Also try after window.onload as backup
             window.addEventListener('load', function() {
                 if (!window.firebaseInitialized) {
-                    setTimeout(initializeFirebaseWhenReady, 10);
+                    setTimeout(initializeFirebaseWhenReady, 100);
                 }
             }, { once: true });
+        } else {
+            // No window, just retry
+            setTimeout(initializeFirebaseWhenReady, 100);
         }
     }
 })();

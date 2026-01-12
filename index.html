@@ -117,8 +117,54 @@
                     </div>
                 </div>
                 
-                <!-- Payment Code Input - Only visible after login -->
+                <!-- Choice Section - Show after registration/login (choose payment or trial) -->
+                <div id="choice-section" class="choice-section" style="display: none; margin-top: 30px;">
+                    <h3 style="color: #1a1a1a; margin-bottom: 20px; font-size: 1.2em; text-align: center;">Ընտրեք ձեր տարբերակը</h3>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 20px; max-width: 600px; margin: 0 auto;">
+                        <!-- Option 1: Pay Now -->
+                        <div class="choice-option" style="border: 2px solid #28a745; border-radius: 12px; padding: 20px; background: #f8fff9; cursor: pointer; transition: all 0.3s;" 
+                             onmouseover="this.style.background='#e8f5e9'; this.style.transform='scale(1.02)';" 
+                             onmouseout="this.style.background='#f8fff9'; this.style.transform='scale(1)';"
+                             onclick="showPaymentCodeSection(); return false;">
+                            <h4 style="margin: 0 0 10px 0; color: #28a745; font-size: 1.1em;">💰 Վճարել Հիմա</h4>
+                            <p style="margin: 5px 0; color: #555; font-size: 0.95em;">
+                                <strong>15,000 դրամ</strong> - Ամբողջ թեստը 3 անգամ անցնելու համար
+                            </p>
+                            <p style="margin: 5px 0; color: #666; font-size: 0.9em;">
+                                ✅ 18 թեստ, 54 հարց<br>
+                                ✅ Անսահմանափակ մուտք<br>
+                                ✅ Բոլոր հարցերի պատասխաններ
+                            </p>
+                            <button class="btn-primary" style="width: 100%; margin-top: 15px; background: #28a745;">
+                                💳 Վճարել 15,000 դրամ
+                            </button>
+                        </div>
+                        
+                        <!-- Option 2: Free Trial -->
+                        <div class="choice-option" style="border: 2px solid #007bff; border-radius: 12px; padding: 20px; background: #f0f8ff; cursor: pointer; transition: all 0.3s;" 
+                             onmouseover="this.style.background='#e3f2fd'; this.style.transform='scale(1.02)';" 
+                             onmouseout="this.style.background='#f0f8ff'; this.style.transform='scale(1)';"
+                             onclick="startFreeTrial(); return false;">
+                            <h4 style="margin: 0 0 10px 0; color: #007bff; font-size: 1.1em;">🎯 Թեստային 10 Հարց (Անվճար)</h4>
+                            <p style="margin: 5px 0; color: #555; font-size: 0.95em;">
+                                <strong>Անվճար</strong> - Փորձեք մինչև գնելը
+                            </p>
+                            <p style="margin: 5px 0; color: #666; font-size: 0.9em;">
+                                ✅ 10 հարց անվճար<br>
+                                ✅ Հասկանալու համար, արդյոք ուզում եք գնել<br>
+                                ⚠️ Միայն 1 անգամ
+                            </p>
+                            <button class="btn-primary" style="width: 100%; margin-top: 15px; background: #007bff;">
+                                🚀 Սկսել Թեստային Հարցերը
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payment Code Input - Only visible when user chooses to pay -->
                 <div id="payment-code-section" class="payment-code-input" style="display: none; margin-top: 30px;">
+                    <button id="back-to-choice-btn" class="btn-secondary" style="margin-bottom: 15px; width: 100%;" onclick="showChoiceSection(); return false;">← Ետ Գնալ Ընտրության</button>
                     <h3 style="color: #1a1a1a; margin-bottom: 15px; font-size: 1.1em;">🔑 Վճարման Կոդ</h3>
                     <p style="margin-bottom: 15px; color: #666; font-size: 0.9em;">Վճարիր 15,000 դրամ և ստացիր վճարման կոդը email-ով, ապա մուտքագրիր այն ներքևում:</p>
                     <label for="payment-code">Վճարման Կոդ:</label>
@@ -502,21 +548,92 @@
         window.showRegisterForm = function() { return false; };
         window.showLoginForm = function() { return false; };
     </script>
-        <!-- Firebase SDK - Load first (compat version for script tags) -->
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore-compat.js"></script>
+        <!-- Firebase SDK v9 - Load first (more reliable, compat version for script tags) -->
+        <!-- IMPORTANT: Do NOT use async or defer - scripts must load synchronously -->
+        <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
         
-        <!-- Verify Firebase SDK is loaded immediately after scripts -->
+        <!-- Manual Firebase Wrapper - creates firebase object if SDK doesn't -->
+        <script src="js/firebase.manual-wrapper.js" charset="UTF-8"></script>
+        
+        <!-- Verify Firebase SDK is loaded and create global firebase object if needed -->
         <script>
-            // Verify Firebase SDK loaded immediately (scripts execute synchronously)
+            // Verify Firebase SDK loaded and create global firebase object if needed
             (function() {
-                if (typeof firebase !== 'undefined') {
-                    console.log('✅ Firebase SDK loaded: typeof firebase =', typeof firebase);
-                    console.log('✅ Firebase SDK methods:', typeof firebase.initializeApp, typeof firebase.auth, typeof firebase.firestore);
-                } else {
-                    console.error('❌ Firebase SDK not loaded: typeof firebase =', typeof firebase);
+                function checkAndCreateFirebase() {
+                    // Check if firebase is already available
+                    if (typeof firebase !== 'undefined') {
+                        console.log('✅ Firebase SDK loaded: typeof firebase =', typeof firebase);
+                        if (typeof window !== 'undefined') {
+                            window.firebaseSDKReady = true;
+                            window.dispatchEvent(new Event('firebaseSDKReady'));
+                        }
+                        return;
+                    }
+                    
+                    // Try to find firebase in window or create it from loaded modules
+                    // Firebase SDK v8 compat should expose firebase as a global, but if it doesn't,
+                    // we need to check if the modules are loaded and create the object manually
+                    if (typeof window !== 'undefined') {
+                        // Check if Firebase modules are loaded by checking for specific functions
+                        // Firebase SDK v8 compat exposes functions directly on window
+                        let firebaseObj = null;
+                        
+                        // Try to find firebase in window
+                        if (window.firebase) {
+                            firebaseObj = window.firebase;
+                        } else {
+                            // Check if Firebase SDK functions are available (they might be in a different namespace)
+                            // Firebase SDK v8 compat should create a global 'firebase' object
+                            // If it doesn't, we need to wait or check for the actual SDK
+                            
+                            // Try to access Firebase through the SDK's internal structure
+                            // This is a fallback - normally firebase should be global
+                            try {
+                                // Check if we can access Firebase through eval (last resort)
+                                // Actually, let's just wait a bit more and check again
+                                if (typeof window.firebase === 'undefined') {
+                                    // Firebase SDK v8 compat should have created window.firebase
+                                    // If it hasn't, the scripts might not have executed properly
+                                    console.warn('⚠️ Firebase SDK scripts loaded but firebase object not found');
+                                    console.warn('Debug: Checking for Firebase SDK internals...');
+                                    
+                                    // Try to find any Firebase-related objects
+                                    const allKeys = Object.keys(window);
+                                    const firebaseKeys = allKeys.filter(k => k.toLowerCase().includes('firebase'));
+                                    console.warn('Debug: Window keys with "firebase":', firebaseKeys);
+                                    
+                                    // Still dispatch event so initialization can retry
+                                    window.dispatchEvent(new Event('firebaseSDKReady'));
+                                    return;
+                                }
+                            } catch (e) {
+                                console.error('Error checking for Firebase:', e);
+                            }
+                        }
+                        
+                        if (firebaseObj) {
+                            // Set global firebase
+                            if (typeof window !== 'undefined') {
+                                window.firebase = firebaseObj;
+                            }
+                            console.log('✅ Firebase SDK found and set: typeof firebase =', typeof firebaseObj);
+                            window.firebaseSDKReady = true;
+                            window.dispatchEvent(new Event('firebaseSDKReady'));
+                        } else {
+                            // Retry after delay
+                            setTimeout(checkAndCreateFirebase, 100);
+                        }
+                    }
                 }
+                
+                // Check immediately
+                checkAndCreateFirebase();
+                
+                // Also check after a delay as fallback
+                setTimeout(checkAndCreateFirebase, 100);
+                setTimeout(checkAndCreateFirebase, 500);
             })();
         </script>
         

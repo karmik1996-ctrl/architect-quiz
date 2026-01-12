@@ -20,3 +20,4 @@ Command Prompt-ում պետք է տեսնեք:
 ✅ Push-ը կհաջողվի authorization-ից հետո:
 
 
+

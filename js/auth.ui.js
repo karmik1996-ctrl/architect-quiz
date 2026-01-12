@@ -76,6 +76,7 @@ function showLoginForm() {
 function showUserInfo(userData) {
     const authForms = document.getElementById('auth-forms');
     const userInfo = document.getElementById('user-info');
+    const choiceSection = document.getElementById('choice-section');
     const paymentCodeSection = document.getElementById('payment-code-section');
     
     // Hide auth forms
@@ -93,8 +94,11 @@ function showUserInfo(userData) {
         if (userPhone) userPhone.textContent = userData.phone || '';
     }
     
-    // Show payment code section
-    if (paymentCodeSection) paymentCodeSection.style.display = 'block';
+    // Hide payment code section (will show when user chooses to pay)
+    if (paymentCodeSection) paymentCodeSection.style.display = 'none';
+    
+    // Show choice section (choose payment or trial)
+    if (choiceSection) choiceSection.style.display = 'block';
 }
 
 /**
@@ -103,6 +107,7 @@ function showUserInfo(userData) {
 function hideUserInfo() {
     const authForms = document.getElementById('auth-forms');
     const userInfo = document.getElementById('user-info');
+    const choiceSection = document.getElementById('choice-section');
     const paymentCodeSection = document.getElementById('payment-code-section');
     
     // Show auth forms
@@ -110,6 +115,9 @@ function hideUserInfo() {
     
     // Hide user info
     if (userInfo) userInfo.style.display = 'none';
+    
+    // Hide choice section
+    if (choiceSection) choiceSection.style.display = 'none';
     
     // Hide payment code section
     if (paymentCodeSection) paymentCodeSection.style.display = 'none';
@@ -336,6 +344,89 @@ function initializeAuthUI() {
 }
 
 // ============================================
+// CHOICE SECTION FUNCTIONS
+// ============================================
+
+/**
+ * Show payment code section (when user chooses to pay)
+ */
+function showPaymentCodeSection() {
+    const choiceSection = document.getElementById('choice-section');
+    const paymentCodeSection = document.getElementById('payment-code-section');
+    
+    if (choiceSection) choiceSection.style.display = 'none';
+    if (paymentCodeSection) paymentCodeSection.style.display = 'block';
+}
+
+/**
+ * Show choice section (when user goes back from payment)
+ */
+function showChoiceSection() {
+    const choiceSection = document.getElementById('choice-section');
+    const paymentCodeSection = document.getElementById('payment-code-section');
+    
+    if (choiceSection) choiceSection.style.display = 'block';
+    if (paymentCodeSection) paymentCodeSection.style.display = 'none';
+}
+
+/**
+ * Start free trial (10 questions)
+ */
+async function startFreeTrial() {
+    try {
+        // Check if free trial is available
+        if (typeof checkFreeTrialStatus === 'function') {
+            const trialStatus = await checkFreeTrialStatus();
+            
+            if (trialStatus.used) {
+                alert('⚠️ Թեստային հարցերը արդեն օգտագործված են:\n\nԽնդրում ենք վճարել 15,000 դրամ ամբողջ թեստը մուտք գործելու համար:');
+                return;
+            }
+        }
+        
+        // Hide choice section
+        const choiceSection = document.getElementById('choice-section');
+        if (choiceSection) choiceSection.style.display = 'none';
+        
+        // Hide payment section
+        const paymentSection = document.getElementById('payment-section');
+        if (paymentSection) paymentSection.style.display = 'none';
+        
+        // Show start section and start quiz with free trial
+        const startSection = document.getElementById('start-section');
+        if (startSection) {
+            startSection.style.display = 'block';
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Show info message about free trial
+            const welcomeMessage = document.getElementById('welcome-message');
+            const welcomeGreeting = document.getElementById('welcome-greeting');
+            const welcomeInfo = document.getElementById('welcome-info');
+            
+            if (welcomeMessage && welcomeGreeting && welcomeInfo) {
+                welcomeGreeting.textContent = '🎯 Թեստային 10 Հարց (Անվճար)';
+                welcomeInfo.textContent = 'Դուք կարող եք լուծել 10 հարց անվճար: Սա օգնում է հասկանալ, թե արդյոք ցանկանում եք գնել ամբողջ թեստը:';
+                welcomeMessage.style.display = 'block';
+            }
+            
+            // Auto-start quiz (will use free trial automatically)
+            setTimeout(() => {
+                if (typeof startQuiz === 'function') {
+                    startQuiz();
+                } else {
+                    console.error('startQuiz function not found');
+                    alert('Սխալ: Quiz-ը չի կարող սկսվել:');
+                }
+            }, 500);
+        }
+    } catch (error) {
+        console.error('Error starting free trial:', error);
+        alert('Սխալ: Հնարավոր չէ սկսել թեստային հարցերը: ' + error.message);
+    }
+}
+
+// ============================================
 // EXPOSE FUNCTIONS TO WINDOW
 // ============================================
 
@@ -347,6 +438,9 @@ if (typeof window !== 'undefined') {
     window.handleLogout = handleLogout;
     window.checkAuthState = checkAuthState;
     window.initializeAuthUI = initializeAuthUI;
+    window.showPaymentCodeSection = showPaymentCodeSection;
+    window.showChoiceSection = showChoiceSection;
+    window.startFreeTrial = startFreeTrial;
 }
 
 // Auto-initialize when script loads
