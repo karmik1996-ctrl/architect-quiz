@@ -57,6 +57,11 @@ function initializeFirebaseWhenReady() {
             
             // Check if Firebase is already initialized
             if (!firebase.apps || firebase.apps.length === 0) {
+                console.log("🔧 Initializing Firebase with config:", {
+                    apiKey: firebaseConfig.apiKey ? firebaseConfig.apiKey.substring(0, 20) + "..." : "MISSING",
+                    authDomain: firebaseConfig.authDomain,
+                    projectId: firebaseConfig.projectId
+                });
                 firebase.initializeApp(firebaseConfig);
                 console.log("✅ Firebase initialized successfully");
                 // Trigger custom event for other scripts

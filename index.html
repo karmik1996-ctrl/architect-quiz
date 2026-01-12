@@ -548,11 +548,11 @@
         window.showRegisterForm = function() { return false; };
         window.showLoginForm = function() { return false; };
     </script>
-        <!-- Firebase SDK v9 - Load first (more reliable, compat version for script tags) -->
+        <!-- Firebase SDK v8 Compat - Load first (most reliable for script tags) -->
         <!-- IMPORTANT: Do NOT use async or defer - scripts must load synchronously -->
-        <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
         
         <!-- Manual Firebase Wrapper - creates firebase object if SDK doesn't -->
         <script src="js/firebase.manual-wrapper.js" charset="UTF-8"></script>
