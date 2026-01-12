@@ -132,10 +132,21 @@ function showUserInfo(userData) {
         }
         
         // Hide payment section (IMPORTANT: Must be hidden when user is logged in)
+        // BUT keep payment-info visible if quiz-type-section needs to be shown
         if (paymentSection) {
-            paymentSection.style.display = 'none';
-            paymentSection.style.setProperty('display', 'none', 'important');
-            console.log('✅ Payment section hidden');
+            // Don't hide payment-section completely - just hide its initial content
+            // The quiz-type-section is inside payment-info, which is inside payment-section
+            const paymentInfo = paymentSection.querySelector('.payment-info');
+            if (paymentInfo) {
+                // Hide payment-instructions but keep payment-info visible for quiz-type-section
+                const paymentInstructions = paymentInfo.querySelector('.payment-instructions');
+                if (paymentInstructions) {
+                    paymentInstructions.style.display = 'none';
+                    paymentInstructions.style.setProperty('display', 'none', 'important');
+                }
+            }
+            // Don't hide payment-section itself - it contains quiz-type-section
+            console.log('✅ Payment section content hidden (keeping container visible for quiz-type-section)');
         } else {
             console.warn('⚠️ Payment section not found');
         }
