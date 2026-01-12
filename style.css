@@ -10,10 +10,26 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Ensure all buttons are above watermark */
+/* Ensure all buttons are above watermark and overlays */
 button {
     position: relative;
     z-index: 1000001 !important;
+}
+
+/* Ensure user-info and choice-section are above overlays */
+#user-info,
+.choice-section,
+#choice-section {
+    position: relative;
+    z-index: 1000002 !important;
+}
+
+/* Ensure all buttons inside user-info and choice-section are above overlays */
+#user-info button,
+.choice-section button,
+#choice-section button {
+    position: relative;
+    z-index: 1000003 !important;
 }
 
 /* Ensure dark mode toggle is above watermark */
