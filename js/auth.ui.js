@@ -805,9 +805,7 @@ async function startFreeTrial() {
             console.log('✅ Payment section hidden');
         }
         
-        // Hide quiz type section
-        const quizTypeSection = document.getElementById('quiz-type-section');
-        if (quizTypeSection) quizTypeSection.style.display = 'none';
+        // quizTypeSection already declared above, no need to redeclare
         
         // Show start section and start quiz with free trial
         const startSection = document.getElementById('start-section');
