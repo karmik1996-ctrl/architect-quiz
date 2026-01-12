@@ -272,11 +272,12 @@ function initializeContentProtection() {
     
     // Setup DevTools detection ONLY when quiz is active (not on every page load)
     // Note: DevTools detection is not 100% reliable, but serves as deterrence
+    // DISABLED: Developer tools detection interferes with browser automation
     // Only start detection if quiz is already started (gameStarted === true)
-    const quizActive = typeof gameStarted !== 'undefined' && gameStarted === true;
-    if (quizActive) {
-        setupDevToolsDetection();
-    }
+    // const quizActive = typeof gameStarted !== 'undefined' && gameStarted === true;
+    // if (quizActive) {
+    //     setupDevToolsDetection();
+    // }
 }
 
 // ============================================
