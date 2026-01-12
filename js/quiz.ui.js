@@ -20,6 +20,11 @@ function handleInfoClick(e) {
         infoModal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
         localStorage.setItem('infoModalOpen', 'true');
+        // Lower dark mode toggle z-index when modal is open
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        if (darkModeToggle) {
+            darkModeToggle.style.zIndex = '999999';
+        }
     }
     return false;
 }

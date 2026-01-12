@@ -32,10 +32,16 @@ button {
     z-index: 1000003 !important;
 }
 
-/* Ensure dark mode toggle is above watermark */
+/* Ensure dark mode toggle is above watermark but below modal */
 .dark-mode-toggle {
     z-index: 1000000 !important;
     position: relative !important;
+}
+
+/* When modal is open, dark mode toggle should be below modal */
+body:has(.info-modal[style*="display: flex"]) .dark-mode-toggle,
+body:has(.info-modal[style*="display: block"]) .dark-mode-toggle {
+    z-index: 999999 !important; /* Below modal (10000001) */
 }
 
 /* Allow text selection in inputs and textareas */
