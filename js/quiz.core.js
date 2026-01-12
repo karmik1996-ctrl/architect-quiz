@@ -47,6 +47,9 @@ let topicSection = null;
 let questionSection = null;
 let answersSection = null;
 let resultsSection = null;
+let nextSection = null;
+let topicTitle = null;
+let questionText = null;
 
 // Quiz sets: 17 sets of 10 questions + 1 set of 5 questions (18th test) = 175 questions
 let quizSets = []; // Array of quiz sets, each containing 10 or 5 questions
@@ -858,6 +861,9 @@ async function startQuiz() {
         questionSection = document.getElementById('question-section');
         answersSection = document.getElementById('answers-section');
         resultsSection = document.getElementById('results-section');
+        nextSection = document.getElementById('next-section');
+        topicTitle = document.getElementById('topic-title');
+        questionText = document.getElementById('question-text');
     }
     
     // Start DevTools detection when quiz starts (security protection)
@@ -1110,16 +1116,31 @@ function loadQuestion() {
     // Update exhausted quiz sets display
     updateExhaustedQuizSetsDisplay();
     
+    // Get DOM elements if not already initialized
+    if (!topicTitle) {
+        topicTitle = document.getElementById('topic-title');
+    }
+    if (!questionText) {
+        questionText = document.getElementById('question-text');
+    }
+    if (!answersSection) {
+        answersSection = document.getElementById('answers-section');
+    }
+    
     // Display topic
-    if (question.topic && question.topic.trim()) {
-        topicTitle.textContent = question.topic;
-        topicTitle.style.display = 'block';
-    } else {
-        topicTitle.style.display = 'none';
+    if (topicTitle) {
+        if (question.topic && question.topic.trim()) {
+            topicTitle.textContent = question.topic;
+            topicTitle.style.display = 'block';
+        } else {
+            topicTitle.style.display = 'none';
+        }
     }
     
     // Display question
-    questionText.textContent = question.question;
+    if (questionText) {
+        questionText.textContent = question.question;
+    }
     
     // Display answers (cleaned from materials)
     const answerButtons = answersSection.querySelectorAll('.answer-btn');
@@ -1211,6 +1232,11 @@ function selectAnswer(selectedIndex) {
                 }
             });
         }, 1500); // Second check after 1.5 seconds
+    }
+    
+    // Get nextSection if not already initialized
+    if (!nextSection) {
+        nextSection = document.getElementById('next-section');
     }
     
     // Show next button
