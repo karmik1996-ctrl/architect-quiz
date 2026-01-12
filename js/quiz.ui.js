@@ -356,6 +356,11 @@ function initializeUIButtons() {
                 document.body.style.overflow = 'auto';
                 // Save modal state
                 localStorage.setItem('infoModalOpen', 'false');
+                // Restore dark mode toggle z-index when modal is closed
+                const darkModeToggle = document.getElementById('dark-mode-toggle');
+                if (darkModeToggle) {
+                    darkModeToggle.style.zIndex = '';
+                }
             }
         });
     }
@@ -367,6 +372,11 @@ function initializeUIButtons() {
                 document.body.style.overflow = 'auto';
                 // Save modal state
                 localStorage.setItem('infoModalOpen', 'false');
+                // Restore dark mode toggle z-index when modal is closed
+                const darkModeToggle = document.getElementById('dark-mode-toggle');
+                if (darkModeToggle) {
+                    darkModeToggle.style.zIndex = '';
+                }
             }
         });
     }
@@ -379,6 +389,11 @@ function initializeUIButtons() {
                 document.body.style.overflow = 'auto';
                 // Save modal state
                 localStorage.setItem('infoModalOpen', 'false');
+                // Restore dark mode toggle z-index when modal is closed
+                const darkModeToggle = document.getElementById('dark-mode-toggle');
+                if (darkModeToggle) {
+                    darkModeToggle.style.zIndex = '';
+                }
             }
         });
     }
