@@ -574,32 +574,105 @@ function showForgotPasswordForm() {
  */
 async function handleLogout() {
     try {
-        // Clear test data if test mode is enabled (TEMPORARY - WILL BE REMOVED)
-        if (typeof clearTestData === 'function') {
-            clearTestData();
+        // Create exit animation overlay
+        const exitOverlay = document.createElement('div');
+        exitOverlay.id = 'exit-animation-overlay';
+        exitOverlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 9999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        `;
+        
+        // Create door icon in center
+        const doorIcon = document.createElement('div');
+        doorIcon.style.cssText = `
+            width: 200px;
+            height: 200px;
+            position: relative;
+            transform: scale(0.5);
+            transition: transform 0.8s ease;
+        `;
+        
+        doorIcon.innerHTML = `
+            <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 100%; height: 100%;">
+                <!-- Door frame (U-shaped on left) -->
+                <path d="M4 4 L4 20 M4 4 L12 4 M4 20 L12 20"/>
+                <!-- Door panel (solid white trapezoid on right, angled outward) -->
+                <path d="M12 4 L16 4 L17 6 L17 18 L16 20 L12 20 Z" fill="white"/>
+            </svg>
+        `;
+        
+        exitOverlay.appendChild(doorIcon);
+        document.body.appendChild(exitOverlay);
+        
+        // Start animation
+        setTimeout(() => {
+            exitOverlay.style.opacity = '1';
+            doorIcon.style.transform = 'scale(1)';
+        }, 10);
+        
+        // Animate content shrinking into door
+        const quizContainer = document.querySelector('.quiz-container');
+        if (quizContainer) {
+            quizContainer.style.transition = 'transform 0.8s ease, opacity 0.8s ease';
+            setTimeout(() => {
+                quizContainer.style.transform = 'scale(0.3) translateX(-50%)';
+                quizContainer.style.opacity = '0';
+            }, 100);
         }
         
-        // Check if logoutUser function exists
-        if (typeof logoutUser !== 'function') {
-            throw new Error('Firebase Auth functions not loaded.');
-        }
-        
-        // Logout user
-        await logoutUser();
-        
-        // Hide user info and show auth forms
-        hideUserInfo();
-        
-        // Clear forms
-        const registerForm = document.getElementById('register-form');
-        const loginForm = document.getElementById('login-form');
-        if (registerForm) registerForm.reset();
-        if (loginForm) loginForm.reset();
-        
-        // Show register form by default
-        showRegisterForm();
-        
-        console.log('✅ Logged out successfully');
+        // After animation completes, perform logout
+        setTimeout(async () => {
+            // Clear test data if test mode is enabled (TEMPORARY - WILL BE REMOVED)
+            if (typeof clearTestData === 'function') {
+                clearTestData();
+            }
+            
+            // Check if logoutUser function exists
+            if (typeof logoutUser !== 'function') {
+                throw new Error('Firebase Auth functions not loaded.');
+            }
+            
+            // Logout user
+            await logoutUser();
+            
+            // Hide user info and show auth forms
+            hideUserInfo();
+            
+            // Clear forms
+            const registerForm = document.getElementById('register-form');
+            const loginForm = document.getElementById('login-form');
+            if (registerForm) registerForm.reset();
+            if (loginForm) loginForm.reset();
+            
+            // Show register form by default
+            showRegisterForm();
+            
+            // Reset container transform
+            if (quizContainer) {
+                quizContainer.style.transform = '';
+                quizContainer.style.opacity = '';
+            }
+            
+            // Remove overlay
+            exitOverlay.style.opacity = '0';
+            setTimeout(() => {
+                if (exitOverlay.parentNode) {
+                    exitOverlay.parentNode.removeChild(exitOverlay);
+                }
+            }, 300);
+            
+            console.log('✅ Logged out successfully');
+        }, 800);
     } catch (error) {
         console.error('Logout error:', error);
         alert('❌ Logout սխալ: ' + error.message);
