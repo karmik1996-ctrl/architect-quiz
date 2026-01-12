@@ -78,6 +78,7 @@ function showUserInfo(userData) {
     const userInfo = document.getElementById('user-info');
     const choiceSection = document.getElementById('choice-section');
     const paymentCodeSection = document.getElementById('payment-code-section');
+    const logoutContainer = document.getElementById('logout-container');
     
     // Hide auth forms
     if (authForms) authForms.style.display = 'none';
@@ -93,6 +94,9 @@ function showUserInfo(userData) {
         if (userEmail) userEmail.textContent = userData.email || '';
         if (userPhone) userPhone.textContent = userData.phone || '';
     }
+    
+    // Show logout button at bottom
+    if (logoutContainer) logoutContainer.style.display = 'block';
     
     // Hide payment code section (will show when user chooses to pay)
     if (paymentCodeSection) paymentCodeSection.style.display = 'none';
