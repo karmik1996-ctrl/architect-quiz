@@ -322,24 +322,10 @@ function initializeAuthUI() {
     // Check auth state on page load
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                // Auto-login with test account if test mode is enabled (TEMPORARY - WILL BE REMOVED)
-                if (typeof isTestModeEnabled === 'function' && isTestModeEnabled()) {
-                    autoLoginTestAccount();
-                } else {
-                    checkAuthState();
-                }
-            }, 1000); // Wait for Firebase to load
+            setTimeout(checkAuthState, 1000); // Wait for Firebase to load
         });
     } else {
-        setTimeout(() => {
-            // Auto-login with test account if test mode is enabled (TEMPORARY - WILL BE REMOVED)
-            if (typeof isTestModeEnabled === 'function' && isTestModeEnabled()) {
-                autoLoginTestAccount();
-            } else {
-                checkAuthState();
-            }
-        }, 1000); // Wait for Firebase to load
+        setTimeout(checkAuthState, 1000); // Wait for Firebase to load
     }
     
     // Listen for auth state changes (wait for Firebase Auth to be ready)
