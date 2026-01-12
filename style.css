@@ -228,6 +228,7 @@ body.dark-mode .toggle-slider {
     text-align: center;
     transition: opacity 0.3s ease, transform 0.3s ease;
     position: relative;
+    z-index: 2; /* Ensure sections are above screenshot protection overlay */
 }
 
 .section[style*="display: none"] {
@@ -1814,6 +1815,7 @@ body.dark-mode .toggle-slider {
     text-align: center;
     transition: opacity 0.3s ease, transform 0.3s ease;
     position: relative;
+    z-index: 2; /* Ensure sections are above screenshot protection overlay */
 }
 
 .section[style*="display: none"] {
