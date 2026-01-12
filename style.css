@@ -3730,10 +3730,10 @@ body:not(.dark-mode) .quiz-type-option {
     opacity: 0.8;
 }
 
-/* Logout Icon - Door opens outward (to the left) */
+/* Logout Icon - Door opens outward (to the right) */
 .logout-btn-with-icon:hover .logout-icon .door-panel {
-    transform: rotateY(60deg) translateX(-2px);
-    transform-origin: right center;
+    transform: rotateY(-60deg) translateX(2px);
+    transform-origin: left center;
     transition: transform 0.3s ease;
 }
 
