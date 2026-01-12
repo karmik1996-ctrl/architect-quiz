@@ -64,7 +64,12 @@
                                 
                                 <div class="form-group">
                                     <label for="register-password">Գաղտնաբառ *</label>
-                                    <input type="password" id="register-password" name="password" required placeholder="Առնվազն 6 նիշ" autocomplete="new-password" minlength="6">
+                                    <div style="position: relative; width: 100%;">
+                                        <input type="password" id="register-password" name="password" required placeholder="Առնվազն 6 նիշ" autocomplete="new-password" minlength="6" style="width: 100%; padding-right: 45px;">
+                                        <button type="button" id="register-password-toggle" onclick="togglePasswordVisibility('register-password', 'register-password-toggle'); return false;" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2em; padding: 5px; color: #666;" title="Ցուցադրել/Թաքցնել գաղտնաբառը">
+                                            👁️
+                                        </button>
+                                    </div>
                                 </div>
                                 
                                 <button type="submit" id="register-btn" class="btn-primary" style="width: 100%;">
@@ -90,7 +95,12 @@
                                 
                                 <div class="form-group">
                                     <label for="login-password">Գաղտնաբառ *</label>
-                                    <input type="password" id="login-password" name="password" required placeholder="Քո գաղտնաբառը" autocomplete="current-password">
+                                    <div style="position: relative; width: 100%;">
+                                        <input type="password" id="login-password" name="password" required placeholder="Քո գաղտնաբառը" autocomplete="current-password" style="width: 100%; padding-right: 45px;">
+                                        <button type="button" id="login-password-toggle" onclick="togglePasswordVisibility('login-password', 'login-password-toggle'); return false;" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2em; padding: 5px; color: #666;" title="Ցուցադրել/Թաքցնել գաղտնաբառը">
+                                            👁️
+                                        </button>
+                                    </div>
                                 </div>
                                 
                                 <button type="submit" id="login-btn" class="btn-primary" style="width: 100%;">

@@ -13,12 +13,68 @@
 const DEMO_QUESTIONS_LIMIT = 10; // 10 questions for free trial
 const DEMO_MAX_ATTEMPTS = 1; // Only 1 free test allowed
 
+// ============================================
+// TEST MODE (TEMPORARY - WILL BE REMOVED)
+// ============================================
+// Test mode allows unlimited free testing - clears all data on logout
+const TEST_MODE_ENABLED = true; // Set to false to disable test mode
+const TEST_MODE_KEY = 'architectQuizTestMode';
+
+/**
+ * Check if test mode is enabled
+ * @returns {boolean}
+ */
+function isTestModeEnabled() {
+    if (!TEST_MODE_ENABLED) return false;
+    return localStorage.getItem(TEST_MODE_KEY) === 'true';
+}
+
+/**
+ * Enable test mode
+ */
+function enableTestMode() {
+    localStorage.setItem(TEST_MODE_KEY, 'true');
+    console.log('🧪 Test mode enabled - unlimited free testing');
+}
+
+/**
+ * Disable test mode
+ */
+function disableTestMode() {
+    localStorage.removeItem(TEST_MODE_KEY);
+    console.log('🧪 Test mode disabled');
+}
+
+/**
+ * Clear all test data (called on logout)
+ */
+function clearTestData() {
+    if (isTestModeEnabled()) {
+        // Clear all quiz-related data
+        localStorage.removeItem('freeTrialUsed');
+        localStorage.removeItem('quizProgress');
+        localStorage.removeItem('quizSetAttempts');
+        localStorage.removeItem('quizSetQuestionsUsed');
+        localStorage.removeItem('paymentToken');
+        localStorage.removeItem('paymentTimestamp');
+        localStorage.removeItem('paymentIP');
+        localStorage.removeItem('paymentDevice');
+        localStorage.removeItem('paymentCode');
+        console.log('🧪 Test mode: All quiz data cleared');
+    }
+}
+
 /**
  * Check if user has used free trial
  * @returns {Promise<Object>} {used: boolean, questionsUsed: number, attempts: number}
  */
 async function checkFreeTrialStatus() {
     try {
+        // TEST MODE: Always allow free trial if test mode is enabled
+        if (isTestModeEnabled()) {
+            return { used: false, questionsUsed: 0, attempts: 0 };
+        }
+        
         // Check if Firebase Auth and Firestore are available
         if (typeof firebase === 'undefined' || !firebase.auth || !firebase.firestore) {
             return { used: false, questionsUsed: 0, attempts: 0 };
@@ -229,6 +285,11 @@ async function checkQuizAccess() {
  */
 async function checkCanContinueQuiz(currentQuestionIndex) {
     try {
+        // TEST MODE: Always allow continuation if test mode is enabled
+        if (isTestModeEnabled()) {
+            return { canContinue: true, reason: 'test_mode' };
+        }
+        
         // First, check payment status
         if (typeof checkPaymentStatus === 'function') {
             const paymentStatus = await checkPaymentStatus();
@@ -284,9 +345,20 @@ if (typeof window !== 'undefined') {
     window.checkQuizAccess = checkQuizAccess;
     window.checkCanContinueQuiz = checkCanContinueQuiz;
     
+    // Test mode functions
+    window.isTestModeEnabled = isTestModeEnabled;
+    window.enableTestMode = enableTestMode;
+    window.disableTestMode = disableTestMode;
+    window.clearTestData = clearTestData;
+    
     // Constants
     window.DEMO_QUESTIONS_LIMIT = DEMO_QUESTIONS_LIMIT;
     window.DEMO_MAX_ATTEMPTS = DEMO_MAX_ATTEMPTS;
+    
+    // Auto-enable test mode on page load (TEMPORARY - WILL BE REMOVED)
+    if (TEST_MODE_ENABLED) {
+        enableTestMode();
+    }
 }
 
 
