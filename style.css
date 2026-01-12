@@ -3587,11 +3587,6 @@ body.dark-mode #login-password-toggle:hover {
     bottom: auto !important;
     transform: none !important;
     z-index: 1000004 !important;
-    position: fixed !important;
-    bottom: 20px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 1000004 !important;
     display: none;
     width: auto;
     pointer-events: auto !important;
