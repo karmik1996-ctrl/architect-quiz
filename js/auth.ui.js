@@ -70,6 +70,95 @@ function showLoginForm() {
 }
 
 /**
+ * Show login animation - website comes out of door
+ * @param {Function} callback - Callback function to execute after animation
+ */
+function showLoginAnimation(callback) {
+    // Get login button position (where door icon is)
+    const loginBtn = document.getElementById('login-btn');
+    const btnRect = loginBtn ? loginBtn.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 48, height: 48 };
+    const doorCenterX = btnRect.left + btnRect.width / 2;
+    const doorCenterY = btnRect.top + btnRect.height / 2;
+    
+    // Create entrance animation overlay
+    const entranceOverlay = document.createElement('div');
+    entranceOverlay.id = 'entrance-animation-overlay';
+    entranceOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000000;
+        z-index: 9999999;
+        opacity: 1;
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+    `;
+    document.body.appendChild(entranceOverlay);
+    
+    // Get all sections that will appear
+    const quizContainer = document.querySelector('.quiz-container');
+    const allSections = document.querySelectorAll('.section, #payment-section, #start-section, #choice-section, #quiz-type-section');
+    
+    // Start with all content very small at door position
+    allSections.forEach((section, index) => {
+        if (section) {
+            const rect = section.getBoundingClientRect();
+            const sectionCenterX = rect.left + rect.width / 2;
+            const sectionCenterY = rect.top + rect.height / 2;
+            
+            // Calculate distance from door
+            const deltaX = sectionCenterX - doorCenterX;
+            const deltaY = sectionCenterY - doorCenterY;
+            
+            // Set initial state (very small at door position)
+            section.style.transition = 'transform 1s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease';
+            section.style.transformOrigin = `${sectionCenterX - rect.left}px ${sectionCenterY - rect.top}px`;
+            section.style.transform = `translate(${-deltaX}px, ${-deltaY}px) scale(0.01)`;
+            section.style.opacity = '0';
+            
+            // Animate to final position
+            setTimeout(() => {
+                section.style.transform = 'translate(0, 0) scale(1)';
+                section.style.opacity = '1';
+            }, index * 20 + 100);
+        }
+    });
+    
+    // Animate quiz container if it exists
+    if (quizContainer) {
+        const rect = quizContainer.getBoundingClientRect();
+        const containerCenterX = rect.left + rect.width / 2;
+        const containerCenterY = rect.top + rect.height / 2;
+        
+        const deltaX = containerCenterX - doorCenterX;
+        const deltaY = containerCenterY - doorCenterY;
+        
+        quizContainer.style.transition = 'transform 1s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease';
+        quizContainer.style.transformOrigin = `${containerCenterX - rect.left}px ${containerCenterY - rect.top}px`;
+        quizContainer.style.transform = `translate(${-deltaX}px, ${-deltaY}px) scale(0.01)`;
+        quizContainer.style.opacity = '0';
+        
+        setTimeout(() => {
+            quizContainer.style.transform = 'translate(0, 0) scale(1)';
+            quizContainer.style.opacity = '1';
+        }, 150);
+    }
+    
+    // Fade out overlay and execute callback
+    setTimeout(() => {
+        entranceOverlay.style.opacity = '0';
+        setTimeout(() => {
+            if (entranceOverlay.parentNode) {
+                entranceOverlay.parentNode.removeChild(entranceOverlay);
+            }
+            if (callback) callback();
+        }, 500);
+    }, 1100);
+}
+
+/**
  * Show user info after login
  * @param {Object} userData - User data from Firebase
  */
