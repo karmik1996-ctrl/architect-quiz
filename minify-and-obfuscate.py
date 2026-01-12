@@ -149,3 +149,4 @@ print(f'Reduction: {((original_size - new_size) / original_size * 100):.1f}%')
 
 
 
+

@@ -78,6 +78,7 @@ function showUserInfo(userData) {
     const quizTypeSection = document.getElementById('quiz-type-section');
     const choiceSection = document.getElementById('choice-section');
     const paymentCodeSection = document.getElementById('payment-code-section');
+    const paymentSection = document.getElementById('payment-section');
     const logoutContainer = document.getElementById('logout-container');
     
     // Hide auth forms
@@ -92,8 +93,15 @@ function showUserInfo(userData) {
     // Hide choice section (will show after quiz type selection)
     if (choiceSection) choiceSection.style.display = 'none';
     
+    // Keep payment section visible but show quiz type selection inside it
     // Show quiz type selection section first (choose Architect or Constructor)
-    if (quizTypeSection) quizTypeSection.style.display = 'block';
+    if (quizTypeSection) {
+        quizTypeSection.style.display = 'block';
+        // Scroll to quiz type section
+        setTimeout(() => {
+            quizTypeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
 }
 
 /**
