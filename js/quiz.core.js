@@ -829,13 +829,25 @@ async function initGame() {
 async function startQuiz() {
     // Check if quiz type is selected
     const selectedType = localStorage.getItem('selectedQuizType');
-    if (!selectedType) {
+    
+    // Validate selected type
+    if (!selectedType || (selectedType !== 'architect' && selectedType !== 'constructor')) {
         alert('⚠️ Խնդրում ենք նախ ընտրել թեստի տեսակը (Ճարտարապետ կամ Կոնստրուկտոր):');
         // Show quiz type selection section
         const quizTypeSection = document.getElementById('quiz-type-section');
         const startSection = document.getElementById('start-section');
-        if (quizTypeSection) quizTypeSection.style.display = 'block';
+        const choiceSection = document.getElementById('choice-section');
+        if (quizTypeSection) {
+            quizTypeSection.style.display = 'block';
+            quizTypeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
         if (startSection) startSection.style.display = 'none';
+        if (choiceSection) choiceSection.style.display = 'none';
+        // Clear invalid selection
+        if (selectedType) {
+            localStorage.removeItem('selectedQuizType');
+            console.warn('Invalid quiz type removed:', selectedType);
+        }
         return;
     }
     
