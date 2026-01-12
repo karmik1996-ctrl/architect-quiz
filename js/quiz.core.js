@@ -79,14 +79,14 @@ function getQuizTypeTitle() {
     // Validate selected type
     if (!selectedType || (selectedType !== 'architect' && selectedType !== 'constructor')) {
         // Return default title
-        return 'ճարտարապետների արտոնագրման և որակավորման հարցաթերթիկներ';
+        return 'Ճարտարապետ-Կոնստրուկտորների Արտոնագրման և Որակավորման Հարցաթերթիկներ';
     }
     
     if (selectedType === 'constructor') {
         return 'ՃԱՐՏԱՐԱԳԵՏ-ԿՈՆՍՏՐՈՒԿՏՈՐՆԵՐԻ ԱՐՏՈՆԱԳՐՄԱՆ ԵՎ ՈՐԱԿԱՎՈՐՄԱՆ ՀԱՐՑԱԹԵՐԹԻԿՆԵՐ';
     }
     
-    return 'ճարտարապետների արտոնագրման և որակավորման հարցաթերթիկներ';
+    return 'ՃԱՐՏԱՐԱԳԵՏ-ԿՈՆՍՏՐՈՒԿՏՈՐՆԵՐԻ ԱՐՏՈՆԱԳՐՄԱՆ ԵՎ ՈՐԱԿԱՎՈՐՄԱՆ ՀԱՐՑԱԹԵՐԹԻԿՆԵՐ';
 }
 
 /**
