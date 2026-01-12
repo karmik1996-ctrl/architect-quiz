@@ -93,10 +93,19 @@ function showUserInfo(userData) {
         if (paymentCodeSection) paymentCodeSection.style.display = 'none';
         
         // Hide start section (will show when user starts quiz)
-        if (startSection) startSection.style.display = 'none';
+        if (startSection) {
+            startSection.style.display = 'none';
+            startSection.style.setProperty('display', 'none', 'important');
+        }
         
-        // Hide payment section
-        if (paymentSection) paymentSection.style.display = 'none';
+        // Hide payment section (IMPORTANT: Must be hidden when user is logged in)
+        if (paymentSection) {
+            paymentSection.style.display = 'none';
+            paymentSection.style.setProperty('display', 'none', 'important');
+            console.log('✅ Payment section hidden');
+        } else {
+            console.warn('⚠️ Payment section not found');
+        }
         
         // Check if quiz type is already selected
         const selectedType = localStorage.getItem('selectedQuizType');
