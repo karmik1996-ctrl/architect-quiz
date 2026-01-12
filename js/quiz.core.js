@@ -1858,6 +1858,11 @@ async function showQuizSetResults() {
             }
         }, 200);
     }
+    
+    // Reset flag after completion
+    setTimeout(() => {
+        showQuizSetResults.inProgress = false;
+    }, 100);
 }
 
 // Create quiz set results section
