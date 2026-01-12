@@ -986,6 +986,9 @@ async function startQuiz() {
         }
     }
     
+    // Update quiz type indicator
+    updateQuizTypeIndicator();
+    
     // Start DevTools detection when quiz starts (security protection)
     // DISABLED: Developer tools detection interferes with browser automation
     // if (typeof setupDevToolsDetection === 'function') {
