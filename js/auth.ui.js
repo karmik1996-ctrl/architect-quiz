@@ -852,7 +852,7 @@ async function handleLogout() {
             // Show register form by default
             showRegisterForm();
             
-            // Reset all transforms
+            // Reset all transforms FIRST
             allSections.forEach(section => {
                 if (section) {
                     section.style.transform = '';
@@ -869,13 +869,57 @@ async function handleLogout() {
                 quizContainer.style.transition = '';
             }
             
-            // Remove overlay
-            exitOverlay.style.opacity = '0';
+            // Remove overlay IMMEDIATELY
+            if (exitOverlay && exitOverlay.parentNode) {
+                exitOverlay.parentNode.removeChild(exitOverlay);
+            }
+            
+            // Force show payment section and auth forms after removing overlay
             setTimeout(() => {
-                if (exitOverlay.parentNode) {
-                    exitOverlay.parentNode.removeChild(exitOverlay);
+                const paymentSection = document.getElementById('payment-section');
+                const authForms = document.getElementById('auth-forms');
+                const authSection = document.getElementById('auth-section');
+                
+                if (paymentSection) {
+                    paymentSection.style.display = 'block';
+                    paymentSection.style.setProperty('display', 'block', 'important');
+                    paymentSection.style.visibility = 'visible';
+                    paymentSection.style.opacity = '1';
+                    
+                    // Show payment section content
+                    const paymentH1 = paymentSection.querySelector('h1');
+                    const infoBtn = paymentSection.querySelector('#info-btn');
+                    const paymentInstructions = paymentSection.querySelector('.payment-instructions');
+                    const paymentInfo = paymentSection.querySelector('.payment-info');
+                    
+                    if (paymentH1) {
+                        paymentH1.style.display = 'block';
+                        paymentH1.style.setProperty('display', 'block', 'important');
+                    }
+                    if (infoBtn) {
+                        infoBtn.style.display = 'block';
+                        infoBtn.style.setProperty('display', 'block', 'important');
+                    }
+                    if (paymentInstructions) {
+                        paymentInstructions.style.display = 'block';
+                        paymentInstructions.style.setProperty('display', 'block', 'important');
+                    }
+                    if (paymentInfo) {
+                        paymentInfo.style.display = 'block';
+                        paymentInfo.style.setProperty('display', 'block', 'important');
+                    }
                 }
-            }, 500);
+                
+                if (authSection) {
+                    authSection.style.display = 'block';
+                    authSection.style.setProperty('display', 'block', 'important');
+                }
+                
+                if (authForms) {
+                    authForms.style.display = 'block';
+                    authForms.style.setProperty('display', 'block', 'important');
+                }
+            }, 100);
             
             console.log('✅ Logged out successfully');
         }, 1100);
