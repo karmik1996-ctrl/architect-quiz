@@ -395,14 +395,32 @@ async function handleRegister(event) {
  * @param {Event} event - Form submit event
  */
 async function handleLogin(event) {
-    if (event) event.preventDefault();
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    
+    console.log('✅ handleLogin called');
     
     const loginBtn = document.getElementById('login-btn');
     const statusDiv = document.getElementById('login-status');
     
     // Get form data
-    const email = document.getElementById('login-email')?.value.trim();
-    const password = document.getElementById('login-password')?.value;
+    const emailInput = document.getElementById('login-email');
+    const passwordInput = document.getElementById('login-password');
+    
+    if (!emailInput || !passwordInput) {
+        console.error('❌ Login form inputs not found');
+        if (statusDiv) {
+            setStatusMessage(statusDiv, 'error', '❌ Սխալ: Login form-ի inputs չեն գտնվել');
+        }
+        return;
+    }
+    
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    
+    console.log('Login attempt:', { email: email ? 'provided' : 'missing', password: password ? 'provided' : 'missing' });
     
     // Validate
     if (!email || !password) {
