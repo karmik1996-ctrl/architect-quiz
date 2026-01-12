@@ -1085,6 +1085,9 @@ function loadQuestion() {
     // Track questions used for this quiz set (update max questions reached)
     loadQuizSetQuestionsUsed();
     updateQuizSetQuestionsUsed(quizSetNumber.toString(), questionInSet);
+    
+    // Get question number element
+    const questionNumber = document.getElementById('question-number');
     if (questionNumber) {
         questionNumber.textContent = questionInSet;
     }
