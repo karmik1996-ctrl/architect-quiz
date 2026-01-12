@@ -264,6 +264,27 @@ function showUserInfo(userData) {
             if (choiceSection) {
                 choiceSection.style.display = 'block';
                 choiceSection.style.setProperty('display', 'block', 'important');
+                
+                // Update choice section title based on quiz type
+                const choiceSectionTitle = document.getElementById('choice-section-title');
+                if (choiceSectionTitle) {
+                    if (selectedType === 'constructor') {
+                        choiceSectionTitle.textContent = 'Կոնստրուկտորի Թեստեր - Ընտրեք ձեր տարբերակը';
+                    } else {
+                        choiceSectionTitle.textContent = 'Ճարտարապետի Թեստեր - Ընտրեք ձեր տարբերակը';
+                    }
+                    
+                    // Fix color for dark mode
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    if (isDarkMode) {
+                        choiceSectionTitle.style.color = '#e0e0e0';
+                        choiceSectionTitle.style.setProperty('color', '#e0e0e0', 'important');
+                    } else {
+                        choiceSectionTitle.style.color = '#1a1a1a';
+                        choiceSectionTitle.style.setProperty('color', '#1a1a1a', 'important');
+                    }
+                }
+                
                 console.log('✅ Choice section shown');
             } else {
                 console.warn('⚠️ Choice section not found');
@@ -1409,6 +1430,27 @@ function selectQuizType(type) {
         const choiceSection = document.getElementById('choice-section');
         if (choiceSection) {
             choiceSection.style.display = 'block';
+            
+            // Update choice section title based on quiz type
+            const choiceSectionTitle = document.getElementById('choice-section-title');
+            if (choiceSectionTitle) {
+                if (type === 'constructor') {
+                    choiceSectionTitle.textContent = 'Կոնստրուկտորի Թեստեր - Ընտրեք ձեր տարբերակը';
+                } else {
+                    choiceSectionTitle.textContent = 'Ճարտարապետի Թեստեր - Ընտրեք ձեր տարբերակը';
+                }
+                
+                // Fix color for dark mode
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                if (isDarkMode) {
+                    choiceSectionTitle.style.color = '#e0e0e0';
+                    choiceSectionTitle.style.setProperty('color', '#e0e0e0', 'important');
+                } else {
+                    choiceSectionTitle.style.color = '#1a1a1a';
+                    choiceSectionTitle.style.setProperty('color', '#1a1a1a', 'important');
+                }
+            }
+            
             // Scroll to choice section
             setTimeout(() => {
                 if (choiceSection) {
