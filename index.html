@@ -119,7 +119,52 @@
                     
                 </div>
                 
-                <!-- Choice Section - Show after registration/login (choose payment or trial) -->
+                <!-- Quiz Type Selection Section - Show after registration/login (choose Architect or Constructor) -->
+                <div id="quiz-type-section" class="quiz-type-section" style="display: none; margin-top: 30px;">
+                    <h3 class="quiz-type-section-title" style="color: #1a1a1a; margin-bottom: 30px; font-size: 1.5em; text-align: center; font-weight: bold;">Ընտրեք թեստի տեսակը</h3>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 25px; max-width: 700px; margin: 0 auto;">
+                        <!-- Option 1: Architect -->
+                        <div class="quiz-type-option quiz-type-architect" style="border: 3px solid #007bff; border-radius: 16px; padding: 30px; background: #ffffff; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.1);" 
+                             onmouseover="if (!document.body.classList.contains('dark-mode')) { this.style.background='#e3f2fd'; this.style.transform='scale(1.02)'; this.style.boxShadow='0 6px 20px rgba(0, 123, 255, 0.2)'; } else { this.style.transform='scale(1.02)'; }" 
+                             onmouseout="if (!document.body.classList.contains('dark-mode')) { this.style.background='#ffffff'; this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(0, 123, 255, 0.1)'; } else { this.style.transform='scale(1)'; }"
+                             onclick="selectQuizType('architect'); return false;">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                <div style="font-size: 3em;">🏛️</div>
+                                <h4 style="margin: 0; color: #007bff; font-size: 1.4em; font-weight: bold;">Ճարտարապետի Թեստեր</h4>
+                            </div>
+                            <p style="margin: 10px 0; color: #555; font-size: 1em; line-height: 1.6;">
+                                <strong>175 հարց</strong> - Ճարտարապետական գործունեության, քաղաքաշինության և հարցեր
+                            </p>
+                            <p style="margin: 10px 0; color: #666; font-size: 0.95em; line-height: 1.6;">
+                                ✅ 18 թեստ, 175 հարց<br>
+                                ✅ Բոլոր թեմաները<br>
+                                ✅ Պատասխաններով
+                            </p>
+                        </div>
+                        
+                        <!-- Option 2: Constructor -->
+                        <div class="quiz-type-option quiz-type-constructor" style="border: 3px solid #28a745; border-radius: 16px; padding: 30px; background: #ffffff; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.1);" 
+                             onmouseover="if (!document.body.classList.contains('dark-mode')) { this.style.background='#e8f5e9'; this.style.transform='scale(1.02)'; this.style.boxShadow='0 6px 20px rgba(40, 167, 69, 0.2)'; } else { this.style.transform='scale(1.02)'; }" 
+                             onmouseout="if (!document.body.classList.contains('dark-mode')) { this.style.background='#ffffff'; this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(40, 167, 69, 0.1)'; } else { this.style.transform='scale(1)'; }"
+                             onclick="selectQuizType('constructor'); return false;">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                                <div style="font-size: 3em;">🔧</div>
+                                <h4 style="margin: 0; color: #28a745; font-size: 1.4em; font-weight: bold;">Կոնստրուկտորի Թեստեր</h4>
+                            </div>
+                            <p style="margin: 10px 0; color: #555; font-size: 1em; line-height: 1.6;">
+                                <strong>Կոնստրուկցիայի հարցեր</strong> - Շինարարական կոնստրուկցիաների և տեխնիկական հարցեր
+                            </p>
+                            <p style="margin: 10px 0; color: #666; font-size: 0.95em; line-height: 1.6;">
+                                ✅ Կոնստրուկցիայի թեմաներ<br>
+                                ✅ Տեխնիկական հարցեր<br>
+                                ✅ Պատասխաններով
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Choice Section - Show after quiz type selection (choose payment or trial) -->
                 <div id="choice-section" class="choice-section" style="display: none; margin-top: 30px;">
                     <h3 class="choice-section-title" style="color: #1a1a1a; margin-bottom: 20px; font-size: 1.2em; text-align: center;">Ընտրեք ձեր տարբերակը</h3>
                     

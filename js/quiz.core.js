@@ -40,6 +40,21 @@ let userName = '';
 let shuffledQuizData = []; // Shuffled version of quizData
 let savedShuffledQuizData = []; // Saved shuffled data for repeat
 
+/**
+ * Get current quiz data based on selected type
+ * @returns {Array} Quiz data array
+ */
+function getCurrentQuizData() {
+    const selectedType = localStorage.getItem('selectedQuizType') || 'architect';
+    
+    if (selectedType === 'constructor' && typeof constructorQuizData !== 'undefined' && constructorQuizData && constructorQuizData.length > 0) {
+        return constructorQuizData;
+    }
+    
+    // Default to architect quiz data
+    return quizData;
+}
+
 // DOM elements (will be initialized when DOM is ready)
 let startSection = null;
 let paymentSection = null;
@@ -440,7 +455,8 @@ async function initGame() {
                 if (savedProgress.shuffledQuizData && savedProgress.shuffledQuizData.length > 0) {
                     shuffledQuizData = [];
                     for (const questionText of savedProgress.shuffledQuizData) {
-                        const foundQuestion = quizData.find(q => q.question === questionText);
+                        const currentQuizData = getCurrentQuizData();
+                    const foundQuestion = currentQuizData.find(q => q.question === questionText);
                         if (foundQuestion) {
                             shuffledQuizData.push(foundQuestion);
                         }
@@ -449,7 +465,8 @@ async function initGame() {
                 
                 // Restore quiz sets if needed
                 if (typeof quizSets === 'undefined' || quizSets.length === 0) {
-                    const orderedQuizData = [...quizData];
+                    const currentQuizData = getCurrentQuizData();
+                    const orderedQuizData = [...currentQuizData];
                     quizSets = [];
                     quizSetResults = [];
                     for (let i = 0; i < 17; i++) {
@@ -605,7 +622,8 @@ async function initGame() {
                 // Restore shuffled quiz data by finding questions
                 shuffledQuizData = [];
                 for (const questionText of savedProgress.shuffledQuizData) {
-                    const foundQuestion = quizData.find(q => q.question === questionText);
+                    const currentQuizData = getCurrentQuizData();
+                    const foundQuestion = currentQuizData.find(q => q.question === questionText);
                     if (foundQuestion) {
                         shuffledQuizData.push(foundQuestion);
                     }
@@ -709,7 +727,8 @@ async function initGame() {
     
     // Only update UI if progress wasn't already restored
     if (!progressRestored) {
-        if (totalQuestions) totalQuestions.textContent = quizData.length;
+        const currentQuizData = getCurrentQuizData();
+        if (totalQuestions) totalQuestions.textContent = currentQuizData.length;
         
         // Update attempts display if element exists
         // Calculate remaining attempts based on quiz sets (18 sets * 3 attempts each = 54 total)
@@ -823,9 +842,12 @@ async function startQuiz() {
     // Load quiz set attempts from localStorage
     loadQuizSetAttempts();
     
+    // Get current quiz data based on selected type
+    const currentQuizData = getCurrentQuizData();
+    
     // Don't shuffle - keep questions in same order for consistent quiz sets
     // Each quiz set will always have the same questions
-    const orderedQuizData = [...quizData]; // Use original order, no shuffle
+    const orderedQuizData = [...currentQuizData]; // Use original order, no shuffle
     
     // Divide into 18 quiz sets: 17 sets of 10 + 1 set of 5 (18th test) = 175 questions
     quizSets = [];
@@ -920,9 +942,12 @@ async function startQuiz() {
         updateAttemptsDisplay(quizSetAttempts);
     }, 100);
     
+    // Get current quiz data based on selected type
+    const currentQuizData = getCurrentQuizData();
+    
     // Check if quizData is loaded before loading question
-    if (typeof quizData === 'undefined' || !quizData || quizData.length === 0) {
-        console.error('❌ Quiz data not loaded! quizData:', typeof quizData, quizData);
+    if (typeof currentQuizData === 'undefined' || !currentQuizData || currentQuizData.length === 0) {
+        console.error('❌ Quiz data not loaded! currentQuizData:', typeof currentQuizData, currentQuizData);
         alert('❌ Սխալ: Հարցաթերթիկների տվյալները բեռնված չեն:\nԽնդրում ենք թարմացնել էջը:');
         // Show start section again
         if (startSection) startSection.style.display = 'block';
@@ -1101,8 +1126,11 @@ function changeQuiz() {
 
 
 function loadQuestion() {
+    // Get current quiz data based on selected type
+    const currentQuizData = getCurrentQuizData();
+    
     // Check if quizData is loaded
-    if (typeof quizData === 'undefined' || !quizData || quizData.length === 0) {
+    if (typeof currentQuizData === 'undefined' || !currentQuizData || currentQuizData.length === 0) {
         console.error('❌ Quiz data not loaded in loadQuestion!');
         alert('❌ Սխալ: Հարցաթերթիկների տվյալները բեռնված չեն:\nԽնդրում ենք թարմացնել էջը:');
         // Show start section again

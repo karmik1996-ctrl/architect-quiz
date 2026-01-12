@@ -3627,3 +3627,45 @@ body.dark-mode .choice-option strong {
 body:not(.dark-mode) .choice-option {
     background: #ffffff !important;
 }
+
+/* Quiz Type Selection Section - Dark Mode Support */
+body.dark-mode .quiz-type-section,
+body.dark-mode #quiz-type-section {
+    background: transparent;
+}
+
+body.dark-mode .quiz-type-section-title,
+body.dark-mode #quiz-type-section h3 {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .quiz-type-option {
+    background: #1a1a1a !important;
+    border-color: #4a4a4a !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .quiz-type-option:hover {
+    background: #2a2a2a !important;
+}
+
+body.dark-mode .quiz-type-option h4 {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .quiz-type-option p {
+    color: #b0b0b0 !important;
+}
+
+body.dark-mode .quiz-type-option strong {
+    color: #ffffff !important;
+}
+
+/* Light Mode - Ensure white background */
+.quiz-type-option {
+    background: #ffffff !important;
+}
+
+body:not(.dark-mode) .quiz-type-option {
+    background: #ffffff !important;
+}

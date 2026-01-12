@@ -75,6 +75,7 @@ function showLoginForm() {
  */
 function showUserInfo(userData) {
     const authForms = document.getElementById('auth-forms');
+    const quizTypeSection = document.getElementById('quiz-type-section');
     const choiceSection = document.getElementById('choice-section');
     const paymentCodeSection = document.getElementById('payment-code-section');
     const logoutContainer = document.getElementById('logout-container');
@@ -88,8 +89,11 @@ function showUserInfo(userData) {
     // Hide payment code section (will show when user chooses to pay)
     if (paymentCodeSection) paymentCodeSection.style.display = 'none';
     
-    // Show choice section (choose payment or trial)
-    if (choiceSection) choiceSection.style.display = 'block';
+    // Hide choice section (will show after quiz type selection)
+    if (choiceSection) choiceSection.style.display = 'none';
+    
+    // Show quiz type selection section first (choose Architect or Constructor)
+    if (quizTypeSection) quizTypeSection.style.display = 'block';
 }
 
 /**
@@ -97,6 +101,7 @@ function showUserInfo(userData) {
  */
 function hideUserInfo() {
     const authForms = document.getElementById('auth-forms');
+    const quizTypeSection = document.getElementById('quiz-type-section');
     const choiceSection = document.getElementById('choice-section');
     const paymentCodeSection = document.getElementById('payment-code-section');
     const logoutContainer = document.getElementById('logout-container');
@@ -106,6 +111,9 @@ function hideUserInfo() {
     
     // Hide logout button
     if (logoutContainer) logoutContainer.style.display = 'none';
+    
+    // Hide quiz type section
+    if (quizTypeSection) quizTypeSection.style.display = 'none';
     
     // Hide choice section
     if (choiceSection) choiceSection.style.display = 'none';
@@ -422,6 +430,28 @@ async function startFreeTrial() {
     }
 }
 
+/**
+ * Select quiz type (Architect or Constructor)
+ * @param {string} type - 'architect' or 'constructor'
+ */
+function selectQuizType(type) {
+    // Store selected quiz type
+    if (typeof window !== 'undefined') {
+        window.selectedQuizType = type;
+        localStorage.setItem('selectedQuizType', type);
+    }
+    
+    // Hide quiz type section
+    const quizTypeSection = document.getElementById('quiz-type-section');
+    if (quizTypeSection) quizTypeSection.style.display = 'none';
+    
+    // Show choice section (payment or trial)
+    const choiceSection = document.getElementById('choice-section');
+    if (choiceSection) choiceSection.style.display = 'block';
+    
+    console.log('✅ Quiz type selected:', type);
+}
+
 // ============================================
 // EXPOSE FUNCTIONS TO WINDOW
 // ============================================
@@ -434,6 +464,7 @@ if (typeof window !== 'undefined') {
     window.handleLogout = handleLogout;
     window.checkAuthState = checkAuthState;
     window.initializeAuthUI = initializeAuthUI;
+    window.selectQuizType = selectQuizType;
     window.showPaymentCodeSection = showPaymentCodeSection;
     window.showChoiceSection = showChoiceSection;
     window.startFreeTrial = startFreeTrial;
