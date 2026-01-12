@@ -574,6 +574,12 @@ function showForgotPasswordForm() {
  */
 async function handleLogout() {
     try {
+        // Get logout button position (top-left corner)
+        const logoutBtn = document.getElementById('logout-btn');
+        const btnRect = logoutBtn ? logoutBtn.getBoundingClientRect() : { left: 20, top: 20, width: 48, height: 48 };
+        const doorCenterX = btnRect.left + btnRect.width / 2;
+        const doorCenterY = btnRect.top + btnRect.height / 2;
+        
         // Create exit animation overlay
         const exitOverlay = document.createElement('div');
         exitOverlay.id = 'exit-animation-overlay';
@@ -585,49 +591,60 @@ async function handleLogout() {
             height: 100%;
             background: #000000;
             z-index: 9999999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
         `;
-        
-        // Create door icon in center
-        const doorIcon = document.createElement('div');
-        doorIcon.style.cssText = `
-            width: 200px;
-            height: 200px;
-            position: relative;
-            transform: scale(0.5);
-            transition: transform 0.8s ease;
-        `;
-        
-        doorIcon.innerHTML = `
-            <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 100%; height: 100%;">
-                <!-- Door frame (U-shaped on left) -->
-                <path d="M4 4 L4 20 M4 4 L12 4 M4 20 L12 20"/>
-                <!-- Door panel (solid white trapezoid on right, angled outward) -->
-                <path d="M12 4 L16 4 L17 6 L17 18 L16 20 L12 20 Z" fill="white"/>
-            </svg>
-        `;
-        
-        exitOverlay.appendChild(doorIcon);
         document.body.appendChild(exitOverlay);
+        
+        // Get all visible content
+        const quizContainer = document.querySelector('.quiz-container');
+        const allSections = document.querySelectorAll('.section, #payment-section, #start-section, #choice-section, #quiz-type-section');
         
         // Start animation
         setTimeout(() => {
             exitOverlay.style.opacity = '1';
-            doorIcon.style.transform = 'scale(1)';
         }, 10);
         
-        // Animate content shrinking into door
-        const quizContainer = document.querySelector('.quiz-container');
+        // Animate all content shrinking into door
+        allSections.forEach((section, index) => {
+            if (section && section.offsetParent !== null) {
+                const rect = section.getBoundingClientRect();
+                const sectionCenterX = rect.left + rect.width / 2;
+                const sectionCenterY = rect.top + rect.height / 2;
+                
+                // Calculate distance and direction to door
+                const deltaX = doorCenterX - sectionCenterX;
+                const deltaY = doorCenterY - sectionCenterY;
+                
+                section.style.transition = 'transform 1s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease';
+                section.style.transformOrigin = `${sectionCenterX - rect.left}px ${sectionCenterY - rect.top}px`;
+                
+                setTimeout(() => {
+                    const scale = 0.01;
+                    section.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scale})`;
+                    section.style.opacity = '0';
+                }, index * 20);
+            }
+        });
+        
+        // Animate quiz container if it exists
         if (quizContainer) {
-            quizContainer.style.transition = 'transform 0.8s ease, opacity 0.8s ease';
+            const rect = quizContainer.getBoundingClientRect();
+            const containerCenterX = rect.left + rect.width / 2;
+            const containerCenterY = rect.top + rect.height / 2;
+            
+            const deltaX = doorCenterX - containerCenterX;
+            const deltaY = doorCenterY - containerCenterY;
+            
+            quizContainer.style.transition = 'transform 1s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease';
+            quizContainer.style.transformOrigin = `${containerCenterX - rect.left}px ${containerCenterY - rect.top}px`;
+            
             setTimeout(() => {
-                quizContainer.style.transform = 'scale(0.3) translateX(-50%)';
+                const scale = 0.01;
+                quizContainer.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scale})`;
                 quizContainer.style.opacity = '0';
-            }, 100);
+            }, 50);
         }
         
         // After animation completes, perform logout
@@ -657,10 +674,21 @@ async function handleLogout() {
             // Show register form by default
             showRegisterForm();
             
-            // Reset container transform
+            // Reset all transforms
+            allSections.forEach(section => {
+                if (section) {
+                    section.style.transform = '';
+                    section.style.opacity = '';
+                    section.style.transformOrigin = '';
+                    section.style.transition = '';
+                }
+            });
+            
             if (quizContainer) {
                 quizContainer.style.transform = '';
                 quizContainer.style.opacity = '';
+                quizContainer.style.transformOrigin = '';
+                quizContainer.style.transition = '';
             }
             
             // Remove overlay
@@ -669,10 +697,10 @@ async function handleLogout() {
                 if (exitOverlay.parentNode) {
                     exitOverlay.parentNode.removeChild(exitOverlay);
                 }
-            }, 300);
+            }, 500);
             
             console.log('✅ Logged out successfully');
-        }, 800);
+        }, 1100);
     } catch (error) {
         console.error('Logout error:', error);
         alert('❌ Logout սխալ: ' + error.message);
