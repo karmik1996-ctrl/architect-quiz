@@ -1067,6 +1067,37 @@ function changeQuiz() {
 
 
 function loadQuestion() {
+    // Check if quizData is loaded
+    if (typeof quizData === 'undefined' || !quizData || quizData.length === 0) {
+        console.error('❌ Quiz data not loaded in loadQuestion!');
+        alert('❌ Սխալ: Հարցաթերթիկների տվյալները բեռնված չեն:\nԽնդրում ենք թարմացնել էջը:');
+        // Show start section again
+        if (startSection) startSection.style.display = 'block';
+        if (topicSection) topicSection.style.display = 'none';
+        if (questionSection) questionSection.style.display = 'none';
+        if (answersSection) answersSection.style.display = 'none';
+        return;
+    }
+    
+    // Check if shuffledQuizData is valid
+    if (!shuffledQuizData || shuffledQuizData.length === 0) {
+        console.error('❌ Shuffled quiz data is empty in loadQuestion!');
+        alert('❌ Սխալ: Հարցաթերթիկների տվյալները սխալ են:\nԽնդրում ենք թարմացնել էջը:');
+        // Show start section again
+        if (startSection) startSection.style.display = 'block';
+        if (topicSection) topicSection.style.display = 'none';
+        if (questionSection) questionSection.style.display = 'none';
+        if (answersSection) answersSection.style.display = 'none';
+        return;
+    }
+    
+    // Check if currentQuestionIndex is valid
+    if (currentQuestionIndex < 0 || currentQuestionIndex >= shuffledQuizData.length) {
+        console.error('❌ Invalid question index:', currentQuestionIndex, 'out of', shuffledQuizData.length);
+        // Quiz is complete, show results
+        showQuizSetResults();
+        return;
+    }
     // Check if current quiz set is finished
     if (currentQuestionIndex >= shuffledQuizData.length) {
         showQuizSetResults();
@@ -1085,6 +1116,18 @@ function loadQuestion() {
     updateAttemptsDisplay(attempts);
     
     const question = shuffledQuizData[currentQuestionIndex];
+    
+    // Check if question is valid
+    if (!question || !question.question || !question.answers) {
+        console.error('❌ Invalid question data:', question);
+        alert('❌ Սխալ: Հարցի տվյալները սխալ են:\nԽնդրում ենք թարմացնել էջը:');
+        // Show start section again
+        if (startSection) startSection.style.display = 'block';
+        if (topicSection) topicSection.style.display = 'none';
+        if (questionSection) questionSection.style.display = 'none';
+        if (answersSection) answersSection.style.display = 'none';
+        return;
+    }
     
     // Update question number (show question number within set: 1/10, 2/10, etc.)
     const questionInSet = currentQuestionIndex + 1;
