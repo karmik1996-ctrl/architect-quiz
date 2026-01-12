@@ -153,7 +153,10 @@ function showUserInfo(userData) {
             if (quizTypeSection) {
                 quizTypeSection.style.display = 'block';
                 quizTypeSection.style.setProperty('display', 'block', 'important');
+                quizTypeSection.style.visibility = 'visible';
+                quizTypeSection.style.opacity = '1';
                 console.log('✅ Quiz type section shown');
+                console.log('Quiz type section computed style:', window.getComputedStyle(quizTypeSection).display);
                 // Scroll to quiz type section
                 setTimeout(() => {
                     if (quizTypeSection) {
