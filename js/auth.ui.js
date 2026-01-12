@@ -369,14 +369,49 @@ function hideUserInfo() {
         // Show payment section (main page)
         if (paymentSection) {
             paymentSection.style.display = 'block';
+            paymentSection.style.setProperty('display', 'block', 'important');
+            paymentSection.style.visibility = 'visible';
+            paymentSection.style.opacity = '1';
             console.log('✅ Payment section shown');
+            
+            // Show payment section content (h1, info-btn, payment-instructions)
+            const paymentH1 = paymentSection.querySelector('h1');
+            const infoBtn = paymentSection.querySelector('#info-btn');
+            const paymentInfo = paymentSection.querySelector('.payment-info');
+            const paymentInstructions = paymentSection.querySelector('.payment-instructions');
+            
+            if (paymentH1) {
+                paymentH1.style.display = 'block';
+                paymentH1.style.setProperty('display', 'block', 'important');
+            }
+            if (infoBtn) {
+                infoBtn.style.display = 'block';
+                infoBtn.style.setProperty('display', 'block', 'important');
+            }
+            if (paymentInstructions) {
+                paymentInstructions.style.display = 'block';
+                paymentInstructions.style.setProperty('display', 'block', 'important');
+            }
+            if (paymentInfo) {
+                paymentInfo.style.display = 'block';
+                paymentInfo.style.setProperty('display', 'block', 'important');
+            }
         } else {
             console.warn('⚠️ Payment section not found');
+        }
+        
+        // Show auth section
+        const authSection = document.getElementById('auth-section');
+        if (authSection) {
+            authSection.style.display = 'block';
+            authSection.style.setProperty('display', 'block', 'important');
+            console.log('✅ Auth section shown');
         }
         
         // Show auth forms
         if (authForms) {
             authForms.style.display = 'block';
+            authForms.style.setProperty('display', 'block', 'important');
             console.log('✅ Auth forms shown');
         } else {
             console.warn('⚠️ Auth forms not found');
@@ -762,6 +797,57 @@ async function handleLogout() {
             const loginForm = document.getElementById('login-form');
             if (registerForm) registerForm.reset();
             if (loginForm) loginForm.reset();
+            
+            // Ensure payment section is visible (contains auth forms)
+            const paymentSection = document.getElementById('payment-section');
+            if (paymentSection) {
+                paymentSection.style.display = 'block';
+                paymentSection.style.setProperty('display', 'block', 'important');
+                paymentSection.style.visibility = 'visible';
+                paymentSection.style.opacity = '1';
+            }
+            
+            // Ensure auth forms are visible
+            const authForms = document.getElementById('auth-forms');
+            const authSection = document.getElementById('auth-section');
+            if (authForms) {
+                authForms.style.display = 'block';
+                authForms.style.setProperty('display', 'block', 'important');
+            }
+            if (authSection) {
+                authSection.style.display = 'block';
+                authSection.style.setProperty('display', 'block', 'important');
+            }
+            
+            // Show payment section content
+            const paymentH1 = paymentSection ? paymentSection.querySelector('h1') : null;
+            const infoBtn = paymentSection ? paymentSection.querySelector('#info-btn') : null;
+            const paymentInstructions = paymentSection ? paymentSection.querySelector('.payment-instructions') : null;
+            
+            if (paymentH1) {
+                paymentH1.style.display = 'block';
+                paymentH1.style.setProperty('display', 'block', 'important');
+            }
+            if (infoBtn) {
+                infoBtn.style.display = 'block';
+                infoBtn.style.setProperty('display', 'block', 'important');
+            }
+            if (paymentInstructions) {
+                paymentInstructions.style.display = 'block';
+                paymentInstructions.style.setProperty('display', 'block', 'important');
+            }
+            
+            // Hide quiz type section and choice section
+            const quizTypeSection = document.getElementById('quiz-type-section');
+            const choiceSection = document.getElementById('choice-section');
+            if (quizTypeSection) {
+                quizTypeSection.style.display = 'none';
+                quizTypeSection.style.setProperty('display', 'none', 'important');
+            }
+            if (choiceSection) {
+                choiceSection.style.display = 'none';
+                choiceSection.style.setProperty('display', 'none', 'important');
+            }
             
             // Show register form by default
             showRegisterForm();
