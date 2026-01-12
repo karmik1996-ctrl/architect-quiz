@@ -226,6 +226,7 @@ function showUserInfo(userData) {
         // Validate selected type
         const isValidType = selectedType && (selectedType === 'architect' || selectedType === 'constructor');
         
+        // ALWAYS show quiz type selection first (even if type is selected, user can change it)
         // Hide payment section content BUT keep payment-section visible if quiz-type-section needs to be shown
         if (paymentSection) {
             // Hide payment section's initial content (h1, info-btn, payment-instructions, auth-section)
@@ -257,6 +258,70 @@ function showUserInfo(userData) {
             console.log('✅ Payment section content hidden (keeping container visible for quiz-type-section)');
         } else {
             console.warn('⚠️ Payment section not found');
+        }
+        
+        // ALWAYS show quiz type selection first after login
+        if (quizTypeSection) {
+            // CRITICAL: Ensure payment-section is visible (it contains quiz-type-section)
+            if (paymentSection) {
+                paymentSection.style.display = 'block';
+                paymentSection.style.setProperty('display', 'block', 'important');
+                paymentSection.style.visibility = 'visible';
+                paymentSection.style.opacity = '1';
+                console.log('✅ Payment section made visible for quiz-type-section');
+            }
+            
+            quizTypeSection.style.display = 'block';
+            quizTypeSection.style.setProperty('display', 'block', 'important');
+            quizTypeSection.style.visibility = 'visible';
+            quizTypeSection.style.opacity = '1';
+            
+            // Fix text color for dark mode
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const title = quizTypeSection.querySelector('.quiz-type-section-title');
+            if (title) {
+                if (isDarkMode) {
+                    title.style.color = '#e0e0e0';
+                    title.style.setProperty('color', '#e0e0e0', 'important');
+                } else {
+                    title.style.color = '#1a1a1a';
+                    title.style.setProperty('color', '#1a1a1a', 'important');
+                }
+            }
+            
+            // Fix quiz-type-option colors for dark mode
+            const options = quizTypeSection.querySelectorAll('.quiz-type-option');
+            options.forEach(option => {
+                if (isDarkMode) {
+                    option.style.color = '#e0e0e0';
+                    option.style.setProperty('color', '#e0e0e0', 'important');
+                    const h4 = option.querySelector('h4');
+                    if (h4) {
+                        h4.style.color = '#e0e0e0';
+                        h4.style.setProperty('color', '#e0e0e0', 'important');
+                    }
+                    const paragraphs = option.querySelectorAll('p');
+                    paragraphs.forEach(p => {
+                        p.style.color = '#e0e0e0';
+                        p.style.setProperty('color', '#e0e0e0', 'important');
+                    });
+                }
+            });
+            
+            console.log('✅ Quiz type section shown');
+            
+            // Scroll to quiz type section
+            setTimeout(() => {
+                if (quizTypeSection) {
+                    quizTypeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
+        
+        // Hide choice section initially (will show after quiz type is selected)
+        if (choiceSection) {
+            choiceSection.style.display = 'none';
+            choiceSection.style.setProperty('display', 'none', 'important');
         }
         
         if (isValidType) {
