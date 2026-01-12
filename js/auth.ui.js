@@ -101,7 +101,10 @@ function showUserInfo(userData) {
         // Check if quiz type is already selected
         const selectedType = localStorage.getItem('selectedQuizType');
         
-        if (selectedType && (selectedType === 'architect' || selectedType === 'constructor')) {
+        // Validate selected type
+        const isValidType = selectedType && (selectedType === 'architect' || selectedType === 'constructor');
+        
+        if (isValidType) {
             // Quiz type already selected, show choice section
             if (choiceSection) {
                 choiceSection.style.display = 'block';
@@ -110,7 +113,13 @@ function showUserInfo(userData) {
                 quizTypeSection.style.display = 'none';
             }
         } else {
-            // Quiz type not selected, show quiz type selection section first (choose Architect or Constructor)
+            // Quiz type not selected or invalid, show quiz type selection section first (choose Architect or Constructor)
+            // Clear invalid selection
+            if (selectedType && !isValidType) {
+                localStorage.removeItem('selectedQuizType');
+                console.warn('Invalid quiz type removed:', selectedType);
+            }
+            
             if (choiceSection) {
                 choiceSection.style.display = 'none';
             }
@@ -125,7 +134,7 @@ function showUserInfo(userData) {
             }
         }
         
-        console.log('✅ User info shown, quiz type:', selectedType || 'not selected');
+        console.log('✅ User info shown, quiz type:', isValidType ? selectedType : 'not selected');
     } catch (error) {
         console.error('Error in showUserInfo:', error);
     }
@@ -413,11 +422,23 @@ function showChoiceSection() {
  */
 async function startFreeTrial() {
     try {
-        // If quiz type is not selected, default to 'architect' (for test mode compatibility)
-        const selectedType = localStorage.getItem('selectedQuizType');
-        if (!selectedType) {
-            localStorage.setItem('selectedQuizType', 'architect');
-            console.log('✅ Quiz type not selected, defaulting to "architect"');
+        // Check if quiz type is selected
+        let selectedType = localStorage.getItem('selectedQuizType');
+        
+        // Validate selected type
+        if (!selectedType || (selectedType !== 'architect' && selectedType !== 'constructor')) {
+            // Quiz type not selected, show quiz type selection section
+            alert('⚠️ Խնդրում ենք նախ ընտրել թեստի տեսակը (Ճարտարապետ կամ Կոնստրուկտոր):');
+            const quizTypeSection = document.getElementById('quiz-type-section');
+            const choiceSection = document.getElementById('choice-section');
+            if (quizTypeSection) {
+                quizTypeSection.style.display = 'block';
+                quizTypeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            if (choiceSection) {
+                choiceSection.style.display = 'none';
+            }
+            return;
         }
         
         // Check if free trial is available (skip in test mode)
@@ -482,7 +503,7 @@ async function startFreeTrial() {
             welcomeMessage.style.display = 'block';
         }
         
-        console.log('✅ Free trial started successfully');
+        console.log('✅ Free trial started successfully, quiz type:', selectedType);
     } catch (error) {
         console.error('Error starting free trial:', error);
         alert('Սխալ: Հնարավոր չէ սկսել թեստային հարցերը: ' + (error.message || error));
