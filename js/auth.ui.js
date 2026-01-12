@@ -313,7 +313,31 @@ async function handleLogin(event) {
         }
         
         // Login user
-        const result = await loginUser(email, password);
+        let result = await loginUser(email, password);
+        
+        // If login fails with "user-not-found" error, try to auto-register test account
+        if (!result.success && result.error && result.error.includes('user-not-found')) {
+            // Check if this is the test account
+            if (email === 'karmik1996@mail.ru') {
+                console.log('🔄 Test account not found, auto-creating...');
+                setStatusMessage(statusDiv, 'info', '🔄 Account-ը չի գտնվել, ստեղծվում է...');
+                
+                // Auto-register test account
+                if (typeof registerUser === 'function') {
+                    const registerResult = await registerUser(email, password, 'Test User', '000000000');
+                    
+                    if (registerResult.success) {
+                        console.log('✅ Test account created successfully');
+                        // Now try to login again
+                        result = await loginUser(email, password);
+                    } else {
+                        throw new Error(registerResult.error || 'Auto-registration failed');
+                    }
+                } else {
+                    throw new Error('Register function not available');
+                }
+            }
+        }
         
         if (result.success) {
             setStatusMessage(statusDiv, 'success', '✅ Մուտք գործվեց հաջողությամբ!');
