@@ -45,14 +45,28 @@ let savedShuffledQuizData = []; // Saved shuffled data for repeat
  * @returns {Array} Quiz data array
  */
 function getCurrentQuizData() {
-    const selectedType = localStorage.getItem('selectedQuizType') || 'architect';
+    const selectedType = localStorage.getItem('selectedQuizType');
+    
+    // Validate selected type
+    if (!selectedType || (selectedType !== 'architect' && selectedType !== 'constructor')) {
+        console.warn('Invalid or missing quiz type, defaulting to architect');
+        // Don't set default here - let user select
+        // Return architect as fallback for now
+        return typeof quizData !== 'undefined' && quizData ? quizData : [];
+    }
     
     if (selectedType === 'constructor' && typeof constructorQuizData !== 'undefined' && constructorQuizData && constructorQuizData.length > 0) {
         return constructorQuizData;
     }
     
     // Default to architect quiz data
-    return quizData;
+    if (typeof quizData !== 'undefined' && quizData) {
+        return quizData;
+    }
+    
+    // Return empty array if no data available
+    console.error('No quiz data available');
+    return [];
 }
 
 /**
@@ -60,7 +74,13 @@ function getCurrentQuizData() {
  * @returns {string} Quiz type title
  */
 function getQuizTypeTitle() {
-    const selectedType = localStorage.getItem('selectedQuizType') || 'architect';
+    const selectedType = localStorage.getItem('selectedQuizType');
+    
+    // Validate selected type
+    if (!selectedType || (selectedType !== 'architect' && selectedType !== 'constructor')) {
+        // Return default title
+        return 'ճարտարապետների արտոնագրման և որակավորման հարցաթերթիկներ';
+    }
     
     if (selectedType === 'constructor') {
         return 'Կոնստրուկտորների արտոնագրման և որակավորման հարցաթերթիկներ';
