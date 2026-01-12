@@ -1038,15 +1038,16 @@ function updateAttemptsDisplay(attempts) {
     loadQuizSetAttempts();
     
     // If attempts is not provided, get it from current quiz set
-    if (attempts === undefined) {
-        const quizSetNumber = currentQuizSetIndex < 17 ? currentQuizSetIndex + 1 : 18;
+    if (attempts === undefined && typeof currentQuizSetIndex !== 'undefined' && currentQuizSetIndex >= 0 && quizSets && quizSets.length > 0) {
+        const quizSetNumber = currentQuizSetIndex + 1; // 1-based index
         attempts = getQuizSetAttempts(quizSetNumber.toString());
     }
     
     // Get questions used for current quiz set
     loadQuizSetQuestionsUsed();
-    const quizSetNumber = currentQuizSetIndex < 17 ? currentQuizSetIndex + 1 : 18;
-    const questionsUsed = getQuizSetQuestionsUsed(quizSetNumber.toString());
+    if (typeof currentQuizSetIndex !== 'undefined' && currentQuizSetIndex >= 0 && quizSets && quizSets.length > 0) {
+        const quizSetNumber = currentQuizSetIndex + 1; // 1-based index
+        const questionsUsed = getQuizSetQuestionsUsed(quizSetNumber.toString());
     
     const attemptsHeaderText = document.getElementById('quiz-attempts-header-text');
     if (attemptsHeaderText) {
