@@ -104,7 +104,7 @@
                                     </div>
                                 </div>
                                 
-                                <button type="submit" id="login-btn" class="btn-primary" style="width: 100%;">
+                                <button type="submit" id="login-btn" class="btn-primary" style="width: 100%;" onclick="if(typeof handleLogin === 'function') { handleLogin(event); } else { console.error('handleLogin function not found'); } return false;">
                                     🔓 Մուտք Գործել
                                 </button>
                                 <div id="login-status"></div>
