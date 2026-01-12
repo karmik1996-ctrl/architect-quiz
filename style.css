@@ -3706,6 +3706,28 @@ body:not(.dark-mode) .quiz-type-option {
     background: #ffffff !important;
 }
 
+/* Dark mode support for info modal sections */
+body.dark-mode .info-section div[style*="background: #e3f2fd"] {
+    background: #0d47a1 !important;
+    border-left-color: #64b5f6 !important;
+}
+
+body.dark-mode .info-section div[style*="background: #e8f5e9"] {
+    background: #1e4620 !important;
+    border-left-color: #4caf50 !important;
+}
+
+body.dark-mode .info-section h3 {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .info-section div[style*="background: #e3f2fd"] p,
+body.dark-mode .info-section div[style*="background: #e3f2fd"] ul,
+body.dark-mode .info-section div[style*="background: #e8f5e9"] p,
+body.dark-mode .info-section div[style*="background: #e8f5e9"] ul {
+    color: #e0e0e0 !important;
+}
+
 /* Door Icon Animations */
 .door-icon {
     transition: all 0.3s ease;
