@@ -82,6 +82,11 @@ function handleDarkModeToggle(e) {
         totalText.style.setProperty('color', textColor, 'important');
     }
     
+    // Update quiz type indicator when dark mode changes
+    if (typeof updateQuizTypeIndicator === 'function') {
+        updateQuizTypeIndicator();
+    }
+    
     // Remove any inline styles from result-item elements to let CSS handle it
     // This ensures CSS rules (body.dark-mode .result-item) work correctly when mode changes
     // Use multiple requestAnimationFrame calls to ensure DOM is fully updated after class toggle
