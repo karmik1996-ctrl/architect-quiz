@@ -3614,10 +3614,16 @@ body.dark-mode #logout-container #logout-btn:hover {
 body.dark-mode .choice-section,
 body.dark-mode #choice-section {
     background: transparent;
+    color: #e0e0e0;
+}
+
+body.dark-mode #choice-section h3 {
+    color: #e0e0e0 !important;
 }
 
 body.dark-mode .choice-section-title,
-body.dark-mode #choice-section h3 {
+body.dark-mode #choice-section h3,
+body.dark-mode .choice-section h3 {
     color: #e0e0e0 !important;
 }
 
