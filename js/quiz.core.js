@@ -861,9 +861,10 @@ async function startQuiz() {
     }
     
     // Start DevTools detection when quiz starts (security protection)
-    if (typeof setupDevToolsDetection === 'function') {
-        setupDevToolsDetection();
-    }
+    // DISABLED: Developer tools detection interferes with browser automation
+    // if (typeof setupDevToolsDetection === 'function') {
+    //     setupDevToolsDetection();
+    // }
     
     if (startSection) startSection.style.display = 'none';
     if (paymentSection) paymentSection.style.display = 'none';
