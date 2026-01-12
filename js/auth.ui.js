@@ -700,12 +700,60 @@ async function startFreeTrial() {
             alert('⚠️ Խնդրում ենք նախ ընտրել թեստի տեսակը (Ճարտարապետ կամ Կոնստրուկտոր):');
             const quizTypeSection = document.getElementById('quiz-type-section');
             const choiceSection = document.getElementById('choice-section');
+            const paymentSection = document.getElementById('payment-section');
+            
+            // CRITICAL: Ensure payment-section is visible (it contains quiz-type-section)
+            if (paymentSection) {
+                paymentSection.style.display = 'block';
+                paymentSection.style.setProperty('display', 'block', 'important');
+                paymentSection.style.visibility = 'visible';
+                paymentSection.style.opacity = '1';
+                console.log('✅ Payment section made visible for quiz-type-section (from startFreeTrial)');
+            }
+            
             if (quizTypeSection) {
                 quizTypeSection.style.display = 'block';
+                quizTypeSection.style.setProperty('display', 'block', 'important');
+                quizTypeSection.style.visibility = 'visible';
+                quizTypeSection.style.opacity = '1';
+                
+                // Fix text color for dark mode
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                const title = quizTypeSection.querySelector('.quiz-type-section-title');
+                if (title) {
+                    if (isDarkMode) {
+                        title.style.color = '#e0e0e0';
+                        title.style.setProperty('color', '#e0e0e0', 'important');
+                    } else {
+                        title.style.color = '#1a1a1a';
+                        title.style.setProperty('color', '#1a1a1a', 'important');
+                    }
+                }
+                
+                // Fix quiz-type-option colors for dark mode
+                const options = quizTypeSection.querySelectorAll('.quiz-type-option');
+                options.forEach(option => {
+                    if (isDarkMode) {
+                        option.style.color = '#e0e0e0';
+                        option.style.setProperty('color', '#e0e0e0', 'important');
+                        const h4 = option.querySelector('h4');
+                        if (h4) {
+                            h4.style.color = '#e0e0e0';
+                            h4.style.setProperty('color', '#e0e0e0', 'important');
+                        }
+                        const paragraphs = option.querySelectorAll('p');
+                        paragraphs.forEach(p => {
+                            p.style.color = '#e0e0e0';
+                            p.style.setProperty('color', '#e0e0e0', 'important');
+                        });
+                    }
+                });
+                
                 quizTypeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
             if (choiceSection) {
                 choiceSection.style.display = 'none';
+                choiceSection.style.setProperty('display', 'none', 'important');
             }
             return;
         }
@@ -741,10 +789,19 @@ async function startFreeTrial() {
         const choiceSection = document.getElementById('choice-section');
         if (choiceSection) choiceSection.style.display = 'none';
         
+        // Hide quiz type section (if visible)
+        const quizTypeSection = document.getElementById('quiz-type-section');
+        if (quizTypeSection) {
+            quizTypeSection.style.display = 'none';
+            quizTypeSection.style.setProperty('display', 'none', 'important');
+        }
+        
         // Hide payment section (IMPORTANT: must be hidden for start-section to be visible)
+        // BUT only if quiz-type-section is not supposed to be shown
         const paymentSection = document.getElementById('payment-section');
         if (paymentSection) {
             paymentSection.style.display = 'none';
+            paymentSection.style.setProperty('display', 'none', 'important');
             console.log('✅ Payment section hidden');
         }
         
