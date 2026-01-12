@@ -55,6 +55,37 @@ function getCurrentQuizData() {
     return quizData;
 }
 
+/**
+ * Get quiz type title based on selected type
+ * @returns {string} Quiz type title
+ */
+function getQuizTypeTitle() {
+    const selectedType = localStorage.getItem('selectedQuizType') || 'architect';
+    
+    if (selectedType === 'constructor') {
+        return 'Կոնստրուկտորների արտոնագրման և որակավորման հարցաթերթիկներ';
+    }
+    
+    return 'ճարտարապետների արտոնագրման և որակավորման հարցաթերթիկներ';
+}
+
+/**
+ * Calculate quiz sets info based on quiz data
+ * @param {Array} quizDataArray - Quiz data array
+ * @returns {Object} {totalQuestions, totalTests, questionsPerTest}
+ */
+function calculateQuizSetsInfo(quizDataArray) {
+    if (!quizDataArray || quizDataArray.length === 0) {
+        return { totalQuestions: 0, totalTests: 0, questionsPerTest: 10 };
+    }
+    
+    const totalQuestions = quizDataArray.length;
+    const questionsPerTest = 10; // 10 questions per test
+    const totalTests = Math.ceil(totalQuestions / questionsPerTest);
+    
+    return { totalQuestions, totalTests, questionsPerTest };
+}
+
 // DOM elements (will be initialized when DOM is ready)
 let startSection = null;
 let paymentSection = null;
@@ -635,15 +666,20 @@ async function initGame() {
                 // Quiz sets already exist, just restore current state
             } else {
                 // Need to recreate quiz sets
-                const orderedQuizData = [...quizData];
+                const currentQuizData = getCurrentQuizData();
+                const quizSetsInfo = calculateQuizSetsInfo(currentQuizData);
+                const orderedQuizData = [...currentQuizData];
                 quizSets = [];
                 quizSetResults = [];
-                for (let i = 0; i < 17; i++) {
-                    quizSets.push(orderedQuizData.slice(i * 10, (i + 1) * 10));
+                const questionsPerTest = quizSetsInfo.questionsPerTest;
+                const totalTests = quizSetsInfo.totalTests;
+                
+                for (let i = 0; i < totalTests; i++) {
+                    const startIndex = i * questionsPerTest;
+                    const endIndex = Math.min(startIndex + questionsPerTest, orderedQuizData.length);
+                    quizSets.push(orderedQuizData.slice(startIndex, endIndex));
                     quizSetResults.push({ correct: 0, wrong: 0 });
                 }
-                quizSets.push(orderedQuizData.slice(170, 175));
-                quizSetResults.push({ correct: 0, wrong: 0 });
             }
             
             // Restore UI to quiz state

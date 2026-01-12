@@ -441,6 +441,14 @@ function selectQuizType(type) {
         localStorage.setItem('selectedQuizType', type);
     }
     
+    // Update title immediately
+    if (typeof getQuizTypeTitle === 'function') {
+        const title = getQuizTypeTitle();
+        const pageTitle = document.getElementById('page-title');
+        if (pageTitle) pageTitle.textContent = title;
+        if (document.title) document.title = title;
+    }
+    
     // Hide quiz type section
     const quizTypeSection = document.getElementById('quiz-type-section');
     if (quizTypeSection) quizTypeSection.style.display = 'none';
