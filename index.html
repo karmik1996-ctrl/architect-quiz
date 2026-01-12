@@ -125,9 +125,9 @@
                     
                     <div style="display: flex; flex-direction: column; gap: 20px; max-width: 600px; margin: 0 auto;">
                         <!-- Option 1: Pay Now -->
-                        <div class="choice-option" style="border: 2px solid #28a745; border-radius: 12px; padding: 20px; background: #f8fff9; cursor: pointer; transition: all 0.3s;" 
-                             onmouseover="this.style.background='#e8f5e9'; this.style.transform='scale(1.02)';" 
-                             onmouseout="this.style.background='#f8fff9'; this.style.transform='scale(1)';"
+                        <div class="choice-option" style="border: 2px solid #28a745; border-radius: 12px; padding: 20px; background: #ffffff; cursor: pointer; transition: all 0.3s;" 
+                             onmouseover="if (!document.body.classList.contains('dark-mode')) { this.style.background='#e8f5e9'; } this.style.transform='scale(1.02)';" 
+                             onmouseout="if (!document.body.classList.contains('dark-mode')) { this.style.background='#ffffff'; } this.style.transform='scale(1)';"
                              onclick="showPaymentCodeSection(); return false;">
                             <h4 style="margin: 0 0 10px 0; color: #28a745; font-size: 1.1em;">💰 Վճարել Հիմա</h4>
                             <p style="margin: 5px 0; color: #555; font-size: 0.95em;">
@@ -144,9 +144,9 @@
                         </div>
                         
                         <!-- Option 2: Free Trial -->
-                        <div class="choice-option" style="border: 2px solid #007bff; border-radius: 12px; padding: 20px; background: #f0f8ff; cursor: pointer; transition: all 0.3s;" 
-                             onmouseover="this.style.background='#e3f2fd'; this.style.transform='scale(1.02)';" 
-                             onmouseout="this.style.background='#f0f8ff'; this.style.transform='scale(1)';"
+                        <div class="choice-option" style="border: 2px solid #007bff; border-radius: 12px; padding: 20px; background: #ffffff; cursor: pointer; transition: all 0.3s;" 
+                             onmouseover="if (!document.body.classList.contains('dark-mode')) { this.style.background='#e3f2fd'; } this.style.transform='scale(1.02)';" 
+                             onmouseout="if (!document.body.classList.contains('dark-mode')) { this.style.background='#ffffff'; } this.style.transform='scale(1)';"
                              onclick="startFreeTrial(); return false;">
                             <h4 style="margin: 0 0 10px 0; color: #007bff; font-size: 1.1em;">🎯 Թեստային 10 Հարց (Անվճար)</h4>
                             <p style="margin: 5px 0; color: #555; font-size: 0.95em;">
