@@ -472,9 +472,12 @@ async function startFreeTrial() {
         const choiceSection = document.getElementById('choice-section');
         if (choiceSection) choiceSection.style.display = 'none';
         
-        // Hide payment section
+        // Hide payment section (IMPORTANT: must be hidden for start-section to be visible)
         const paymentSection = document.getElementById('payment-section');
-        if (paymentSection) paymentSection.style.display = 'none';
+        if (paymentSection) {
+            paymentSection.style.display = 'none';
+            console.log('✅ Payment section hidden');
+        }
         
         // Hide quiz type section
         const quizTypeSection = document.getElementById('quiz-type-section');
@@ -489,6 +492,7 @@ async function startFreeTrial() {
         }
         
         startSection.style.display = 'block';
+        console.log('✅ Start section displayed');
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
         
