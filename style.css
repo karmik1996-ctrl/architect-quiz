@@ -905,7 +905,7 @@ body.dark-mode #exhausted-quiz-sets-display {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10000;
+    z-index: 10000001 !important; /* Higher than dark mode toggle (1000000) */
     overflow-y: auto;
     padding: 20px;
 }
@@ -919,6 +919,7 @@ body.dark-mode #exhausted-quiz-sets-display {
     padding: 50px;
     position: relative;
     border: 1px solid #e0e0e0;
+    z-index: 10000002 !important; /* Higher than modal background */
 }
 
 .info-modal-close {
@@ -938,6 +939,8 @@ body.dark-mode #exhausted-quiz-sets-display {
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
+    z-index: 10000003 !important; /* Highest - above everything in modal */
+    pointer-events: auto !important;
 }
 
 .info-modal-close:hover {
@@ -2492,7 +2495,7 @@ body.dark-mode #exhausted-quiz-sets-display {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10000;
+    z-index: 10000001 !important; /* Higher than dark mode toggle (1000000) */
     overflow-y: auto;
     padding: 20px;
 }
@@ -2506,6 +2509,7 @@ body.dark-mode #exhausted-quiz-sets-display {
     padding: 50px;
     position: relative;
     border: 1px solid #e0e0e0;
+    z-index: 10000002 !important; /* Higher than modal background */
 }
 
 .info-modal-close {
@@ -2525,6 +2529,8 @@ body.dark-mode #exhausted-quiz-sets-display {
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
+    z-index: 10000003 !important; /* Highest - above everything in modal */
+    pointer-events: auto !important;
 }
 
 .info-modal-close:hover {
