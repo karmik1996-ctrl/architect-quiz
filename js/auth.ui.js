@@ -861,17 +861,55 @@ async function startFreeTrial() {
  */
 function showQuizTypeSelection() {
     try {
+        console.log('✅ showQuizTypeSelection called');
+        
         // Remove selected quiz type from localStorage
         localStorage.removeItem('selectedQuizType');
         if (typeof window !== 'undefined') {
             window.selectedQuizType = null;
         }
         
-        // Hide choice section
+        // Hide all other sections first
         const choiceSection = document.getElementById('choice-section');
+        const paymentCodeSection = document.getElementById('payment-code-section');
+        const startSection = document.getElementById('start-section');
+        const topicSection = document.getElementById('topic-section');
+        const questionSection = document.getElementById('question-section');
+        const answersSection = document.getElementById('answers-section');
+        const nextSection = document.getElementById('next-section');
+        const resultsSection = document.getElementById('results-section');
+        
         if (choiceSection) {
             choiceSection.style.display = 'none';
             choiceSection.style.setProperty('display', 'none', 'important');
+        }
+        if (paymentCodeSection) {
+            paymentCodeSection.style.display = 'none';
+            paymentCodeSection.style.setProperty('display', 'none', 'important');
+        }
+        if (startSection) {
+            startSection.style.display = 'none';
+            startSection.style.setProperty('display', 'none', 'important');
+        }
+        if (topicSection) {
+            topicSection.style.display = 'none';
+            topicSection.style.setProperty('display', 'none', 'important');
+        }
+        if (questionSection) {
+            questionSection.style.display = 'none';
+            questionSection.style.setProperty('display', 'none', 'important');
+        }
+        if (answersSection) {
+            answersSection.style.display = 'none';
+            answersSection.style.setProperty('display', 'none', 'important');
+        }
+        if (nextSection) {
+            nextSection.style.display = 'none';
+            nextSection.style.setProperty('display', 'none', 'important');
+        }
+        if (resultsSection) {
+            resultsSection.style.display = 'none';
+            resultsSection.style.setProperty('display', 'none', 'important');
         }
         
         // Show quiz type section
@@ -884,6 +922,31 @@ function showQuizTypeSelection() {
             paymentSection.style.setProperty('display', 'block', 'important');
             paymentSection.style.visibility = 'visible';
             paymentSection.style.opacity = '1';
+            
+            // Hide payment section's initial content (h1, info-btn, payment-instructions, auth-section)
+            const paymentH1 = paymentSection.querySelector('h1');
+            const infoBtn = paymentSection.querySelector('#info-btn');
+            const authSection = paymentSection.querySelector('#auth-section');
+            const paymentInstructions = paymentSection.querySelector('.payment-instructions');
+            
+            if (paymentH1) {
+                paymentH1.style.display = 'none';
+                paymentH1.style.setProperty('display', 'none', 'important');
+            }
+            if (infoBtn) {
+                infoBtn.style.display = 'none';
+                infoBtn.style.setProperty('display', 'none', 'important');
+            }
+            if (authSection) {
+                authSection.style.display = 'none';
+                authSection.style.setProperty('display', 'none', 'important');
+            }
+            if (paymentInstructions) {
+                paymentInstructions.style.display = 'none';
+                paymentInstructions.style.setProperty('display', 'none', 'important');
+            }
+            
+            console.log('✅ Payment section made visible and content hidden');
         }
         
         if (quizTypeSection) {
@@ -924,12 +987,18 @@ function showQuizTypeSelection() {
                 }
             });
             
+            console.log('✅ Quiz type section shown');
+            console.log('Quiz type section computed style:', window.getComputedStyle(quizTypeSection).display);
+            console.log('Quiz type section offsetHeight:', quizTypeSection.offsetHeight);
+            
             // Scroll to quiz type section
             setTimeout(() => {
                 if (quizTypeSection) {
                     quizTypeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             }, 100);
+        } else {
+            console.error('❌ Quiz type section not found!');
         }
         
         console.log('✅ Quiz type selection shown');
