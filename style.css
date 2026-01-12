@@ -3583,3 +3583,47 @@ body.dark-mode #logout-container #logout-btn:hover {
     background: #2a2a2a;
     color: #ffffff;
 }
+
+/* Choice Section - Dark Mode Support */
+body.dark-mode .choice-section,
+body.dark-mode #choice-section {
+    background: transparent;
+}
+
+body.dark-mode .choice-section-title,
+body.dark-mode #choice-section h3 {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .choice-option {
+    background: #1a1a1a !important;
+    border-color: #4a4a4a !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .choice-option:hover {
+    background: #2a2a2a !important;
+}
+
+body.dark-mode .choice-option-title,
+body.dark-mode .choice-option h4 {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .choice-option-text,
+body.dark-mode .choice-option p {
+    color: #b0b0b0 !important;
+}
+
+body.dark-mode .choice-option strong {
+    color: #ffffff !important;
+}
+
+/* Light Mode - Ensure white background */
+.choice-option {
+    background: #ffffff !important;
+}
+
+body:not(.dark-mode) .choice-option {
+    background: #ffffff !important;
+}
