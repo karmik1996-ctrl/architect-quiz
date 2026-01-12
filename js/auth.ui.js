@@ -1516,6 +1516,20 @@ function selectQuizType(type) {
                 }
             }
             
+            // Update quiz counts in choice section based on quiz type
+            const choiceTotalTests = document.getElementById('choice-total-tests');
+            const choiceTotalQuestions = document.getElementById('choice-total-questions');
+            
+            if (type === 'constructor') {
+                // Constructor: 19 tests, 187 questions
+                if (choiceTotalTests) choiceTotalTests.textContent = '19';
+                if (choiceTotalQuestions) choiceTotalQuestions.textContent = '187';
+            } else {
+                // Architect: 18 tests, 175 questions
+                if (choiceTotalTests) choiceTotalTests.textContent = '18';
+                if (choiceTotalQuestions) choiceTotalQuestions.textContent = '175';
+            }
+            
             // Scroll to choice section
             setTimeout(() => {
                 if (choiceSection) {

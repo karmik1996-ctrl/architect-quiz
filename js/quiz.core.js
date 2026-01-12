@@ -100,10 +100,18 @@ function calculateQuizSetsInfo(quizDataArray) {
     }
     
     const totalQuestions = quizDataArray.length;
-    const questionsPerTest = 10; // 10 questions per test
-    const totalTests = Math.ceil(totalQuestions / questionsPerTest);
+    const selectedType = localStorage.getItem('selectedQuizType');
     
-    return { totalQuestions, totalTests, questionsPerTest };
+    // For constructor: 18 sets of 10 + 1 set of 7 = 19 tests, 187 questions
+    // For architect: 17 sets of 10 + 1 set of 5 = 18 tests, 175 questions
+    if (selectedType === 'constructor') {
+        const totalTests = 19; // 18 tests of 10 + 1 test of 7
+        return { totalQuestions, totalTests, questionsPerTest: 10 };
+    } else {
+        // Architect: 18 tests (17 of 10 + 1 of 5)
+        const totalTests = 18;
+        return { totalQuestions, totalTests, questionsPerTest: 10 };
+    }
 }
 
 /**
@@ -848,7 +856,9 @@ async function initGame() {
             const escapedUsed = (typeof escapeHtml === 'function') ? escapeHtml(String(totalUsedAttempts)) : String(totalUsedAttempts);
             const escapedTotal = (typeof escapeHtml === 'function') ? escapeHtml(String(totalMaxAttempts)) : String(totalMaxAttempts);
             const escapedRemaining = remaining > 0 ? ((typeof escapeHtml === 'function') ? escapeHtml(String(remaining)) : String(remaining)) : '';
-            const attemptsHtml = `Առկա է <strong>18 թեստ</strong>, ունեք իրավունք անցնելու ամեն թեստը <strong>3 անգամ</strong>։<br><strong>${escapedUsed}/${escapedTotal} օգտագործված</strong>${remaining > 0 ? `, <strong>մնաց ${escapedRemaining}</strong>` : ''}`;
+            const quizSetsInfo = calculateQuizSetsInfo(currentQuizData);
+            const totalTests = quizSetsInfo.totalTests;
+            const attemptsHtml = `Առկա է <strong>${totalTests} թեստ</strong>, ունեք իրավունք անցնելու ամեն թեստը <strong>3 անգամ</strong>։<br><strong>${escapedUsed}/${escapedTotal} օգտագործված</strong>${remaining > 0 ? `, <strong>մնաց ${escapedRemaining}</strong>` : ''}`;
             safeSetHTML(attemptsDisplay, attemptsHtml);
             if (remaining === 0) {
                 attemptsDisplay.style.color = '#dc3545';
