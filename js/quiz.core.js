@@ -1025,8 +1025,11 @@ function repeatQuiz() {
     // Load quiz set attempts from localStorage
     loadQuizSetAttempts();
     
+    // Get current quiz data based on selected type
+    const currentQuizData = getCurrentQuizData();
+    
     // Don't shuffle - keep questions in same order for consistent quiz sets
-    const orderedQuizData = [...quizData]; // Use original order, no shuffle
+    const orderedQuizData = [...currentQuizData]; // Use original order, no shuffle
     
     // Divide into 18 quiz sets: 17 sets of 10 + 1 set of 5 (18th test) = 175 questions
     quizSets = [];
