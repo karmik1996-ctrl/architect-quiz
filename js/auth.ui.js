@@ -410,15 +410,15 @@ async function startFreeTrial() {
                 welcomeMessage.style.display = 'block';
             }
             
-            // Auto-start quiz (will use free trial automatically)
-            setTimeout(() => {
-                if (typeof startQuiz === 'function') {
-                    startQuiz();
-                } else {
-                    console.error('startQuiz function not found');
-                    alert('Սխալ: Quiz-ը չի կարող սկսվել:');
-                }
-            }, 500);
+            // REMOVED: Auto-start quiz - user should click start button manually
+            // setTimeout(() => {
+            //     if (typeof startQuiz === 'function') {
+            //         startQuiz();
+            //     } else {
+            //         console.error('startQuiz function not found');
+            //         alert('Սխալ: Quiz-ը չի կարող սկսվել:');
+            //     }
+            // }, 500);
         }
     } catch (error) {
         console.error('Error starting free trial:', error);

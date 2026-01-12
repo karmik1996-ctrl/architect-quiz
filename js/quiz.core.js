@@ -1262,18 +1262,13 @@ async function nextQuestion() {
     if (typeof checkCanContinueQuiz === 'function') {
         const canContinue = await checkCanContinueQuiz(currentQuestionIndex + 1); // Check next question index
         if (!canContinue.canContinue) {
-            // Free trial limit reached
-            alert(canContinue.message || '⚠️ Անվճար demo-ի սահմանը հասել է: Վճարեք 15,000 դրամ:');
+            // Free trial limit reached - show results first, then payment option
             // Record trial usage
             if (typeof recordFreeTrialUsage === 'function') {
                 await recordFreeTrialUsage(currentQuestionIndex + 1);
             }
-            // Show payment section
-            if (paymentSection) paymentSection.style.display = 'block';
-            if (startSection) startSection.style.display = 'none';
-            if (topicSection) topicSection.style.display = 'none';
-            if (questionSection) questionSection.style.display = 'none';
-            if (answersSection) answersSection.style.display = 'none';
+            // Show quiz set results (allows user to see answers before payment)
+            showQuizSetResults();
             
             nextQuestion.inProgress = false;
             return;
@@ -1554,26 +1549,102 @@ async function showQuizSetResults() {
     
     displayQuizSetResults(correctCount, wrongCount);
     
-    // Force show next button if there are more quiz sets (backup check)
-    setTimeout(() => {
-        const resultsNextBtn = document.getElementById('next-quiz-set-btn');
-        const resultsFinishBtn = document.getElementById('finish-all-quiz-sets-btn');
-        
-        if (resultsNextBtn && resultsFinishBtn) {
-            const currentIndex = typeof currentQuizSetIndex === 'number' ? currentQuizSetIndex : 0;
-            const totalSets = Array.isArray(quizSets) ? quizSets.length : 18;
-            const hasMoreSets = currentIndex < totalSets - 1;
-            
-            if (hasMoreSets) {
-                resultsNextBtn.style.display = 'inline-block';
-                resultsNextBtn.style.visibility = 'visible';
-                resultsNextBtn.style.opacity = '1';
-                resultsNextBtn.style.flex = '1';
-                resultsNextBtn.style.minWidth = '200px';
-                resultsFinishBtn.style.display = 'none';
+    // Check if free trial was used - show payment option after results
+    // User can view answers first, then decide to pay
+    if (typeof checkFreeTrialStatus === 'function') {
+        checkFreeTrialStatus().then(trialStatus => {
+            if (trialStatus.used) {
+                // Free trial used - hide "next quiz set" button, show payment option
+                // But don't force redirect - let user view answers first
+                const resultsNextBtn = document.getElementById('next-quiz-set-btn');
+                const resultsFinishBtn = document.getElementById('finish-all-quiz-sets-btn');
+                
+                if (resultsNextBtn) {
+                    resultsNextBtn.style.display = 'none';
+                }
+                if (resultsFinishBtn) {
+                    resultsFinishBtn.style.display = 'none';
+                }
+                
+                // Add payment button to results section (if not already present)
+                const resultsSection = document.getElementById('results-section');
+                if (resultsSection) {
+                    let paymentBtn = document.getElementById('payment-after-trial-btn');
+                    if (!paymentBtn) {
+                        paymentBtn = document.createElement('button');
+                        paymentBtn.id = 'payment-after-trial-btn';
+                        paymentBtn.className = 'btn-primary';
+                        paymentBtn.style.cssText = 'flex: 1; min-width: 200px; margin-top: 15px;';
+                        paymentBtn.textContent = '💰 Վճարել 15,000 դրամ - Շարունակել';
+                        paymentBtn.onclick = function() {
+                            // Show payment section
+                            if (paymentSection) paymentSection.style.display = 'block';
+                            if (resultsSection) resultsSection.style.display = 'none';
+                            // Scroll to payment section
+                            if (paymentSection) paymentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            return false;
+                        };
+                        
+                        // Insert after view-answers-btn
+                        const viewAnswersBtn = document.getElementById('view-answers-btn');
+                        if (viewAnswersBtn && viewAnswersBtn.parentNode) {
+                            viewAnswersBtn.parentNode.insertBefore(paymentBtn, viewAnswersBtn.nextSibling);
+                        } else if (resultsSection) {
+                            resultsSection.appendChild(paymentBtn);
+                        }
+                    }
+                    paymentBtn.style.display = 'block';
+                }
+                
+                console.log('ℹ️ Free trial completed - user can view answers, then pay if desired');
+            } else {
+                // Free trial not used - show normal buttons
+                const resultsNextBtn = document.getElementById('next-quiz-set-btn');
+                const resultsFinishBtn = document.getElementById('finish-all-quiz-sets-btn');
+                
+                if (resultsNextBtn && resultsFinishBtn) {
+                    const currentIndex = typeof currentQuizSetIndex === 'number' ? currentQuizSetIndex : 0;
+                    const totalSets = Array.isArray(quizSets) ? quizSets.length : 18;
+                    const hasMoreSets = currentIndex < totalSets - 1;
+                    
+                    if (hasMoreSets) {
+                        resultsNextBtn.style.display = 'inline-block';
+                        resultsNextBtn.style.visibility = 'visible';
+                        resultsNextBtn.style.opacity = '1';
+                        resultsNextBtn.style.flex = '1';
+                        resultsNextBtn.style.minWidth = '200px';
+                        resultsFinishBtn.style.display = 'none';
+                    } else {
+                        resultsNextBtn.style.display = 'none';
+                        resultsFinishBtn.style.display = 'inline-block';
+                        resultsFinishBtn.style.flex = '1';
+                        resultsFinishBtn.style.minWidth = '200px';
+                    }
+                }
             }
-        }
-    }, 200);
+        });
+    } else {
+        // Fallback: Force show next button if there are more quiz sets (backup check)
+        setTimeout(() => {
+            const resultsNextBtn = document.getElementById('next-quiz-set-btn');
+            const resultsFinishBtn = document.getElementById('finish-all-quiz-sets-btn');
+            
+            if (resultsNextBtn && resultsFinishBtn) {
+                const currentIndex = typeof currentQuizSetIndex === 'number' ? currentQuizSetIndex : 0;
+                const totalSets = Array.isArray(quizSets) ? quizSets.length : 18;
+                const hasMoreSets = currentIndex < totalSets - 1;
+                
+                if (hasMoreSets) {
+                    resultsNextBtn.style.display = 'inline-block';
+                    resultsNextBtn.style.visibility = 'visible';
+                    resultsNextBtn.style.opacity = '1';
+                    resultsNextBtn.style.flex = '1';
+                    resultsNextBtn.style.minWidth = '200px';
+                    resultsFinishBtn.style.display = 'none';
+                }
+            }
+        }, 200);
+    }
 }
 
 // Create quiz set results section
@@ -1879,7 +1950,29 @@ function showAllResults() {
     userAnswers = []; // Clear for final results display
     shuffledQuizData = []; // Clear for final results display
     
-    showResults();
+    // Show results section (user can view answers before payment)
+    const resultsSection = document.getElementById('results-section');
+    if (resultsSection) {
+        resultsSection.style.display = 'block';
+    }
+    
+    // Hide other sections
+    if (topicSection) topicSection.style.display = 'none';
+    if (questionSection) questionSection.style.display = 'none';
+    if (answersSection) answersSection.style.display = 'none';
+    if (nextSection) nextSection.style.display = 'none';
+    
+    // Check if free trial was used - show payment option after results
+    // User can view answers first, then decide to pay
+    if (typeof checkFreeTrialStatus === 'function') {
+        checkFreeTrialStatus().then(trialStatus => {
+            if (trialStatus.used) {
+                // Free trial used - add payment button to results section
+                // But don't force redirect - let user view answers first
+                console.log('ℹ️ Free trial completed - user can view answers, then pay if desired');
+            }
+        });
+    }
 }
 
 // Collect device information
