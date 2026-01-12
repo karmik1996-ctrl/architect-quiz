@@ -1010,6 +1010,9 @@ if (typeof window !== 'undefined') {
     window.showChoiceSection = showChoiceSection;
     window.startFreeTrial = startFreeTrial;
     window.togglePasswordVisibility = togglePasswordVisibility;
+    
+    // Debug: Verify function is exported
+    console.log('✅ showQuizTypeSelection exported:', typeof window.showQuizTypeSelection);
 }
 
 /**
