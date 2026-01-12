@@ -76,6 +76,7 @@ function showLoginForm() {
 function showUserInfo(userData) {
     try {
         const authForms = document.getElementById('auth-forms');
+        const authSection = document.getElementById('auth-section');
         const quizTypeSection = document.getElementById('quiz-type-section');
         const choiceSection = document.getElementById('choice-section');
         const paymentCodeSection = document.getElementById('payment-code-section');
@@ -90,6 +91,15 @@ function showUserInfo(userData) {
             console.log('✅ Auth forms hidden');
         } else {
             console.warn('⚠️ Auth forms not found');
+        }
+        
+        // Hide auth section (IMPORTANT: Must be hidden when user is logged in)
+        if (authSection) {
+            authSection.style.display = 'none';
+            authSection.style.setProperty('display', 'none', 'important');
+            console.log('✅ Auth section hidden');
+        } else {
+            console.warn('⚠️ Auth section not found');
         }
         
         // Show logout button at bottom
