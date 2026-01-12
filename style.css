@@ -3523,11 +3523,21 @@ body.dark-mode .correct-indicator {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1.2em;
     padding: 5px;
     color: #666;
     z-index: 10;
     transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#register-password-toggle svg,
+#login-password-toggle svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    transition: stroke 0.2s;
 }
 
 #register-password-toggle:hover,
