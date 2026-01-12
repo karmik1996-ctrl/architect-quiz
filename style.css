@@ -239,6 +239,19 @@ body.dark-mode .toggle-slider {
     display: none !important;
 }
 
+/* Hide all sections by default except payment-section */
+#start-section,
+#choice-section,
+#quiz-type-section,
+#payment-code-section {
+    display: none;
+}
+
+/* Payment section should be visible by default (when user is not logged in) */
+#payment-section {
+    display: block;
+}
+
 h1 {
     color: #1a1a1a;
     margin-bottom: 30px;
@@ -1827,6 +1840,19 @@ body.dark-mode .toggle-slider {
 
 .section[style*="display: none"] {
     display: none !important;
+}
+
+/* Hide all sections by default except payment-section */
+#start-section,
+#choice-section,
+#quiz-type-section,
+#payment-code-section {
+    display: none;
+}
+
+/* Payment section should be visible by default (when user is not logged in) */
+#payment-section {
+    display: block;
 }
 
 h1 {
