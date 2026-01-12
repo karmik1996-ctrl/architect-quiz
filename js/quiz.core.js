@@ -990,10 +990,7 @@ async function startQuiz() {
         updateAttemptsDisplay(quizSetAttempts);
     }, 100);
     
-    // Get current quiz data based on selected type
-    const currentQuizData = getCurrentQuizData();
-    
-    // Check if quizData is loaded before loading question
+    // Check if quizData is loaded before loading question (currentQuizData already declared above)
     if (typeof currentQuizData === 'undefined' || !currentQuizData || currentQuizData.length === 0) {
         console.error('❌ Quiz data not loaded! currentQuizData:', typeof currentQuizData, currentQuizData);
         alert('❌ Սխալ: Հարցաթերթիկների տվյալները բեռնված չեն:\nԽնդրում ենք թարմացնել էջը:');
