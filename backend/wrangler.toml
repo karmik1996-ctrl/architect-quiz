@@ -1,0 +1,20 @@
+name = "quiz-backend-api"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Environment variables (set via Cloudflare Dashboard or CLI)
+# These are SECRET and never exposed to frontend
+# [vars]
+# SECRET_FIREBASE_API_KEY = "your-firebase-api-key-here"
+# FIREBASE_AUTH_DOMAIN = "architect-quiz-c5273.firebaseapp.com"
+# FIREBASE_PROJECT_ID = "architect-quiz-c5273"
+# FIREBASE_STORAGE_BUCKET = "architect-quiz-c5273.firebasestorage.app"
+# FIREBASE_MESSAGING_SENDER_ID = "566027889328"
+# FIREBASE_APP_ID = "1:566027889328:web:efb894feed4b74bd4ca975"
+# FIREBASE_MEASUREMENT_ID = "G-57NQ5TB1NP"
+# SECRET_IPGEOLOCATION_API_KEY = "your-ipgeolocation-api-key-here"
+# SECRET_FIREBASE_SERVICE_ACCOUNT_TOKEN = "your-service-account-token-here"
+
+# Note: For production, use Cloudflare Dashboard → Workers → Settings → Variables
+# to set secrets securely (they won't be visible in code)
+
